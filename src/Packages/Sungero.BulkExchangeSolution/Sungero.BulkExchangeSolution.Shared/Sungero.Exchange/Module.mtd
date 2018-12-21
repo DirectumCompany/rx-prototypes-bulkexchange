@@ -1,0 +1,88 @@
+{
+  "$type": "Sungero.Metadata.LayerModuleMetadata, Sungero.Metadata",
+  "NameGuid": "9bf9840f-5687-4a17-8b9e-98e930513d01",
+  "Name": "Exchange",
+  "AssociatedGuid": "50f2374f-3b0a-4a4b-b161-0073e1165a67",
+  "BaseGuid": "cec41b99-da21-422f-9332-0fbc423e95c0",
+  "ClientBaseAssemblyName": "Sungero.BulkExchangeSolution.ClientBase",
+  "ClientBaseNamespace": "Sungero.BulkExchangeSolution.Module.Exchange.ClientBase",
+  "Code": "ExCh",
+  "CompanyCode": "Sungero",
+  "ExplorerTreeOrder": [],
+  "IconResourcesKeys": [],
+  "Importance": "Medium",
+  "IsVisible": false,
+  "Jobs": [
+    {
+      "NameGuid": "65fa7815-170d-489c-b613-c2c2366161a4",
+      "Name": "BodyConverterJob",
+      "Daily": "Repeat",
+      "IsAncestorMetadata": true,
+      "MonthSchedule": "Monthly",
+      "StartAt": "1753-01-01T00:00:00",
+      "TimePeriod": 10
+    },
+    {
+      "NameGuid": "13f61e21-8bb9-4a3d-b72b-e92da64c60b4",
+      "Name": "GetMessages",
+      "DaysOfWeekSchedule": "Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday",
+      "IsAncestorMetadata": true,
+      "Monthly": "Weekly",
+      "MonthSchedule": "Monthly",
+      "Overridden": [
+        "Monthly",
+        "DaysOfWeekSchedule",
+        "DaysOfMonthSchedule",
+        "IsAtEndOfMonth",
+        "Daily",
+        "EndAt",
+        "TimePeriod"
+      ],
+      "StartAt": "1753-01-01T00:00:00"
+    },
+    {
+      "NameGuid": "e7b6f44d-78eb-4c9f-b6e5-ffa66a262e91",
+      "Name": "SendReceiptNotificationTasks",
+      "IsAncestorMetadata": true,
+      "MonthSchedule": "Monthly",
+      "StartAt": "1753-01-01T14:00:00"
+    },
+    {
+      "NameGuid": "b54f0e86-0cac-49bf-b99b-30ffd8030d9b",
+      "Name": "CreateReceiptNotifications",
+      "Daily": "Repeat",
+      "IsAncestorMetadata": true,
+      "MonthSchedule": "Monthly",
+      "TimePeriod": 10
+    },
+    {
+      "NameGuid": "a050e9dc-ac0a-40c2-a322-7f1832e53f36",
+      "Name": "SendSignedReceiptNotifications",
+      "Daily": "Repeat",
+      "IsAncestorMetadata": true,
+      "MonthSchedule": "Monthly",
+      "TimePeriod": 10
+    }
+  ],
+  "LayeredFromGuid": "cec41b99-da21-422f-9332-0fbc423e95c0",
+  "Overridden": [
+    "IsVisible"
+  ],
+  "PublicStructures": [],
+  "ResourceInterfaceAssemblyName": "Sungero.Domain.Interfaces",
+  "ResourceInterfaceNamespace": "Sungero.BulkExchangeSolution.Module.Exchange",
+  "ResourcesKeys": [],
+  "SpecialFolders": [],
+  "Version": "3.1.1.1",
+  "Widgets": [],
+  "Versions": [
+    {
+      "Type": "LayerModuleMetadata",
+      "Number": 6
+    },
+    {
+      "Type": "ModuleMetadata",
+      "Number": 6
+    }
+  ]
+}

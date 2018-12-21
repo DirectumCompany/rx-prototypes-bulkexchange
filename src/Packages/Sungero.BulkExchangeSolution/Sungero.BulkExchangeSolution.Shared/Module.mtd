@@ -1,0 +1,57 @@
+{
+  "$type": "Sungero.Metadata.SolutionMetadata, Sungero.Metadata",
+  "NameGuid": "50f2374f-3b0a-4a4b-b161-0073e1165a67",
+  "Name": "BulkExchangeSolution",
+  "ClientAssemblyName": "Sungero.BulkExchangeSolution.Client",
+  "ClientBaseAssemblyName": "Sungero.BulkExchangeSolution.ClientBase",
+  "ClientBaseNamespace": "Sungero.BulkExchangeSolution.ClientBase",
+  "ClientNamespace": "Sungero.BulkExchangeSolution.Client",
+  "Code": "BulkEx",
+  "CompanyCode": "Sungero",
+  "Cover": {
+    "NameGuid": "0f879082-dbfa-49b9-9ec5-440bdb63cb00",
+    "Actions": [],
+    "Background": null,
+    "Footer": {
+      "NameGuid": "72c3faee-6cfd-4260-9788-26ed6813d7ec",
+      "BackgroundPosition": "Stretch"
+    },
+    "Groups": [],
+    "Header": {
+      "NameGuid": "80a72065-54cb-4729-b2e7-be29c15152d5",
+      "BackgroundPosition": "Stretch"
+    }
+  },
+  "DesktopViews": [],
+  "ExplorerTreeOrder": [
+    {
+      "ItemId": "3e8b872f-a32f-4756-82f3-34053f483a06"
+    }
+  ],
+  "IconResourcesKeys": [],
+  "Importance": "Medium",
+  "InterfaceAssemblyName": "Sungero.Domain.Interfaces",
+  "InterfaceNamespace": "Sungero.BulkExchangeSolution",
+  "OrderedSpecialFolders": [],
+  "PublicStructures": [],
+  "ResourceInterfaceAssemblyName": "Sungero.Domain.Interfaces",
+  "ResourceInterfaceNamespace": "Sungero.BulkExchangeSolution",
+  "ResourcesKeys": [],
+  "ServerAssemblyName": "Sungero.BulkExchangeSolution.Server",
+  "ServerNamespace": "Sungero.BulkExchangeSolution.Server",
+  "SharedAssemblyName": "Sungero.BulkExchangeSolution.Shared",
+  "SharedNamespace": "Sungero.BulkExchangeSolution.Shared",
+  "SpecialFolders": [],
+  "Version": "3.1.0.0",
+  "Widgets": [],
+  "Versions": [
+    {
+      "Type": "SolutionMetadata",
+      "Number": 6
+    },
+    {
+      "Type": "ModuleMetadata",
+      "Number": 6
+    }
+  ]
+}
