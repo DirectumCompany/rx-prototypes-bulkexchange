@@ -123,13 +123,16 @@
   <data name="Enum_CheckStatus_Required" xml:space="preserve">
     <value>TODO</value>
   </data>
-  <data name="Enum_CheckStatus_Completed" xml:space="preserve">
-    <value>TODO</value>
-  </data>
-  <data name="Enum_CheckStatus_Failed" xml:space="preserve">
+  <data name="Enum_CheckStatus_NotRequired" xml:space="preserve">
     <value>TODO</value>
   </data>
   <data name="Property_PurchaseOrder" xml:space="preserve">
+    <value>TODO</value>
+  </data>
+  <data name="Property_CheckTask" xml:space="preserve">
+    <value>TODO</value>
+  </data>
+  <data name="Enum_CheckStatus_Completed" xml:space="preserve">
     <value>TODO</value>
   </data>
 </root>

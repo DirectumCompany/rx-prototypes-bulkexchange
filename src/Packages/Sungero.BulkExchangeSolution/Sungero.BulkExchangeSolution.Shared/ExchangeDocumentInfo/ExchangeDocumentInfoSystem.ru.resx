@@ -118,18 +118,21 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="Property_CheckStatus" xml:space="preserve">
-    <value>Сверено</value>
+    <value>Проверка документа</value>
   </data>
   <data name="Enum_CheckStatus_Required" xml:space="preserve">
-    <value>Требует сверки</value>
+    <value>Требуется</value>
   </data>
-  <data name="Enum_CheckStatus_Completed" xml:space="preserve">
-    <value>Пройдена</value>
-  </data>
-  <data name="Enum_CheckStatus_Failed" xml:space="preserve">
-    <value>Неуспешна</value>
+  <data name="Enum_CheckStatus_NotRequired" xml:space="preserve">
+    <value>Не требуется</value>
   </data>
   <data name="Property_PurchaseOrder" xml:space="preserve">
     <value>Номер заказа</value>
+  </data>
+  <data name="Property_CheckTask" xml:space="preserve">
+    <value>Задача на проверку докмуента.</value>
+  </data>
+  <data name="Enum_CheckStatus_Completed" xml:space="preserve">
+    <value>Пройдена</value>
   </data>
 </root>

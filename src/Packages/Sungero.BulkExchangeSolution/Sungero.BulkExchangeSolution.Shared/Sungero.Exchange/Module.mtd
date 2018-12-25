@@ -62,6 +62,14 @@
       "IsAncestorMetadata": true,
       "MonthSchedule": "Monthly",
       "TimePeriod": 10
+    },
+    {
+      "NameGuid": "5db5338d-6db7-4463-8819-81587d164a5c",
+      "Name": "CheckDocuments",
+      "Daily": "Repeat",
+      "GenerateHandler": true,
+      "MonthSchedule": "Monthly",
+      "TimePeriod": 30
     }
   ],
   "LayeredFromGuid": "cec41b99-da21-422f-9332-0fbc423e95c0",
