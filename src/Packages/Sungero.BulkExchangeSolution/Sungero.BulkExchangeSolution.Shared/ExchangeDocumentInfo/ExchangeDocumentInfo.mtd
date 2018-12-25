@@ -55,6 +55,14 @@
       ],
       "ListDataBinderTypeName": "Sungero.Presentation.CommonDataBinders.DropDownEditorToEnumerationBinder",
       "PreviousPropertyGuid": "f0870e95-bdcf-491e-9056-0fa2122d48c4"
+    },
+    {
+      "$type": "Sungero.Metadata.StringPropertyMetadata, Sungero.Metadata",
+      "NameGuid": "a0b79dc9-6347-4f71-a9bc-7b7d6ae793d1",
+      "Name": "PurchaseOrder",
+      "Code": "PurchaseOrder",
+      "ListDataBinderTypeName": "Sungero.Presentation.CommonDataBinders.StringEditorToStringBinder",
+      "PreviousPropertyGuid": "3e2e3e39-8870-42ec-8d82-a5f224301909"
     }
   ],
   "PublicStructures": [],

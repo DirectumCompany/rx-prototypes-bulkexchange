@@ -32,6 +32,13 @@
   "Importance": "Medium",
   "InterfaceAssemblyName": "Sungero.Domain.Interfaces",
   "InterfaceNamespace": "Sungero.BulkExchangeSolution",
+  "Libraries": [
+    {
+      "NameGuid": "cb76393a-33f9-4888-8ed9-ba399cb355cd",
+      "Name": "DCX",
+      "Scope": "Server"
+    }
+  ],
   "OrderedSpecialFolders": [],
   "PublicStructures": [],
   "ResourceInterfaceAssemblyName": "Sungero.Domain.Interfaces",

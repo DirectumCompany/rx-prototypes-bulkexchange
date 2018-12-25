@@ -65,8 +65,16 @@
     }
   ],
   "LayeredFromGuid": "cec41b99-da21-422f-9332-0fbc423e95c0",
+  "Libraries": [
+    {
+      "NameGuid": "8afc00b9-ff69-4efe-b800-1d7c065f63d0",
+      "Name": "DCX",
+      "Scope": "Server"
+    }
+  ],
   "Overridden": [
-    "IsVisible"
+    "IsVisible",
+    "Libraries"
   ],
   "PublicStructures": [],
   "ResourceInterfaceAssemblyName": "Sungero.Domain.Interfaces",
