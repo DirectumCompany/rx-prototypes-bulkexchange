@@ -11,15 +11,5 @@
       <IsSolution>true</IsSolution>
       <IsPreviousLayerModule>false</IsPreviousLayerModule>
     </PackageModuleItem>
-	<PackageModuleItem>
-      <Id>9bf9840f-5687-4a17-8b9e-98e930513d01</Id>
-      <SolutionId>50f2374f-3b0a-4a4b-b161-0073e1165a67</SolutionId>
-      <Name>Sungero.Exchange</Name>
-      <Version>3.1.1.1</Version>
-      <IncludeAssemblies>true</IncludeAssemblies>
-      <IncludeSources>false</IncludeSources>
-      <IsSolution>false</IsSolution>
-      <IsPreviousLayerModule>false</IsPreviousLayerModule>
-    </PackageModuleItem>
   </PackageModules>
 </DevelopmentPackageInfo>
