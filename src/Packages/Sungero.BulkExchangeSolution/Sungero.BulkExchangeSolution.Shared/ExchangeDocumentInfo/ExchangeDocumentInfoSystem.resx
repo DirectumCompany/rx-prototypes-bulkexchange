@@ -135,4 +135,25 @@
   <data name="Enum_CheckStatus_Completed" xml:space="preserve">
     <value>TODO</value>
   </data>
+  <data name="Property_SenderSignId" xml:space="preserve">
+    <value>Sender signature ID</value>
+  </data>
+  <data name="Property_ReceiverSignId" xml:space="preserve">
+    <value>Recipient signature ID</value>
+  </data>
+  <data name="Property_RevocationTask" xml:space="preserve">
+    <value>Revocation Task</value>
+  </data>
+  <data name="Property_SignStatus" xml:space="preserve">
+    <value>TODO</value>
+  </data>
+  <data name="Enum_SignStatus_Required" xml:space="preserve">
+    <value>TODO</value>
+  </data>
+  <data name="Enum_SignStatus_NotRequired" xml:space="preserve">
+    <value>TODO</value>
+  </data>
+  <data name="Enum_SignStatus_Signed" xml:space="preserve">
+    <value>TODO</value>
+  </data>
 </root>

@@ -73,6 +73,31 @@
       "FlatListInStandaloneLookup": true,
       "ListDataBinderTypeName": "Sungero.Presentation.CommonDataBinders.DropDownEditorToNavigationBinder",
       "PreviousPropertyGuid": "a0b79dc9-6347-4f71-a9bc-7b7d6ae793d1"
+    },
+    {
+      "$type": "Sungero.Metadata.EnumPropertyMetadata, Sungero.Metadata",
+      "NameGuid": "a0f7bdec-26b7-48c8-befd-39a43a0dc866",
+      "Name": "SignStatus",
+      "Code": "SignStatus",
+      "DirectValues": [
+        {
+          "NameGuid": "2e32bba9-b20a-4dfa-b0c3-83fd4203c913",
+          "Name": "Required",
+          "Code": "Required"
+        },
+        {
+          "NameGuid": "514b3d2f-4eff-4014-9ed1-0219ab0de62b",
+          "Name": "NotRequired",
+          "Code": "NotRequired"
+        },
+        {
+          "NameGuid": "b7f78cab-cfc4-495f-aaf1-fde1fb41b370",
+          "Name": "Signed",
+          "Code": "Signed"
+        }
+      ],
+      "ListDataBinderTypeName": "Sungero.Presentation.CommonDataBinders.DropDownEditorToEnumerationBinder",
+      "PreviousPropertyGuid": "9fdb065a-1584-4804-b42b-7d18af8aa47a"
     }
   ],
   "PublicStructures": [],

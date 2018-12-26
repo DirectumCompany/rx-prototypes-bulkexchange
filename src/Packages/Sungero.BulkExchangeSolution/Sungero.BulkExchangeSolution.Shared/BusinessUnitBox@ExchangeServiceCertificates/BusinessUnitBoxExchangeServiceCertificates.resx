@@ -117,43 +117,4 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="Property_CheckStatus" xml:space="preserve">
-    <value>Проверка документа</value>
-  </data>
-  <data name="Enum_CheckStatus_Required" xml:space="preserve">
-    <value>Требуется</value>
-  </data>
-  <data name="Enum_CheckStatus_NotRequired" xml:space="preserve">
-    <value>Не требуется</value>
-  </data>
-  <data name="Property_PurchaseOrder" xml:space="preserve">
-    <value>Номер заказа</value>
-  </data>
-  <data name="Property_CheckTask" xml:space="preserve">
-    <value>Задача на проверку докмуента.</value>
-  </data>
-  <data name="Enum_CheckStatus_Completed" xml:space="preserve">
-    <value>Пройдена</value>
-  </data>
-  <data name="Property_SenderSignId" xml:space="preserve">
-    <value>ИД подписи отправителя</value>
-  </data>
-  <data name="Property_ReceiverSignId" xml:space="preserve">
-    <value>ИД подписи получателя</value>
-  </data>
-  <data name="Property_RevocationTask" xml:space="preserve">
-    <value>Задача на аннулирование</value>
-  </data>
-  <data name="Property_SignStatus" xml:space="preserve">
-    <value>Статус подписания</value>
-  </data>
-  <data name="Enum_SignStatus_Required" xml:space="preserve">
-    <value>Требуется подпись</value>
-  </data>
-  <data name="Enum_SignStatus_NotRequired" xml:space="preserve">
-    <value>Не требуется подпись</value>
-  </data>
-  <data name="Enum_SignStatus_Signed" xml:space="preserve">
-    <value>Подписано</value>
-  </data>
 </root>
