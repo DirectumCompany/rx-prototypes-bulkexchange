@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Sungero.BulkExchangeSolution.ExchangeDocumentInfo;
 using Sungero.Core;
 using Sungero.CoreEntities;
 
@@ -24,6 +25,7 @@ namespace Sungero.BulkExchangeSolution.Module.Exchange.Server
           {
             var exchangeDocumentInfo = ExchangeDocumentInfos.As(Sungero.Exchange.PublicFunctions.ExchangeDocumentInfo.GetExDocumentInfoByExternalId(box, serviceDocument.ServiceEntityId));
             exchangeDocumentInfo.PurchaseOrder = purchaseOrderElement.Attribute("Значен").Value;
+            exchangeDocumentInfo.CheckStatus = CheckStatus.Required;
             exchangeDocumentInfo.Save();
           }
         }

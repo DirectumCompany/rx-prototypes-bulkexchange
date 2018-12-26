@@ -20,8 +20,8 @@ namespace Sungero.BulkExchangeSolution.Module.Exchange.Server
     /// </summary>
     public virtual void CheckDocuments()
     {
-      var documentsInfos = ExchangeDocumentInfos.GetAll(d => (d.CheckStatus == CheckStatus.Required) && d.PurchaseOrder != null)
-        .ToList();
+      var documentsInfos =
+        ExchangeDocumentInfos.GetAll(d => (d.CheckStatus == CheckStatus.Required) && d.PurchaseOrder != null);
       foreach (var documentsInfo in documentsInfos)
       {
         var document = AccountingDocumentBases.As(documentsInfo.Document);
@@ -32,28 +32,24 @@ namespace Sungero.BulkExchangeSolution.Module.Exchange.Server
         if (document.IsAdjustment == true || Equals(document.Note.ToLowerInvariant().Trim(), "проведено"))
           documentsInfo.CheckStatus = CheckStatus.Completed;
 
-        if (documentsInfo.CheckStatus == CheckStatus.Required)
+        if (documentsInfo.CheckStatus == CheckStatus.Required && Calendar.Now - document.Created > TimeSpan.FromHours(1))
         {
           var subject = "Не пройдена проверка:";
-          if (Calendar.Now - document.Created > TimeSpan.FromHours(1))
+          if (documentsInfo.CheckTask != null && documentsInfo.CheckTask.Status == Workflow.Task.Status.InProcess)
+            continue;
+          if (documentsInfo.CheckTask != null && documentsInfo.CheckTask.Status == Workflow.Task.Status.Completed &&
+              this.IsCheckDocumentCompleted(document))
+            documentsInfo.CheckStatus = CheckStatus.Completed;
+          else
           {
-            if (documentsInfo.CheckTask != null && documentsInfo.CheckTask.Status == Workflow.Task.Status.InProcess)
-              continue;
-            if (documentsInfo.CheckTask != null && documentsInfo.CheckTask.Status == Workflow.Task.Status.Completed &&
-                this.IsCheckDocumentCompleted(document))
-              documentsInfo.CheckStatus = CheckStatus.Completed;
-            else
-            {
-              var task = SimpleTasks.Create(subject + " " + document.Name, Calendar.Today.AddWorkingDays(1),
-                ExchangeCore.PublicFunctions.BoxBase.GetExchangeDocumentResponsible(documentsInfo.RootBox,
-                  documentsInfo.Counterparty));
-              task.Attachments.Add(documentsInfo.Document);
-              task.Start();
-              documentsInfo.CheckTask = task;
-            }
+            var task = SimpleTasks.Create(subject + " " + document.Name, Calendar.Today.AddWorkingDays(1),
+              ExchangeCore.PublicFunctions.BoxBase.GetExchangeDocumentResponsible(documentsInfo.RootBox,
+                documentsInfo.Counterparty));
+            task.Attachments.Add(documentsInfo.Document);
+            task.Start();
+            documentsInfo.CheckTask = task;
           }
         }
-
         documentsInfo.Save();
       }
     }
