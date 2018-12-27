@@ -70,6 +70,14 @@
       "GenerateHandler": true,
       "MonthSchedule": "Monthly",
       "TimePeriod": 30
+    },
+    {
+      "NameGuid": "317b0658-e0bb-4733-ac3c-df0b52ae95bf",
+      "Name": "SendSignedDocuments",
+      "Daily": "Repeat",
+      "GenerateHandler": true,
+      "MonthSchedule": "Monthly",
+      "TimePeriod": 10
     }
   ],
   "LayeredFromGuid": "cec41b99-da21-422f-9332-0fbc423e95c0",

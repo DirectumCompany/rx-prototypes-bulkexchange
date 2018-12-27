@@ -41,7 +41,20 @@ namespace Sungero.BulkExchangeSolution.Module.Exchange.Server
       
       return ExchangeDocumentInfos.GetAll()
         .Where(x => boxes.Contains(x.RootBox) && x.CheckStatus == ExchangeDocumentInfo.CheckStatus.Completed && x.PurchaseOrder != null && x.ExchangeState == ExchangeDocumentInfo.ExchangeState.SignRequired &&
-              x.SignStatus == ExchangeDocumentInfo.SignStatus.Required);
+               x.SignStatus == ExchangeDocumentInfo.SignStatus.Required);
+    }
+    
+    [Remote(IsPure = true)]
+    public virtual IQueryable<IExchangeDocumentInfo> GetSignedAndNotSendedDocuments()
+    {
+      var boxes = Sungero.ExchangeCore.PublicFunctions.BusinessUnitBox.Remote.GetConnectedBoxes().Where(r => BusinessUnitBoxes.As(r).SignDocumentCertificate != null).ToList();
+      
+      return ExchangeDocumentInfos.GetAll()
+        .Where(x => boxes.Contains(x.RootBox)
+               && x.CheckStatus == ExchangeDocumentInfo.CheckStatus.Completed
+               && x.PurchaseOrder != null && x.ExchangeState == ExchangeDocumentInfo.ExchangeState.SignRequired
+               && x.SignStatus == ExchangeDocumentInfo.SignStatus.Signed
+               && x.ReceiverSignId == null);
     }
   }
 }

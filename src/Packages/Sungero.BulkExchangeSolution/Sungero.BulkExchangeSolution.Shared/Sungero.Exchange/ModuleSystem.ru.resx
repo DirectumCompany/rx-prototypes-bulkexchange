@@ -126,4 +126,10 @@
   <data name="JobDisplayName_5db5338d6db74463881981587d164a5c" xml:space="preserve">
     <value>Электронный обмен. Сверка документов с системой учета.</value>
   </data>
+  <data name="JobDisplayName_317b0658e0bb4733ac3cdf0b52ae95bf" xml:space="preserve">
+    <value>Электронный обмен. Отправка подписанных документов</value>
+  </data>
+  <data name="JobDescription_317b0658e0bb4733ac3cdf0b52ae95bf" xml:space="preserve">
+    <value>Отправка подписей и ответных титулов по документам из сервиса обмена</value>
+  </data>
 </root>
