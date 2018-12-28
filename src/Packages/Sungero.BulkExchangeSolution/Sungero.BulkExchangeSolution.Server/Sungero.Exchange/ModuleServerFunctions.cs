@@ -56,5 +56,35 @@ namespace Sungero.BulkExchangeSolution.Module.Exchange.Server
                && x.SignStatus == ExchangeDocumentInfo.SignStatus.Signed
                && x.ReceiverSignId == null);
     }
+    
+    /// <summary>
+    /// Связать документы.
+    /// </summary>
+    /// <param name="document">Документ.</param>
+    /// <param name="relatedExchangeDocumentInfo">Информация о связываемом документе обмена.</param>
+    public override void AddRelations(Docflow.IOfficialDocument document, Sungero.Exchange.IExchangeDocumentInfo relatedExchangeDocumentInfo)
+    {
+      var relatedDocument = relatedExchangeDocumentInfo.Document;
+      var docInfos = Sungero.BulkExchangeSolution.ExchangeDocumentInfos.GetAll()
+        .Where(i => Equals(i.ServiceMessageId, relatedExchangeDocumentInfo.ServiceMessageId));
+      
+      var dop = Docflow.AccountingDocumentBase.FormalizedFunction.Dop;
+      var schf = Docflow.AccountingDocumentBase.FormalizedFunction.Schf;
+      
+      var documentFormalizedFunction = Docflow.AccountingDocumentBases.Is(document) ?
+        Docflow.AccountingDocumentBases.As(document).FormalizedFunction :
+        null;
+      
+      var relatedDocumentFormalizedFunction = Docflow.AccountingDocumentBases.Is(relatedDocument) ?
+        Docflow.AccountingDocumentBases.As(relatedDocument).FormalizedFunction :
+        null;
+      
+      if (docInfos.Count() < 3 && documentFormalizedFunction == dop && relatedDocumentFormalizedFunction == schf)
+        document.Relations.AddOrUpdate(Sungero.Exchange.Constants.Module.AddendumRelationName, null, relatedDocument);
+      else if(docInfos.Count() < 3 && documentFormalizedFunction == schf && relatedDocumentFormalizedFunction == dop)
+        document.Relations.AddFromOrUpdate(Sungero.Exchange.Constants.Module.AddendumRelationName, null, relatedDocument);
+      else
+        document.Relations.AddFromOrUpdate(Sungero.Exchange.Constants.Module.SimpleRelationRelationName, null, relatedDocument);
+    }
   }
 }
