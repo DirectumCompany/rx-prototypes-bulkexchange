@@ -117,4 +117,25 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="CheckSuccessful" xml:space="preserve">
+    <value>TODO</value>
+  </data>
+  <data name="CheckFailed" xml:space="preserve">
+    <value>TODO</value>
+  </data>
+  <data name="DocumentSetError" xml:space="preserve">
+    <value>TODO</value>
+  </data>
+  <data name="DocumentsSummaryError" xml:space="preserve">
+    <value>TODO</value>
+  </data>
+  <data name="SummaryIsTooBig" xml:space="preserve">
+    <value>TODO</value>
+  </data>
+  <data name="CurrencyError" xml:space="preserve">
+    <value>TODO</value>
+  </data>
+  <data name="RubAlphaCode" xml:space="preserve">
+    <value>RUB</value>
+  </data>
 </root>

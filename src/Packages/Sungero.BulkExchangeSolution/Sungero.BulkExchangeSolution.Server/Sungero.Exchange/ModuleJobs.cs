@@ -2,14 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using Sungero.BulkExchangeSolution.ExchangeDocumentInfo;
+using Sungero.Commons;
 using Sungero.Core;
-using Sungero.CoreEntities;
 using Sungero.Docflow;
-using Sungero.Docflow.AccountingDocumentBase;
+using Sungero.Exchange;
 using Sungero.FinancialArchive;
-using Sungero.Workflow;
-using Sungero.Workflow.Server;
-using Sungero.Workflow.SimpleTask;
+using Sungero.FinancialArchive.UniversalTransferDocument;
+using FormalizedFunction = Sungero.Docflow.AccountingDocumentBase.FormalizedFunction;
 
 namespace Sungero.BulkExchangeSolution.Module.Exchange.Server
 {
@@ -50,32 +49,73 @@ namespace Sungero.BulkExchangeSolution.Module.Exchange.Server
         ExchangeDocumentInfos.GetAll(d => (d.CheckStatus == CheckStatus.Required) && d.PurchaseOrder != null);
       foreach (var documentsInfo in documentsInfos)
       {
+        var result = true;
+        var reason = string.Empty;
         var document = AccountingDocumentBases.As(documentsInfo.Document);
-        if (UniversalTransferDocuments.Is(document) ||
-            Waybills.Is(document) && document.Relations.GetRelated().FirstOrDefault(IncomingTaxInvoices.Is) != null)
-          documentsInfo.CheckStatus = document.TotalAmount < 100000 ? CheckStatus.Completed : CheckStatus.Required;
-        
-        if (document.IsAdjustment == true || Equals(document.Note.ToLowerInvariant().Trim(), "проведено"))
-          documentsInfo.CheckStatus = CheckStatus.Completed;
 
-        if (documentsInfo.CheckStatus == CheckStatus.Required && Calendar.Now - document.Created > TimeSpan.FromHours(1))
+        if (UniversalTransferDocuments.Is(document) && (document.FormalizedFunction == FormalizedFunction.SchfDop) ||
+            document.FormalizedFunction == FormalizedFunction.Dop &&
+            document.Relations.GetRelated().FirstOrDefault(IncomingTaxInvoices.Is) != null)
         {
-          var subject = "Не пройдена проверка:";
-          if (documentsInfo.CheckTask != null && documentsInfo.CheckTask.Status == Workflow.Task.Status.InProcess)
-            continue;
-          if (documentsInfo.CheckTask != null && documentsInfo.CheckTask.Status == Workflow.Task.Status.Completed &&
-              this.IsCheckDocumentCompleted(document))
-            documentsInfo.CheckStatus = CheckStatus.Completed;
-          else
+          if (document.Currency != Currencies.GetAll().FirstOrDefault(x => x.AlphaCode == Sungero.BulkExchangeSolution.Module.Exchange.Resources.RubAlphaCode))
           {
-            var task = SimpleTasks.Create(subject + " " + document.Name, Calendar.Today.AddWorkingDays(1),
-                                          ExchangeCore.PublicFunctions.BoxBase.GetExchangeDocumentResponsible(documentsInfo.RootBox,
-                                                                                                              documentsInfo.Counterparty));
-            task.Attachments.Add(documentsInfo.Document);
-            task.Start();
-            documentsInfo.CheckTask = task;
+            result = false;
+            reason = Sungero.BulkExchangeSolution.Module.Exchange.Resources.CurrencyError;
+          }
+
+          if (document.TotalAmount >= 100000)
+          {
+            result = false;
+            reason = Sungero.BulkExchangeSolution.Module.Exchange.Resources.SummaryIsTooBig;
+          }
+
+          if (document.Relations.GetRelated().FirstOrDefault(IncomingTaxInvoices.Is) != null && document.TotalAmount != AccountingDocumentBases
+                .As(document.Relations.GetRelated().FirstOrDefault(IncomingTaxInvoices.Is)).TotalAmount)
+          {
+            result = false;
+            reason = Sungero.BulkExchangeSolution.Module.Exchange.Resources.DocumentsSummaryError;
           }
         }
+        else
+        {
+          result = false;
+          reason = Sungero.BulkExchangeSolution.Module.Exchange.Resources.DocumentSetError;
+        }
+
+        if (!result)
+        {
+          var subject = Sungero.BulkExchangeSolution.Module.Exchange.Resources.CheckFailedFormat(documentsInfo.Id);
+          Logger.Error(subject + reason);
+          if (Calendar.Now - document.Created > TimeSpan.FromHours(1))
+          {
+            if (documentsInfo.CheckTask != null && documentsInfo.CheckTask.Status == Workflow.Task.Status.InProcess)
+              continue;
+            if (documentsInfo.CheckTask != null && documentsInfo.CheckTask.Status == Workflow.Task.Status.Completed &&
+                this.IsCheckDocumentCompleted(document))
+              documentsInfo.CheckStatus = CheckStatus.Completed;
+            else
+            {
+              var task = Sungero.Exchange.PublicFunctions.Module.Remote.CreateExchangeTask(documentsInfo.RootBox,
+                documentsInfo.Counterparty,
+                documentsInfo.MessageDate.Value, true);
+              task.NeedSigning.All.Add(documentsInfo.Document);
+              task.ActiveText = subject;
+              task.ActiveText += reason;
+
+              task.Start();
+              documentsInfo.CheckTask = task;
+            }
+          }
+        }
+
+        if (result)
+        {
+          documentsInfo.CheckStatus = CheckStatus.Completed;
+          Logger.Debug(Sungero.BulkExchangeSolution.Module.Exchange.Resources.CheckReturnRevocationResultFormat(documentsInfo.Id));
+        }
+        else
+          documentsInfo.CheckStatus = CheckStatus.Required;
+
         documentsInfo.Save();
       }
     }

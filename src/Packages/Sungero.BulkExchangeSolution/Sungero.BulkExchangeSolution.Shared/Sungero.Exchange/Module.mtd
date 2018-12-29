@@ -95,7 +95,15 @@
   "PublicStructures": [],
   "ResourceInterfaceAssemblyName": "Sungero.Domain.Interfaces",
   "ResourceInterfaceNamespace": "Sungero.BulkExchangeSolution.Module.Exchange",
-  "ResourcesKeys": [],
+  "ResourcesKeys": [
+    "CheckSuccessful",
+    "CheckFailed",
+    "DocumentSetError",
+    "DocumentsSummaryError",
+    "SummaryIsTooBig",
+    "CurrencyError",
+    "RubAlphaCode"
+  ],
   "SpecialFolders": [],
   "Version": "3.1.1.1",
   "Widgets": [],
