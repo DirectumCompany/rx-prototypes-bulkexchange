@@ -91,27 +91,52 @@ namespace Sungero.BulkExchangeSolution.Module.Exchange.Server
         document.Relations.AddFromOrUpdate(Sungero.Exchange.Constants.Module.SimpleRelationRelationName, null, relatedDocument);
     }
     
+    /// <summary>
+    /// Получить комплект документов.
+    /// </summary>
+    /// <param name="box">Ящик, через который пришел комплект документов.</param>
+    /// <param name="messageId">Сообщение, в котором был получен комплект.</param>
+    /// <returns>Структура с комплектом - признак полноты и инфошки. Может быть null, если в сообщении нет никаких признаков комплекта.</returns>
     public virtual Structures.Module.DocumentSet GetDocumentSet(Sungero.ExchangeCore.IBusinessUnitBox box, string messageId)
     {
+      // Берем все инфошки по сообщению - нам надо их проанализировать.
       var infos = Sungero.BulkExchangeSolution.ExchangeDocumentInfos.GetAll(i => Equals(i.RootBox, box) && i.ServiceMessageId == messageId).ToList();
-      var uniquePurchaseOrder = infos.Select(i => i.PurchaseOrder).Distinct().Count() == 1;
-      if (!uniquePurchaseOrder)
+
+      // Берем уникальный признак решения - номер заказа.
+      var uniquePurchaseOrders = infos.Select(i => i.PurchaseOrder).Distinct().ToList();
+      
+      // Если номера заказа в сообщении нет - комплекта тоже нет.
+      if (uniquePurchaseOrders.All(po => string.IsNullOrWhiteSpace(po)))
         return null;
+      
+      // Если в сообщении упомянуты разные номера заказов - комплект "некорректный".
+      if (uniquePurchaseOrders.Count > 1)
+        return Structures.Module.DocumentSet.Create(false, infos);
       
       if (infos.Count == 1)
       {
+        // Если в сообщении только один документ и он с функцией СЧФДОП - это "корректный" комплект.
         var full = this.ExchangeDocumentInfoHasFunction(infos.Single(), Docflow.AccountingDocumentBase.FormalizedFunction.SchfDop);
         return Structures.Module.DocumentSet.Create(full, infos);
       }
       else if (infos.Count == 2)
       {
+        // Если в сообщении только два документа и это СЧФ и ДОП - это "корректный" комплект.
         var hasSchf = infos.Any(i => this.ExchangeDocumentInfoHasFunction(i, Docflow.AccountingDocumentBase.FormalizedFunction.Schf));
         var hasDop = infos.Any(i => this.ExchangeDocumentInfoHasFunction(i, Docflow.AccountingDocumentBase.FormalizedFunction.Dop));
         return Structures.Module.DocumentSet.Create(hasSchf && hasDop, infos);
       }
+      
+      // Во всех остальных случаях - комплект считаем "некорректным".
       return Structures.Module.DocumentSet.Create(false, infos);
     }
     
+    /// <summary>
+    /// Проверка инфошки на требования комплекта -- функции.
+    /// </summary>
+    /// <param name="info">Инфошка.</param>
+    /// <param name="function">Функция (СЧФ, ДОП, СЧФДОП).</param>
+    /// <returns>True, если документ по инфошке с указанной функцией.</returns>
     public virtual bool ExchangeDocumentInfoHasFunction(Sungero.BulkExchangeSolution.IExchangeDocumentInfo info, Sungero.Core.Enumeration function)
     {
       var document = Docflow.AccountingDocumentBases.As(info.Document);
