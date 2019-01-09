@@ -25,7 +25,8 @@ namespace Sungero.BulkExchangeSolution.Module.Exchange.Server
           {
             var exchangeDocumentInfo = ExchangeDocumentInfos.As(Sungero.Exchange.PublicFunctions.ExchangeDocumentInfo.GetExDocumentInfoByExternalId(box, serviceDocument.ServiceEntityId));
             exchangeDocumentInfo.PurchaseOrder = purchaseOrderElement.Attribute("Значен").Value;
-            exchangeDocumentInfo.CheckStatus = CheckStatus.Required;
+            exchangeDocumentInfo.
+              = CheckStatus.Required;
             exchangeDocumentInfo.Save();
           }
           var caseFile = Docflow.CaseFiles.GetAll(c => c.Status == Docflow.CaseFile.Status.Active).FirstOrDefault();
@@ -88,6 +89,37 @@ namespace Sungero.BulkExchangeSolution.Module.Exchange.Server
         document.Relations.AddFromOrUpdate(Sungero.Exchange.Constants.Module.AddendumRelationName, null, relatedDocument);
       else
         document.Relations.AddFromOrUpdate(Sungero.Exchange.Constants.Module.SimpleRelationRelationName, null, relatedDocument);
+    }
+    
+    public virtual Structures.Module.DocumentSet GetDocumentSet(Sungero.ExchangeCore.IBusinessUnitBox box, string messageId)
+    {
+      var infos = Sungero.BulkExchangeSolution.ExchangeDocumentInfos.GetAll(i => Equals(i.RootBox, box) && i.ServiceMessageId == messageId).ToList();
+      var uniquePurchaseOrder = infos.Select(i => i.PurchaseOrder).Distinct().Count() == 1;
+      if (!uniquePurchaseOrder)
+        return null;
+      
+      if (infos.Count == 1)
+      {
+        var full = this.ExchangeDocumentInfoHasFunction(infos.Single(), Docflow.AccountingDocumentBase.FormalizedFunction.SchfDop);
+        return Structures.Module.DocumentSet.Create(full, infos);
+      }
+      else if (infos.Count == 2)
+      {
+        var hasSchf = infos.Any(i => this.ExchangeDocumentInfoHasFunction(i, Docflow.AccountingDocumentBase.FormalizedFunction.Schf));
+        var hasDop = infos.Any(i => this.ExchangeDocumentInfoHasFunction(i, Docflow.AccountingDocumentBase.FormalizedFunction.Dop));
+        return Structures.Module.DocumentSet.Create(hasSchf && hasDop, infos);
+      }
+      return Structures.Module.DocumentSet.Create(false, infos);
+    }
+    
+    public virtual bool ExchangeDocumentInfoHasFunction(Sungero.BulkExchangeSolution.IExchangeDocumentInfo info, Sungero.Core.Enumeration function)
+    {
+      var document = Docflow.AccountingDocumentBases.As(info.Document);
+      
+      if (document == null)
+        return false;
+      
+      return document.FormalizedFunction == function;
     }
   }
 }
