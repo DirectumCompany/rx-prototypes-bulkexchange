@@ -28,6 +28,9 @@ namespace Sungero.BulkExchangeSolution.Module.Exchange.Server
             exchangeDocumentInfo.CheckStatus = CheckStatus.Required;
             exchangeDocumentInfo.Save();
           }
+          var caseFile = Docflow.CaseFiles.GetAll(c => c.Status == Docflow.CaseFile.Status.Active).FirstOrDefault();
+          document.CaseFile = caseFile;
+          document.Save();
         }
       }
       return document;
