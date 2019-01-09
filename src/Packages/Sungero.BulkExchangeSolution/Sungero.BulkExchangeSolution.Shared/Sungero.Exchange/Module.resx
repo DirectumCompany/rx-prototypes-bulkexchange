@@ -120,9 +120,6 @@
   <data name="CheckSuccessful" xml:space="preserve">
     <value>TODO</value>
   </data>
-  <data name="CheckFailed" xml:space="preserve">
-    <value>TODO</value>
-  </data>
   <data name="DocumentSetError" xml:space="preserve">
     <value>TODO</value>
   </data>
@@ -137,5 +134,8 @@
   </data>
   <data name="RubAlphaCode" xml:space="preserve">
     <value>RUB</value>
+  </data>
+  <data name="CheckFailed" xml:space="preserve">
+    <value>TODO</value>
   </data>
 </root>

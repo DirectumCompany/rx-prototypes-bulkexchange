@@ -40,7 +40,7 @@
         {
           "NameGuid": "24e62a85-dddb-4a2a-9b6e-f0876c3fc3e4",
           "Name": "Required",
-          "Code": "CheckRequired"
+          "Code": "Required"
         },
         {
           "NameGuid": "9740773c-2ffa-45a8-ac65-8d6f5616edd1",

@@ -84,7 +84,7 @@ namespace Sungero.BulkExchangeSolution.Module.Exchange.Server
 
         if (!result)
         {
-          var subject = Sungero.BulkExchangeSolution.Module.Exchange.Resources.CheckFailedFormat(documentsInfo.Id);
+          var subject = string.Format(Sungero.BulkExchangeSolution.Module.Exchange.Resources.CheckFailed + " exchangeDocumentInfoId={0} ", documentsInfo.Id);
           Logger.Error(subject + reason);
           if (Calendar.Now - document.Created > TimeSpan.FromHours(1))
           {
@@ -99,7 +99,7 @@ namespace Sungero.BulkExchangeSolution.Module.Exchange.Server
                 documentsInfo.Counterparty,
                 documentsInfo.MessageDate.Value, true);
               task.NeedSigning.All.Add(documentsInfo.Document);
-              task.ActiveText = subject;
+              task.ActiveText = Resources.CheckFailed;
               task.ActiveText += reason;
 
               task.Start();

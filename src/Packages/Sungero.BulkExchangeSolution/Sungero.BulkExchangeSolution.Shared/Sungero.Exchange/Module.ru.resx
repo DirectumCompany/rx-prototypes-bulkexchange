@@ -120,9 +120,6 @@
   <data name="CheckSuccessful" xml:space="preserve">
     <value>id = {0} проверка успешно пройдена</value>
   </data>
-  <data name="CheckFailed" xml:space="preserve">
-    <value>Не пройдена проверка с id={0}: </value>
-  </data>
   <data name="DocumentSetError" xml:space="preserve">
     <value>Ошибочный комплект документов</value>
   </data>
@@ -133,9 +130,12 @@
     <value>Сумма должна быть меньше 100 000 рублей</value>
   </data>
   <data name="CurrencyError" xml:space="preserve">
-    <value>Валюта документа должна быть Российский рубль</value>
+    <value>Валюта документа должна быть в российских рублях</value>
   </data>
   <data name="RubAlphaCode" xml:space="preserve">
     <value>RUB</value>
+  </data>
+  <data name="CheckFailed" xml:space="preserve">
+    <value>Не пройдена проверка: </value>
   </data>
 </root>
