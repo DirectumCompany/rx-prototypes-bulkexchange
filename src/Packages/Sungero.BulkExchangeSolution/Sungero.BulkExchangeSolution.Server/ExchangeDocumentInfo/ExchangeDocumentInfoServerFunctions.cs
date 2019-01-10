@@ -4,6 +4,7 @@ using System.Linq;
 using Sungero.Core;
 using Sungero.CoreEntities;
 using Sungero.BulkExchangeSolution.ExchangeDocumentInfo;
+using Sungero.BulkExchangeSolution.Module.Exchange.Server;
 
 namespace Sungero.BulkExchangeSolution.Server
 {
@@ -91,6 +92,16 @@ namespace Sungero.BulkExchangeSolution.Server
         return false;
       
       return document.FormalizedFunction == function;
+    }
+    
+    /// <summary>
+    /// Отпралять задания/уведомления ответственному.
+    /// </summary>
+    /// <returns>Признак отправки задания ответсвенному за ящик.</returns>
+    [Public]
+    public override bool NeedReceiveTask()
+    {
+      return _obj.PurchaseOrder != null;
     }
   }
 }
