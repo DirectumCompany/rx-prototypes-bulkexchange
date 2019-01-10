@@ -47,17 +47,18 @@ namespace Sungero.BulkExchangeSolution.Module.Exchange.Server
                x.SignStatus == ExchangeDocumentInfo.SignStatus.Required);
     }
     
-    [Remote(IsPure = true)]
-    public virtual IQueryable<IExchangeDocumentInfo> GetSignedAndNotSendedDocuments()
+    public virtual List<Structures.Exchange.ExchangeDocumentInfo.DocumentSet> GetSignedAndNotSendedDocumentSets()
     {
       var boxes = Sungero.ExchangeCore.PublicFunctions.BusinessUnitBox.Remote.GetConnectedBoxes().Where(r => BusinessUnitBoxes.As(r).SignDocumentCertificate != null).ToList();
       
-      return ExchangeDocumentInfos.GetAll()
+      var infos = ExchangeDocumentInfos.GetAll()
         .Where(x => boxes.Contains(x.RootBox)
                && x.CheckStatus == ExchangeDocumentInfo.CheckStatus.Completed
-               && x.PurchaseOrder != null && x.ExchangeState == ExchangeDocumentInfo.ExchangeState.SignRequired
+               && x.ExchangeState == ExchangeDocumentInfo.ExchangeState.SignRequired
                && x.SignStatus == ExchangeDocumentInfo.SignStatus.Signed
                && x.ReceiverSignId == null);
+      
+      return BulkExchangeSolution.Functions.ExchangeDocumentInfo.GetDocumentSets(infos.ToList()).Where(s => s.IsFullSet).ToList();
     }
     
     /// <summary>

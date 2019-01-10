@@ -20,23 +20,28 @@ namespace Sungero.BulkExchangeSolution.Module.Exchange.Server
     /// </summary>
     public virtual void SendSignedDocuments()
     {
-      var infos = Functions.Module.GetSignedAndNotSendedDocuments();
-      var boxes = infos.GroupBy(i => i.RootBox);
-      foreach (var box in boxes)
+      var documentSets = Functions.Module.GetSignedAndNotSendedDocumentSets();
+      foreach (var documentSet in documentSets)
       {
-        var counterparties = box.GroupBy(i => i.Counterparty);
-        foreach (var counterpartyGroup in counterparties)
-        {
-          try
+        Transactions.Execute(
+          () =>
           {
-            var documents = counterpartyGroup.Select(g => g.Document).ToList();
-            Sungero.Exchange.PublicFunctions.Module.Remote.SendAnswers(documents, box.Key, counterpartyGroup.Key, BusinessUnitBoxes.As(box.Key).SignDocumentCertificate);
-          }
-          catch (AppliedCodeException ex)
-          {
-            Logger.Debug(ex.ToString());
-          }
-        }
+            Logger.DebugFormat("Process document set with infos {0}", string.Join(", ", documentSet.ExchangeDocumentInfos.Select(i => i.Id)));
+            var boxes = documentSet.ExchangeDocumentInfos.GroupBy(i => i.RootBox);
+            foreach (var box in boxes)
+            {
+              var counterparties = box.GroupBy(i => i.Counterparty);
+              foreach (var counterpartyGroup in counterparties)
+              {
+                var businessUnitBox = BusinessUnitBoxes.As(box.Key);
+                var counterparty = counterpartyGroup.Key;
+                var documents = counterpartyGroup.Select(g => g.Document).ToList();
+                Logger.DebugFormat("Try to send answer to documents {0}. Box {1}, counterparty {2}, certificate {3}.",
+                                   string.Join(", ", documents.Select(d => d.Id)), businessUnitBox.Id, counterparty.Id, businessUnitBox.SignDocumentCertificate.Id);
+                Sungero.Exchange.PublicFunctions.Module.Remote.SendAnswers(documents, businessUnitBox, counterparty, businessUnitBox.SignDocumentCertificate);
+              }
+            }
+          });
       }
     }
     
@@ -70,7 +75,7 @@ namespace Sungero.BulkExchangeSolution.Module.Exchange.Server
           }
 
           if (document.Relations.GetRelated().FirstOrDefault(IncomingTaxInvoices.Is) != null && document.TotalAmount != AccountingDocumentBases
-                .As(document.Relations.GetRelated().FirstOrDefault(IncomingTaxInvoices.Is)).TotalAmount)
+              .As(document.Relations.GetRelated().FirstOrDefault(IncomingTaxInvoices.Is)).TotalAmount)
           {
             result = false;
             reason = Sungero.BulkExchangeSolution.Module.Exchange.Resources.DocumentsSummaryError;
@@ -96,8 +101,8 @@ namespace Sungero.BulkExchangeSolution.Module.Exchange.Server
             else
             {
               var task = Sungero.Exchange.PublicFunctions.Module.Remote.CreateExchangeTask(documentsInfo.RootBox,
-                documentsInfo.Counterparty,
-                documentsInfo.MessageDate.Value, true);
+                                                                                           documentsInfo.Counterparty,
+                                                                                           documentsInfo.MessageDate.Value, true);
               task.NeedSigning.All.Add(documentsInfo.Document);
               task.ActiveText = Resources.CheckFailed;
               task.ActiveText += reason;
