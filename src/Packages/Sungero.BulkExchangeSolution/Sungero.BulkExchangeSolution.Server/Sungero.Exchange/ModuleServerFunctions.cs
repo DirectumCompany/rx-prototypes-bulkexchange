@@ -2,8 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using Sungero.BulkExchangeSolution.ExchangeDocumentInfo;
+using Sungero.Commons;
 using Sungero.Core;
 using Sungero.CoreEntities;
+using Sungero.Docflow;
+using Sungero.Workflow;
 
 namespace Sungero.BulkExchangeSolution.Module.Exchange.Server
 {
@@ -96,5 +99,93 @@ namespace Sungero.BulkExchangeSolution.Module.Exchange.Server
       
       document.Relations.AddFromOrUpdate(Sungero.Exchange.Constants.Module.SimpleRelationRelationName, null, relatedDocument);
     }
+
+    public void CheckDocumentSet(Structures.Exchange.ExchangeDocumentInfo.DocumentSet documentSet)
+    {
+      var totalAmount = Sungero.Docflow.AccountingDocumentBases.As(documentSet.ExchangeDocumentInfos.FirstOrDefault().Document).TotalAmount;
+      var result = true;
+      var reason = string.Empty;
+      var documents = new List<IOfficialDocument>();
+      
+      foreach (var documentInfo in documentSet.ExchangeDocumentInfos)
+      {
+        documents.Add(documentInfo.Document);
+        var document = AccountingDocumentBases.As(documentInfo.Document);
+        if (document.TotalAmount != totalAmount)
+        {
+          result = false;
+          reason = Resources.DocumentsTotalAmountError;
+        }
+
+        var rubCurrency = Currencies.GetAll().FirstOrDefault(x =>
+                                                             string.Equals(x.AlphaCode, Sungero.BulkExchangeSolution.Module.Exchange.Resources.RubAlphaCode,
+                                                                           StringComparison.InvariantCultureIgnoreCase));
+        
+        if (!Equals(document.Currency, rubCurrency) || document.TotalAmount >= 100000)
+        {
+          result = false;
+          reason = Resources.TotalAmountIsTooBig;
+        }
+      }
+
+      var logMessage = Sungero.BulkExchangeSolution.Module.Exchange.Resources.DocumentSetWithIDs.ToString();
+      for (int i = 0; i < documents.Count; i++)
+        logMessage += i == 0 ? documents[i].Id.ToString() : documents[i].Id + ", ";
+      
+      if (!result)
+      {
+        var documentInfo = documentSet.ExchangeDocumentInfos.FirstOrDefault(x => Sungero.FinancialArchive.UniversalTransferDocuments.Is(x.Document));
+        var task = documentInfo.CheckTask;
+        if ((task == null || task != null && task.Status == Workflow.Task.Status.Completed) &&
+            this.IsCheckDocumentCompleted(OfficialDocuments.As(documentInfo.Document)))
+          result = true;
+        //TODO: Create task by documentSet with override function
+        if (task == null || task.Status != Workflow.Task.Status.InProcess)
+        {
+          var createTime = documentSet.ExchangeDocumentInfos.Select(x => x.Document.Created).Max();
+//          var processingTask = this.CreateExchangeTask(documentInfo.RootBox, documentInfo.Counterparty, documentInfo.);
+        }
+      }
+      
+      logMessage += result ? Sungero.BulkExchangeSolution.Module.Exchange.Resources.CheckSuccess : Sungero.BulkExchangeSolution.Module.Exchange.Resources.CheckFail + reason;
+      Logger.Debug(logMessage);
+      
+      foreach (var documentInfo in documentSet.ExchangeDocumentInfos)
+      {
+        if (result)
+        {
+          documentInfo.CheckStatus = CheckStatus.Completed;
+          documentInfo.CheckFailReason = null;
+        }
+        else
+        {
+          documentInfo.CheckFailReason = reason;
+          documentInfo.CheckStatus = CheckStatus.Required;
+        }
+        documentInfo.Save();
+      }
+    }
+    
+    public override Sungero.Exchange.IExchangeDocumentProcessingTask CreateExchangeTask(Sungero.ExchangeCore.IBoxBase box,
+                                                                       object messageUntyped,
+                                                                       Parties.ICounterparty sender,
+                                                                       bool isIncoming,
+                                                                       List<Sungero.Docflow.IOfficialDocument> needSign,
+                                                                       List<Sungero.Docflow.IOfficialDocument> signed,
+                                                                       object rejectedUntyped,
+                                                                       List<Sungero.Docflow.IOfficialDocument> dontNeedSign,
+                                                                       string exchangeTaskActiveTextBoundedDocuments)
+    {
+      var task = base.CreateExchangeTask(box, messageUntyped, sender, isIncoming, needSign, signed, rejectedUntyped, dontNeedSign, exchangeTaskActiveTextBoundedDocuments);
+      return task;
+    }
+    
+    private bool IsCheckDocumentCompleted(IOfficialDocument document)
+    {
+      return document != null && (document.ExchangeState == Docflow.OfficialDocument.ExchangeState.Signed || document.ExchangeState == Docflow.OfficialDocument.ExchangeState.Obsolete ||
+                                  document.ExchangeState == Docflow.OfficialDocument.ExchangeState.Rejected || document.ExchangeState == Docflow.OfficialDocument.ExchangeState.Terminated ||
+                                  string.Equals(document.Note.Trim(), "проведено", StringComparison.InvariantCultureIgnoreCase));
+    }
+    
   }
 }

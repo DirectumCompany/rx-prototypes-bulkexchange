@@ -96,13 +96,13 @@
   "ResourceInterfaceAssemblyName": "Sungero.Domain.Interfaces",
   "ResourceInterfaceNamespace": "Sungero.BulkExchangeSolution.Module.Exchange",
   "ResourcesKeys": [
-    "CheckSuccessful",
     "DocumentSetError",
-    "DocumentsSummaryError",
-    "SummaryIsTooBig",
-    "CurrencyError",
+    "DocumentsTotalAmountError",
+    "TotalAmountIsTooBig",
     "RubAlphaCode",
-    "CheckFailed"
+    "CheckSuccess",
+    "CheckFail",
+    "DocumentSetWithIDs"
   ],
   "SpecialFolders": [],
   "Version": "3.1.1.1",

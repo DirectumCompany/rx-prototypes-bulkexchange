@@ -156,4 +156,7 @@
   <data name="Enum_SignStatus_Signed" xml:space="preserve">
     <value>TODO</value>
   </data>
+  <data name="Property_CheckFailReason" xml:space="preserve">
+    <value>CheckFailReaso</value>
+  </data>
 </root>

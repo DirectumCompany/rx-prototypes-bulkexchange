@@ -98,6 +98,14 @@
       ],
       "ListDataBinderTypeName": "Sungero.Presentation.CommonDataBinders.DropDownEditorToEnumerationBinder",
       "PreviousPropertyGuid": "9fdb065a-1584-4804-b42b-7d18af8aa47a"
+    },
+    {
+      "$type": "Sungero.Metadata.StringPropertyMetadata, Sungero.Metadata",
+      "NameGuid": "3b47f7db-2f34-4a02-8886-314daf0bfd6b",
+      "Name": "CheckFailReason",
+      "Code": "CheckFailReaso",
+      "ListDataBinderTypeName": "Sungero.Presentation.CommonDataBinders.StringEditorToStringBinder",
+      "PreviousPropertyGuid": "a0f7bdec-26b7-48c8-befd-39a43a0dc866"
     }
   ],
   "PublicStructures": [],

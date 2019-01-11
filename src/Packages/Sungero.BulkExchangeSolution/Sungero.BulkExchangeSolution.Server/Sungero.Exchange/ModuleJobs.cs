@@ -50,85 +50,12 @@ namespace Sungero.BulkExchangeSolution.Module.Exchange.Server
     /// </summary>
     public virtual void CheckDocuments()
     {
-      var documentsInfos =
-        ExchangeDocumentInfos.GetAll(d => (d.CheckStatus == CheckStatus.Required) && d.PurchaseOrder != null);
-      foreach (var documentsInfo in documentsInfos)
+      var infos = ExchangeDocumentInfos.GetAll(d => (d.CheckStatus == CheckStatus.Required) && d.PurchaseOrder != null);
+      var documentSets = BulkExchangeSolution.Functions.ExchangeDocumentInfo.GetDocumentSets(infos.ToList()).Where(s => s.IsFullSet).ToList();
+      foreach (var documentSet in documentSets)
       {
-        var result = true;
-        var reason = string.Empty;
-        var document = AccountingDocumentBases.As(documentsInfo.Document);
-
-        if (UniversalTransferDocuments.Is(document) && (document.FormalizedFunction == FormalizedFunction.SchfDop) ||
-            document.FormalizedFunction == FormalizedFunction.Dop &&
-            document.Relations.GetRelated().FirstOrDefault(IncomingTaxInvoices.Is) != null)
-        {
-          if (document.Currency != Currencies.GetAll().FirstOrDefault(x => x.AlphaCode == Sungero.BulkExchangeSolution.Module.Exchange.Resources.RubAlphaCode))
-          {
-            result = false;
-            reason = Sungero.BulkExchangeSolution.Module.Exchange.Resources.CurrencyError;
-          }
-
-          if (document.TotalAmount >= 100000)
-          {
-            result = false;
-            reason = Sungero.BulkExchangeSolution.Module.Exchange.Resources.SummaryIsTooBig;
-          }
-
-          if (document.Relations.GetRelated().FirstOrDefault(IncomingTaxInvoices.Is) != null && document.TotalAmount != AccountingDocumentBases
-              .As(document.Relations.GetRelated().FirstOrDefault(IncomingTaxInvoices.Is)).TotalAmount)
-          {
-            result = false;
-            reason = Sungero.BulkExchangeSolution.Module.Exchange.Resources.DocumentsSummaryError;
-          }
-        }
-        else
-        {
-          result = false;
-          reason = Sungero.BulkExchangeSolution.Module.Exchange.Resources.DocumentSetError;
-        }
-
-        if (!result)
-        {
-          var subject = string.Format(Sungero.BulkExchangeSolution.Module.Exchange.Resources.CheckFailed + " exchangeDocumentInfoId={0} ", documentsInfo.Id);
-          Logger.Error(subject + reason);
-          if (Calendar.Now - document.Created > TimeSpan.FromHours(1))
-          {
-            if (documentsInfo.CheckTask != null && documentsInfo.CheckTask.Status == Workflow.Task.Status.InProcess)
-              continue;
-            if (documentsInfo.CheckTask != null && documentsInfo.CheckTask.Status == Workflow.Task.Status.Completed &&
-                this.IsCheckDocumentCompleted(document))
-              documentsInfo.CheckStatus = CheckStatus.Completed;
-            else
-            {
-              var task = Sungero.Exchange.PublicFunctions.Module.Remote.CreateExchangeTask(documentsInfo.RootBox,
-                                                                                           documentsInfo.Counterparty,
-                                                                                           documentsInfo.MessageDate.Value, true);
-              task.NeedSigning.All.Add(documentsInfo.Document);
-              task.ActiveText = Resources.CheckFailed;
-              task.ActiveText += reason;
-
-              task.Start();
-              documentsInfo.CheckTask = task;
-            }
-          }
-        }
-
-        if (result)
-        {
-          documentsInfo.CheckStatus = CheckStatus.Completed;
-          Logger.Debug(Sungero.BulkExchangeSolution.Module.Exchange.Resources.CheckReturnRevocationResultFormat(documentsInfo.Id));
-        }
-        else
-          documentsInfo.CheckStatus = CheckStatus.Required;
-          
-        documentsInfo.Save();
+        Functions.Module.CheckDocumentSet(documentSet);
       }
-    }
-
-    private bool IsCheckDocumentCompleted(IOfficialDocument document)
-    {
-      return document.ExchangeState == Docflow.OfficialDocument.ExchangeState.Signed || document.ExchangeState == Docflow.OfficialDocument.ExchangeState.Obsolete ||
-        document.ExchangeState == Docflow.OfficialDocument.ExchangeState.Rejected || document.ExchangeState == Docflow.OfficialDocument.ExchangeState.Terminated;
     }
   }
 }

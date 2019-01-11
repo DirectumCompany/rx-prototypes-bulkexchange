@@ -117,25 +117,25 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="CheckSuccessful" xml:space="preserve">
-    <value>id = {0} проверка успешно пройдена</value>
-  </data>
   <data name="DocumentSetError" xml:space="preserve">
     <value>Ошибочный комплект документов</value>
   </data>
-  <data name="DocumentsSummaryError" xml:space="preserve">
+  <data name="DocumentsTotalAmountError" xml:space="preserve">
     <value>Суммы документов должны быть одинаковыми</value>
   </data>
-  <data name="SummaryIsTooBig" xml:space="preserve">
-    <value>Сумма должна быть меньше 100 000 рублей</value>
-  </data>
-  <data name="CurrencyError" xml:space="preserve">
-    <value>Валюта документа должна быть в российских рублях</value>
+  <data name="TotalAmountIsTooBig" xml:space="preserve">
+    <value>Сумма должна быть меньше 100 000 российских рублей</value>
   </data>
   <data name="RubAlphaCode" xml:space="preserve">
     <value>RUB</value>
   </data>
-  <data name="CheckFailed" xml:space="preserve">
-    <value>Не пройдена проверка: </value>
+  <data name="CheckSuccess" xml:space="preserve">
+    <value>) успешно прошел проверку: </value>
+  </data>
+  <data name="CheckFail" xml:space="preserve">
+    <value>) не прошел проверку: </value>
+  </data>
+  <data name="DocumentSetWithIDs" xml:space="preserve">
+    <value>Комплект с документами (id </value>
   </data>
 </root>
