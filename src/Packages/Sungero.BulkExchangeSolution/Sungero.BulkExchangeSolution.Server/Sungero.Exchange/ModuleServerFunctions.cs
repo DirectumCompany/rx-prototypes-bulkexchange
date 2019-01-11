@@ -12,7 +12,7 @@ namespace Sungero.BulkExchangeSolution.Module.Exchange.Server
     protected override Sungero.Docflow.IOfficialDocument GetOrCreateNewExchangeDocument(Sungero.ExchangeCore.IBoxBase box, object clientUntyped, object documentUntyped, Sungero.Parties.ICounterparty sender, string serviceCounterpartyId, DateTime messageDate, bool isIncoming)
     {
       var document = base.GetOrCreateNewExchangeDocument(box, clientUntyped, documentUntyped, sender, serviceCounterpartyId, messageDate, isIncoming);
-      if (FinancialArchive.UniversalTransferDocuments.Is(document) || FinancialArchive.Waybills.Is(document))
+      if (FinancialArchive.UniversalTransferDocuments.Is(document) || FinancialArchive.IncomingTaxInvoices.Is(document) || FinancialArchive.Waybills.Is(document))
       {
         var serviceDocument = documentUntyped as NpoComputer.DCX.Common.IDocument;
         var xdoc = System.Xml.Linq.XDocument.Load(new System.IO.MemoryStream(serviceDocument.Content));
@@ -66,29 +66,30 @@ namespace Sungero.BulkExchangeSolution.Module.Exchange.Server
     /// </summary>
     /// <param name="document">Документ.</param>
     /// <param name="relatedExchangeDocumentInfo">Информация о связываемом документе обмена.</param>
-    public override void AddRelations(Docflow.IOfficialDocument document, Sungero.Exchange.IExchangeDocumentInfo relatedExchangeDocumentInfo)
+    public override void AddRelations(Docflow.IOfficialDocument document, Sungero.Exchange.IExchangeDocumentInfo relatedExchangeDocInfo)
     {
+      var exchangeDocumentInfo = Sungero.BulkExchangeSolution.ExchangeDocumentInfos.GetAll().Where(d => Equals(d.Document, document)).FirstOrDefault();
+      var relatedExchangeDocumentInfo = Sungero.BulkExchangeSolution.ExchangeDocumentInfos.As(relatedExchangeDocInfo);
+      
+      if (exchangeDocumentInfo == null || relatedExchangeDocumentInfo == null)
+        return;
+      
       var relatedDocument = relatedExchangeDocumentInfo.Document;
-      var docInfos = Sungero.BulkExchangeSolution.ExchangeDocumentInfos.GetAll()
-        .Where(i => Equals(i.ServiceMessageId, relatedExchangeDocumentInfo.ServiceMessageId));
+      var documentSet = Sungero.BulkExchangeSolution.Functions.ExchangeDocumentInfo.GetDocumentSet(relatedExchangeDocumentInfo);
       
-      var dop = Docflow.AccountingDocumentBase.FormalizedFunction.Dop;
-      var schf = Docflow.AccountingDocumentBase.FormalizedFunction.Schf;
+      if (documentSet != null && documentSet.IsFullSet)
+      {
+        var documentFormalizedFunction = Docflow.AccountingDocumentBases.Is(document) ?
+          Docflow.AccountingDocumentBases.As(document).FormalizedFunction :
+          null;
+   
+        if (documentFormalizedFunction == Docflow.AccountingDocumentBase.FormalizedFunction.Dop)
+          document.Relations.AddOrUpdate(Sungero.Exchange.Constants.Module.AddendumRelationName, null, relatedDocument);
+        
+        return;
+      }
       
-      var documentFormalizedFunction = Docflow.AccountingDocumentBases.Is(document) ?
-        Docflow.AccountingDocumentBases.As(document).FormalizedFunction :
-        null;
-      
-      var relatedDocumentFormalizedFunction = Docflow.AccountingDocumentBases.Is(relatedDocument) ?
-        Docflow.AccountingDocumentBases.As(relatedDocument).FormalizedFunction :
-        null;
-      
-      if (docInfos.Count() < 3 && documentFormalizedFunction == dop && relatedDocumentFormalizedFunction == schf)
-        document.Relations.AddOrUpdate(Sungero.Exchange.Constants.Module.AddendumRelationName, null, relatedDocument);
-      else if(docInfos.Count() < 3 && documentFormalizedFunction == schf && relatedDocumentFormalizedFunction == dop)
-        document.Relations.AddFromOrUpdate(Sungero.Exchange.Constants.Module.AddendumRelationName, null, relatedDocument);
-      else
-        document.Relations.AddFromOrUpdate(Sungero.Exchange.Constants.Module.SimpleRelationRelationName, null, relatedDocument);
+      document.Relations.AddFromOrUpdate(Sungero.Exchange.Constants.Module.SimpleRelationRelationName, null, relatedDocument);
     }
   }
 }
