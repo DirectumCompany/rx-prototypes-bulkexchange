@@ -15,7 +15,7 @@ namespace Sungero.BulkExchangeSolution.Client
       foreach (var messageId in messageIds)
       {
         var infos = checkedSets.Where(x => x.ServiceMessageId == messageId);
-        Logger.DebugFormat("Sign document set with infos {0}", string.Join(", ", infos.Select(i => i.Id)));
+        Logger.DebugFormat("Sign document set with document ids {0}", string.Join(", ", infos.Select(i => i.Document.Id)));
         foreach (var info in infos)
         {
           if (info.NeedSign == true)
