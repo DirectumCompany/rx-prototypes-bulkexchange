@@ -8,20 +8,24 @@ namespace Sungero.BulkExchangeSolution.Client
 {
   public class ModuleFunctions
   {
-    [Public]
     public virtual void SignCheckedDocuments()
     {
       var checkedSets = Sungero.BulkExchangeSolution.Module.Exchange.Functions.Module.Remote.GetCheckedSets();
-      foreach (var checkedSet in checkedSets)
+      var messageIds = checkedSets.Select(x => x.ServiceMessageId).Distinct().ToList();
+      foreach (var messageId in messageIds)
       {
-        Logger.DebugFormat("Sign document set with infos {0}", string.Join(", ", checkedSet.ExchangeDocumentInfos.Select(i => i.Id)));
-        foreach (var info in checkedSet.ExchangeDocumentInfos)
+        var infos = checkedSets.Where(x => x.ServiceMessageId == messageId);
+        Logger.DebugFormat("Sign document set with infos {0}", string.Join(", ", infos.Select(i => i.Id)));
+        foreach (var info in infos)
         {
           if (info.NeedSign == true)
           {
             var certificate = BusinessUnitBoxes.As(info.RootBox).SignDocumentCertificate;
             if (Docflow.PublicFunctions.OfficialDocument.ApproveWithAddenda(info.Document, null, certificate, "Автоподпись", null, false, null))
-              BulkExchangeSolution.Functions.ExchangeDocumentInfo.Remote.ChangeSignStatus(info);
+            {
+              info.SignStatus = Sungero.BulkExchangeSolution.ExchangeDocumentInfo.SignStatus.Signed;
+              info.Save();
+            }
           }
         }
       }

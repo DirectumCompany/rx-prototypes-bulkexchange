@@ -120,7 +120,7 @@ namespace Sungero.BulkExchangeSolution.Module.Exchange.Server
         }
         else
           documentsInfo.CheckStatus = CheckStatus.Required;
-
+          
         documentsInfo.Save();
       }
     }

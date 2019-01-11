@@ -9,13 +9,5 @@ namespace Sungero.BulkExchangeSolution.Module.Exchange.Client
   partial class ModuleFunctions
   {
 
-    /// <summary>
-    /// 
-    /// </summary>
-    public virtual void SignChecked()
-    {
-      Sungero.BulkExchangeSolution.PublicFunctions.Module.SignCheckedDocuments();
-    }
-
   }
 }

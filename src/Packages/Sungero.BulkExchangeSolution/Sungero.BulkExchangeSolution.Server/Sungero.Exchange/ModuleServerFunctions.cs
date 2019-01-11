@@ -37,14 +37,19 @@ namespace Sungero.BulkExchangeSolution.Module.Exchange.Server
     }
     
     [Remote]
-    public virtual List<Sungero.BulkExchangeSolution.Structures.Exchange.ExchangeDocumentInfo.DocumentSet> GetCheckedSets()
+    public virtual List<Sungero.BulkExchangeSolution.IExchangeDocumentInfo> GetCheckedSets()
     {
       // все накладные с РО, прошедшие сверку
       var boxes = Sungero.ExchangeCore.PublicFunctions.BusinessUnitBox.Remote.GetConnectedBoxes().Where(r => BusinessUnitBoxes.As(r).SignDocumentCertificate != null).ToList();
       var infos = ExchangeDocumentInfos.GetAll()
-        .Where(x => boxes.Contains(x.RootBox) && x.CheckStatus == ExchangeDocumentInfo.CheckStatus.Completed && x.PurchaseOrder != null && x.ExchangeState == ExchangeDocumentInfo.ExchangeState.SignRequired &&
-               x.SignStatus == ExchangeDocumentInfo.SignStatus.Required);
-      return Sungero.BulkExchangeSolution.Functions.ExchangeDocumentInfo.GetDocumentSets(infos.ToList()).Where(x => x.IsFullSet).ToList();
+        .Where(x => boxes.Contains(x.RootBox) && x.ExchangeState == ExchangeDocumentInfo.ExchangeState.SignRequired &&
+               (x.SignStatus == null || x.SignStatus != SignStatus.Signed) && x.CheckStatus == ExchangeDocumentInfo.CheckStatus.Completed);
+      
+      var result = new List<Sungero.BulkExchangeSolution.IExchangeDocumentInfo>();
+      foreach (var documentSet in Sungero.BulkExchangeSolution.Functions.ExchangeDocumentInfo.GetDocumentSets(infos.ToList()).Where(x => x.IsFullSet).ToList())
+        result.AddRange(documentSet.ExchangeDocumentInfos);
+      
+      return result;
     }
     
     public virtual List<Structures.Exchange.ExchangeDocumentInfo.DocumentSet> GetSignedAndNotSendedDocumentSets()

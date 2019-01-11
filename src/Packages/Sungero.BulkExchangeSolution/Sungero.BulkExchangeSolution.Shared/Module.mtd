@@ -44,14 +44,6 @@
     }
   ],
   "OrderedSpecialFolders": [],
-  "PublicFunctions": [
-    {
-      "Name": "SignCheckedDocuments",
-      "Placement": "Client",
-      "ReturnType": "void",
-      "ReturnTypeFullName": "System.Void"
-    }
-  ],
   "PublicStructures": [],
   "ResourceInterfaceAssemblyName": "Sungero.Domain.Interfaces",
   "ResourceInterfaceNamespace": "Sungero.BulkExchangeSolution",

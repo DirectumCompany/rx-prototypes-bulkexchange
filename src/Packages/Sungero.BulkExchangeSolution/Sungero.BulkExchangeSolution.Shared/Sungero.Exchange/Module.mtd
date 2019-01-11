@@ -8,33 +8,10 @@
   "ClientBaseNamespace": "Sungero.BulkExchangeSolution.Module.Exchange.ClientBase",
   "Code": "ExCh",
   "CompanyCode": "Sungero",
-  "Cover": {
-    "NameGuid": "5f308d3c-b813-4b4d-9434-efbac45cf040",
-    "Actions": [
-      {
-        "$type": "Sungero.Metadata.CoverFunctionActionMetadata, Sungero.Metadata",
-        "NameGuid": "37cf8d2d-b257-4f80-a73a-301789bed465",
-        "Name": "Action1",
-        "FunctionName": "SignChecked",
-        "GroupId": "747481c0-427b-427e-9aa5-a83d359b3c3f"
-      }
-    ],
-    "Groups": [
-      {
-        "NameGuid": "747481c0-427b-427e-9aa5-a83d359b3c3f",
-        "Name": "Group1",
-        "BackgroundPosition": "Stretch"
-      }
-    ],
-    "IsAncestorMetadata": true,
-    "Overridden": [
-      "Groups",
-      "Actions"
-    ]
-  },
   "ExplorerTreeOrder": [],
   "IconResourcesKeys": [],
   "Importance": "Medium",
+  "IsVisible": false,
   "Jobs": [
     {
       "NameGuid": "65fa7815-170d-489c-b613-c2c2366161a4",
