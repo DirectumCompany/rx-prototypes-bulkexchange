@@ -8,18 +8,14 @@ namespace Sungero.BulkExchangeSolution.Module.Exchange.Client
 {
   partial class ModuleFunctions
   {
-    public virtual void SignCheckedDocuments()
+
+    /// <summary>
+    /// 
+    /// </summary>
+    public virtual void SignChecked()
     {
-      var infos = Functions.Module.Remote.GetCheckedDocuments();
-      foreach (var info in infos)
-      {
-        var certificate = BusinessUnitBoxes.As(info.RootBox).SignDocumentCertificate;
-        if (Docflow.PublicFunctions.OfficialDocument.ApproveWithAddenda(info.Document, null, certificate, "Автоподпись", null, false, null))
-        {
-          info.SignStatus = ExchangeDocumentInfo.SignStatus.Signed;
-          info.Save();
-        }
-      }
+      Sungero.BulkExchangeSolution.PublicFunctions.Module.SignCheckedDocuments();
     }
+
   }
 }

@@ -103,5 +103,17 @@ namespace Sungero.BulkExchangeSolution.Server
     {
       return _obj.PurchaseOrder != null;
     }
+    
+    [Remote]
+    public virtual void ChangeSignStatus()
+    {
+      Transactions.Execute(
+        () =>
+        {
+          _obj.SignStatus = Sungero.BulkExchangeSolution.ExchangeDocumentInfo.SignStatus.Signed;
+          _obj.Save();
+        }
+       );
+    }
   }
 }
