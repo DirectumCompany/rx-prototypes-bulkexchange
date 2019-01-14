@@ -12,9 +12,9 @@ namespace Sungero.BulkExchangeSolution.Module.Exchange.Server
 {
   partial class ModuleFunctions
   {
-    protected override Sungero.Docflow.IOfficialDocument GetOrCreateNewExchangeDocument(Sungero.ExchangeCore.IBoxBase box, object clientUntyped, object documentUntyped, Sungero.Parties.ICounterparty sender, string serviceCounterpartyId, DateTime messageDate, bool isIncoming)
+    protected override Sungero.Docflow.IOfficialDocument GetOrCreateNewExchangeDocument(Sungero.ExchangeCore.IBoxBase box, object documentUntyped, Sungero.Parties.ICounterparty sender, string serviceCounterpartyId, DateTime messageDate, bool isIncoming)
     {
-      var document = base.GetOrCreateNewExchangeDocument(box, clientUntyped, documentUntyped, sender, serviceCounterpartyId, messageDate, isIncoming);
+      var document = base.GetOrCreateNewExchangeDocument(box, documentUntyped, sender, serviceCounterpartyId, messageDate, isIncoming);
       if (FinancialArchive.UniversalTransferDocuments.Is(document) || FinancialArchive.IncomingTaxInvoices.Is(document) || FinancialArchive.Waybills.Is(document))
       {
         var serviceDocument = documentUntyped as NpoComputer.DCX.Common.IDocument;
