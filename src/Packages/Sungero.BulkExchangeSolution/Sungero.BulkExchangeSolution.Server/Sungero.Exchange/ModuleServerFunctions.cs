@@ -90,7 +90,7 @@ namespace Sungero.BulkExchangeSolution.Module.Exchange.Server
         var documentFormalizedFunction = Docflow.AccountingDocumentBases.Is(document) ?
           Docflow.AccountingDocumentBases.As(document).FormalizedFunction :
           null;
-   
+        
         if (documentFormalizedFunction == Docflow.AccountingDocumentBase.FormalizedFunction.Dop)
           document.Relations.AddOrUpdate(Sungero.Exchange.Constants.Module.AddendumRelationName, null, relatedDocument);
         
@@ -134,16 +134,27 @@ namespace Sungero.BulkExchangeSolution.Module.Exchange.Server
       
       if (!result)
       {
-        var documentInfo = documentSet.ExchangeDocumentInfos.FirstOrDefault(x => Sungero.FinancialArchive.UniversalTransferDocuments.Is(x.Document));
+        IExchangeDocumentInfo documentInfo = documentSet.ExchangeDocumentInfos.FirstOrDefault(x => Sungero.FinancialArchive.UniversalTransferDocuments.Is(x.Document));
         var task = documentInfo.CheckTask;
         if ((task == null || task != null && task.Status == Workflow.Task.Status.Completed) &&
             this.IsCheckDocumentCompleted(OfficialDocuments.As(documentInfo.Document)))
           result = true;
-        // TODO: Create task by documentSet with override function
-        if (task == null || task.Status != Workflow.Task.Status.InProcess)
+        var createTime = documentSet.ExchangeDocumentInfos.Select(x => x.Document.Created).Max();
+        if ((task == null || task.Status != Workflow.Task.Status.InProcess) && Calendar.Now - createTime > TimeSpan.FromHours(1) && !result)
         {
-          var createTime = documentSet.ExchangeDocumentInfos.Select(x => x.Document.Created).Max();
-// var processingTask = this.CreateExchangeTask(documentInfo.RootBox, documentInfo.Counterparty, documentInfo.);
+          var client = ExchangeCore.PublicFunctions.BusinessUnitBox.GetPublicClient(documentInfo.RootBox) as NpoComputer.DCX.ClientApi.Client;
+          var message = client.GetMessage(documentInfo.ServiceMessageId);
+          var isIncoming = message.Sender.Organization.OrganizationId != documentInfo.RootBox.OrganizationId;
+          var needSign = documentSet.ExchangeDocumentInfos.Select(i => i.Document).Where(d => FinancialArchive.UniversalTransferDocuments.Is(d)).ToList();
+          var notNeedSign = documentSet.ExchangeDocumentInfos.Select(i => i.Document).Where(d => FinancialArchive.IncomingTaxInvoices.Is(d)).ToList();
+
+          var taskText = Environment.NewLine + "Не пройдена проверка: " + documentInfo.CheckFailReason;
+          var processingTask = this.CreateExchangeTask(documentInfo.RootBox, message, documentInfo.Counterparty, isIncoming,
+                                  needSign, new List<IOfficialDocument>(), new List<NpoComputer.DCX.Common.IDocument>(), 
+                                  notNeedSign, taskText);
+          processingTask.Start();
+          documentInfo.CheckTask = processingTask;
+          documentInfo.Save();
         }
       }
       
@@ -167,14 +178,14 @@ namespace Sungero.BulkExchangeSolution.Module.Exchange.Server
     }
     
     public override Sungero.Exchange.IExchangeDocumentProcessingTask CreateExchangeTask(Sungero.ExchangeCore.IBoxBase box,
-                                                                       object messageUntyped,
-                                                                       Parties.ICounterparty sender,
-                                                                       bool isIncoming,
-                                                                       List<Sungero.Docflow.IOfficialDocument> needSign,
-                                                                       List<Sungero.Docflow.IOfficialDocument> signed,
-                                                                       object rejectedUntyped,
-                                                                       List<Sungero.Docflow.IOfficialDocument> dontNeedSign,
-                                                                       string exchangeTaskActiveTextBoundedDocuments)
+                                                                                        object messageUntyped,
+                                                                                        Parties.ICounterparty sender,
+                                                                                        bool isIncoming,
+                                                                                        List<Sungero.Docflow.IOfficialDocument> needSign,
+                                                                                        List<Sungero.Docflow.IOfficialDocument> signed,
+                                                                                        object rejectedUntyped,
+                                                                                        List<Sungero.Docflow.IOfficialDocument> dontNeedSign,
+                                                                                        string exchangeTaskActiveTextBoundedDocuments)
     {
       var task = base.CreateExchangeTask(box, messageUntyped, sender, isIncoming, needSign, signed, rejectedUntyped, dontNeedSign, exchangeTaskActiveTextBoundedDocuments);
       return task;
