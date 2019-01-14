@@ -1044,6 +1044,11 @@
             Исправленный корректировочный УПД ДОП.
             </summary>
         </member>
+        <member name="F:NpoComputer.DCX.Common.DocumentType.TransportWaybillConsignorTitle">
+            <summary>
+            Транспортная накладная (титул грузоотправителя).
+            </summary>
+        </member>
         <member name="T:NpoComputer.DCX.Common.IBaseDocument">
             <summary>
             Базовый интерфейс документа.
@@ -1497,6 +1502,31 @@
         <member name="F:NpoComputer.DCX.Common.ReglamentDocumentType.WorksTransferBuyer">
             <summary>
             Титул заказчика ДПРР.
+            </summary>
+        </member>
+        <member name="F:NpoComputer.DCX.Common.ReglamentDocumentType.TransportWaybillDeliveryPlaceChangeTitle">
+            <summary>
+            Транспортная накладная (изменение места доставки).
+            </summary>
+        </member>
+        <member name="F:NpoComputer.DCX.Common.ReglamentDocumentType.TransportWaybillCarrierTitle">
+            <summary>
+            Транспортная накладная (титул перевозчика).
+            </summary>
+        </member>
+        <member name="F:NpoComputer.DCX.Common.ReglamentDocumentType.TransportWaybillConsigneeTitle">
+            <summary>
+            Транспортная накладная (титул грузополучателя).
+            </summary>
+        </member>
+        <member name="F:NpoComputer.DCX.Common.ReglamentDocumentType.TransportWaybillCargoReceivedTitle">
+            <summary>
+            Транспортная накладная (титул водителя - прием груза).
+            </summary>
+        </member>
+        <member name="F:NpoComputer.DCX.Common.ReglamentDocumentType.TransportWaybillCargoDeliveredTitle">
+            <summary>
+            Транспортная накладная (титул водителя - сдача груза).
             </summary>
         </member>
         <member name="T:NpoComputer.DCX.Common.RevocationStatus">
