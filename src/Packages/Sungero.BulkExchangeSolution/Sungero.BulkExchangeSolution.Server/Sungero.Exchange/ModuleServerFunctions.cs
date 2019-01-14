@@ -73,7 +73,7 @@ namespace Sungero.BulkExchangeSolution.Module.Exchange.Server
     /// Связать документы.
     /// </summary>
     /// <param name="document">Документ.</param>
-    /// <param name="relatedExchangeDocumentInfo">Информация о связываемом документе обмена.</param>
+    /// <param name="relatedExchangeDocInfo">Информация о связываемом документе обмена.</param>
     public override void AddRelations(Docflow.IOfficialDocument document, Sungero.Exchange.IExchangeDocumentInfo relatedExchangeDocInfo)
     {
       var exchangeDocumentInfo = Sungero.BulkExchangeSolution.ExchangeDocumentInfos.GetAll().Where(d => Equals(d.Document, document)).FirstOrDefault();
@@ -139,11 +139,11 @@ namespace Sungero.BulkExchangeSolution.Module.Exchange.Server
         if ((task == null || task != null && task.Status == Workflow.Task.Status.Completed) &&
             this.IsCheckDocumentCompleted(OfficialDocuments.As(documentInfo.Document)))
           result = true;
-        //TODO: Create task by documentSet with override function
+        // TODO: Create task by documentSet with override function
         if (task == null || task.Status != Workflow.Task.Status.InProcess)
         {
           var createTime = documentSet.ExchangeDocumentInfos.Select(x => x.Document.Created).Max();
-//          var processingTask = this.CreateExchangeTask(documentInfo.RootBox, documentInfo.Counterparty, documentInfo.);
+// var processingTask = this.CreateExchangeTask(documentInfo.RootBox, documentInfo.Counterparty, documentInfo.);
         }
       }
       

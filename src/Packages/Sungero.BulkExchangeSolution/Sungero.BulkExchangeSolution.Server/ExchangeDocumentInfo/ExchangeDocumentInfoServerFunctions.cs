@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Sungero.Core;
-using Sungero.CoreEntities;
 using Sungero.BulkExchangeSolution.ExchangeDocumentInfo;
 using Sungero.BulkExchangeSolution.Module.Exchange.Server;
+using Sungero.Core;
+using Sungero.CoreEntities;
 
 namespace Sungero.BulkExchangeSolution.Server
 {
@@ -38,7 +38,6 @@ namespace Sungero.BulkExchangeSolution.Server
       var documentSet = this.GetPurchaseOrderDocumentSet();
       
       // TODO в теории тут будет обработка других типов комплектов, не только товарных накладных.
-      
       return documentSet;
     }
     

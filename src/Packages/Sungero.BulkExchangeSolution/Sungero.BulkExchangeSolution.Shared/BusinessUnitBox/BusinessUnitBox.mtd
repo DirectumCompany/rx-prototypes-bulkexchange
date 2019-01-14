@@ -3,6 +3,16 @@
   "NameGuid": "7be9df2f-5774-45ed-a760-cc649f7ae948",
   "Name": "BusinessUnitBox",
   "AccessRightsMode": "Both",
+  "Actions": [
+    {
+      "NameGuid": "7297eee1-4b2c-4974-b12b-e910144c57f5",
+      "Name": "CheckConnection",
+      "IsAncestorMetadata": true,
+      "Overridden": [
+        "GenerateHandler"
+      ]
+    }
+  ],
   "BaseGuid": "2dd7a803-8db7-40e1-9da6-b41c62d367c8",
   "CanBeNavigationPropertyType": true,
   "CreationAreaMetadata": {

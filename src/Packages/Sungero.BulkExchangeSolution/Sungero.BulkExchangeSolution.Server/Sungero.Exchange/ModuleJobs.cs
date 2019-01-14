@@ -46,7 +46,7 @@ namespace Sungero.BulkExchangeSolution.Module.Exchange.Server
     }
     
     /// <summary>
-    /// 
+    /// Сверка документов.
     /// </summary>
     public virtual void CheckDocuments()
     {
