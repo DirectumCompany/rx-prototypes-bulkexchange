@@ -47,7 +47,9 @@
   "PublicStructures": [],
   "ResourceInterfaceAssemblyName": "Sungero.Domain.Interfaces",
   "ResourceInterfaceNamespace": "Sungero.BulkExchangeSolution",
-  "ResourcesKeys": [],
+  "ResourcesKeys": [
+    "CannotSignDocument"
+  ],
   "ServerAssemblyName": "Sungero.BulkExchangeSolution.Server",
   "ServerNamespace": "Sungero.BulkExchangeSolution.Server",
   "SharedAssemblyName": "Sungero.BulkExchangeSolution.Shared",
