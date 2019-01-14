@@ -11,7 +11,7 @@ namespace Sungero.BulkExchangeSolution.Client
     public virtual void SignCheckedDocuments()
     {
       var checkedSets = Module.Exchange.Functions.Module.Remote.GetCheckedSets().Where(c => BusinessUnitBoxes.As(c.RootBox).SignDocumentCertificate != null &&
-                                                                                                                    Equals(BusinessUnitBoxes.As(c.RootBox).SignDocumentCertificate.Owner, Users.Current));
+                                                                                       Equals(BusinessUnitBoxes.As(c.RootBox).SignDocumentCertificate.Owner, Users.Current));
       var messageIds = checkedSets.Select(x => x.ServiceMessageId).Distinct().ToList();
       foreach (var messageId in messageIds)
       {
@@ -24,7 +24,7 @@ namespace Sungero.BulkExchangeSolution.Client
             var certificate = BusinessUnitBoxes.As(info.RootBox).SignDocumentCertificate;
             try
             {
-              if (Docflow.PublicFunctions.OfficialDocument.ApproveWithAddenda(info.Document, null, certificate, "Автоподпись", null, false, null))
+              if (Docflow.PublicFunctions.OfficialDocument.ApproveWithAddenda(info.Document, null, certificate, string.Empty, null, false, null))
               {
                 Logger.DebugFormat("Sign document set with document ids {0} successfully.", string.Join(", ", info.Document.Id));
                 info.SignStatus = Sungero.BulkExchangeSolution.ExchangeDocumentInfo.SignStatus.Signed;
