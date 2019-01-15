@@ -120,4 +120,7 @@
   <data name="CannotSignDocument" xml:space="preserve">
     <value>Не удалось подписать документ.</value>
   </data>
+  <data name="RejectMessage" xml:space="preserve">
+    <value>Отказано по причине некорректного комплекта</value>
+  </data>
 </root>

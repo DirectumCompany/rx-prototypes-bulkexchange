@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Sungero.BulkExchangeSolution.ExchangeDocumentInfo;
 using Sungero.Core;
 using Sungero.CoreEntities;
+using Sungero.Docflow;
+using Sungero.ExchangeCore;
 
 namespace Sungero.BulkExchangeSolution.Client
 {
@@ -40,5 +43,35 @@ namespace Sungero.BulkExchangeSolution.Client
       }
     }
     
+    public virtual void SendRejectedDocuments()
+    {
+      var needReject = Functions.Module.Remote.GetRejectedDocumentInfos();
+      foreach (var documentInfo in needReject)
+      {
+        var certificate = documentInfo.RootBox.ExchangeServiceCertificates
+          .Where(x => Equals(x.Certificate.Owner, Users.Current) && x.Certificate.Enabled == true)
+          .Select(x => x.Certificate)
+          .FirstOrDefault();    
+        try
+        {
+          {
+            documentInfo.SignStatus = Sungero.BulkExchangeSolution.ExchangeDocumentInfo.SignStatus.Signed;
+            var result = Sungero.Exchange.PublicFunctions.Module.SendAmendmentRequest(new List<IOfficialDocument> { documentInfo.Document },
+              documentInfo.Counterparty, Sungero.BulkExchangeSolution.Resources.RejectMessage, true,
+              documentInfo.RootBox, certificate, false);
+            if (result == string.Empty)
+            {
+              documentInfo.RejectionStatus = RejectionStatus.Sent;
+              Logger.DebugFormat("Send reject document with document ids {0} successfully.", documentInfo.Document.Id);
+            }
+            documentInfo.Save();
+          }
+        }
+        catch (Exception ex)
+        {
+          Logger.Error(Sungero.BulkExchangeSolution.Resources.CannotSignDocument, ex);
+        }
+      }
+    }
   }
 }
