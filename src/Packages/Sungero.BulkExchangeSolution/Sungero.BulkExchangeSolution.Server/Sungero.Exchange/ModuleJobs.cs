@@ -28,7 +28,8 @@ namespace Sungero.BulkExchangeSolution.Module.Exchange.Server
           () =>
           {
             Logger.DebugFormat("Process document set with infos {0}", string.Join(", ", infoIds));
-            var infos = ExchangeDocumentInfos.GetAll(i => infoIds.Contains(i.Id)).ToList();
+            var infos = ExchangeDocumentInfos
+              .GetAll(i => i.ExchangeState == ExchangeDocumentInfo.ExchangeState.SignRequired && infoIds.Contains(i.Id)).ToList();
             var boxes = infos.GroupBy(i => i.RootBox);
             foreach (var box in boxes)
             {
