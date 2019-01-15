@@ -36,12 +36,17 @@ namespace Sungero.BulkExchangeSolution.Module.Exchange.Server
               var counterparties = box.GroupBy(i => i.Counterparty);
               foreach (var counterpartyGroup in counterparties)
               {
-                var businessUnitBox = BusinessUnitBoxes.As(box.Key);
+                var businessUnitBox = ExchangeCore.BusinessUnitBoxes.As(box.Key);
                 var counterparty = counterpartyGroup.Key;
                 var documents = counterpartyGroup.Select(g => g.Document).ToList();
+                var document = documents.First();
+                
+                var certificates = Functions.Module.GetDocumentCertificatesToBox(document, businessUnitBox);
+                var certificate = certificates.Certificates.FirstOrDefault();
+
                 Logger.DebugFormat("Try to send answer to documents {0}. Box {1}, counterparty {2}, certificate {3}.",
-                                   string.Join(", ", documents.Select(d => d.Id)), businessUnitBox.Id, counterparty.Id, businessUnitBox.SignDocumentCertificate.Id);
-                Sungero.Exchange.PublicFunctions.Module.Remote.SendAnswers(documents, businessUnitBox, counterparty, businessUnitBox.SignDocumentCertificate, true);
+                                   string.Join(", ", documents.Select(d => d.Id)), businessUnitBox.Id, counterparty.Id, certificate.Id);
+                Sungero.Exchange.PublicFunctions.Module.Remote.SendAnswers(documents, businessUnitBox, counterparty, certificate, true);
               }
             }
           });

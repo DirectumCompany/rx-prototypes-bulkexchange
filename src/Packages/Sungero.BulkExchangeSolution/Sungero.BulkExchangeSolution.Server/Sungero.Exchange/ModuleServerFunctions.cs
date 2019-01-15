@@ -45,7 +45,9 @@ namespace Sungero.BulkExchangeSolution.Module.Exchange.Server
     public virtual List<Sungero.BulkExchangeSolution.IExchangeDocumentInfo> GetCheckedSets()
     {
       // все накладные с РО, прошедшие сверку
-      var boxes = Sungero.ExchangeCore.PublicFunctions.BusinessUnitBox.Remote.GetConnectedBoxes().Where(r => BusinessUnitBoxes.As(r).SignDocumentCertificate != null).ToList();
+      var boxes = Sungero.ExchangeCore.PublicFunctions.BusinessUnitBox.Remote.GetConnectedBoxes().Where(c => c.HasExchangeServiceCertificates == true &&
+                                                                                                        c.ExchangeServiceCertificates.Any(x => Equals(x.Certificate.Owner, Users.Current) &&
+                                                                                                                                          x.Certificate.Enabled == true)).ToList();
       var infos = ExchangeDocumentInfos.GetAll()
         .Where(x => boxes.Contains(x.RootBox) && x.ExchangeState == ExchangeDocumentInfo.ExchangeState.SignRequired &&
                (x.SignStatus == null || x.SignStatus != SignStatus.Signed) && x.CheckStatus == ExchangeDocumentInfo.CheckStatus.Completed);
@@ -59,7 +61,7 @@ namespace Sungero.BulkExchangeSolution.Module.Exchange.Server
     
     public virtual List<Structures.Exchange.ExchangeDocumentInfo.DocumentSet> GetSignedAndNotSendedDocumentSets()
     {
-      var boxes = Sungero.ExchangeCore.PublicFunctions.BusinessUnitBox.Remote.GetConnectedBoxes().Where(r => BusinessUnitBoxes.As(r).SignDocumentCertificate != null).ToList();
+      var boxes = Sungero.ExchangeCore.PublicFunctions.BusinessUnitBox.Remote.GetConnectedBoxes().ToList();
       
       var infos = ExchangeDocumentInfos.GetAll()
         .Where(x => boxes.Contains(x.RootBox)
@@ -69,6 +71,11 @@ namespace Sungero.BulkExchangeSolution.Module.Exchange.Server
                && x.ReceiverSignId == null);
       
       return BulkExchangeSolution.Functions.ExchangeDocumentInfo.GetDocumentSets(infos.ToList()).Where(s => s.IsFullSet).ToList();
+    }
+    
+    public override Sungero.Exchange.Structures.Module.DocumentCertificatesInfo GetDocumentCertificatesToBox(IOfficialDocument document, Sungero.ExchangeCore.IBusinessUnitBox box)
+    {
+      return base.GetDocumentCertificatesToBox(document, box);
     }
     
     /// <summary>

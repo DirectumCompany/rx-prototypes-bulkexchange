@@ -10,8 +10,8 @@ namespace Sungero.BulkExchangeSolution.Client
   {
     public virtual void SignCheckedDocuments()
     {
-      var checkedSets = Module.Exchange.Functions.Module.Remote.GetCheckedSets().Where(c => BusinessUnitBoxes.As(c.RootBox).SignDocumentCertificate != null &&
-                                                                                       Equals(BusinessUnitBoxes.As(c.RootBox).SignDocumentCertificate.Owner, Users.Current));
+      var checkedSets = Module.Exchange.Functions.Module.Remote.GetCheckedSets().Where(c => c.RootBox.HasExchangeServiceCertificates == true &&
+                                                                                       c.RootBox.ExchangeServiceCertificates.Any(x => Equals(x.Certificate.Owner, Users.Current) && x.Certificate.Enabled == true));
       var messageIds = checkedSets.Select(x => x.ServiceMessageId).Distinct().ToList();
       foreach (var messageId in messageIds)
       {
@@ -21,7 +21,7 @@ namespace Sungero.BulkExchangeSolution.Client
         {
           if (info.NeedSign == true)
           {
-            var certificate = BusinessUnitBoxes.As(info.RootBox).SignDocumentCertificate;
+            var certificate = info.RootBox.ExchangeServiceCertificates.Where(x => Equals(x.Certificate.Owner, Users.Current) && x.Certificate.Enabled == true).Select(x => x.Certificate).FirstOrDefault();
             try
             {
               if (Docflow.PublicFunctions.OfficialDocument.ApproveWithAddenda(info.Document, null, certificate, string.Empty, null, false, null))
