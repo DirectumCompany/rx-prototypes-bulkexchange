@@ -76,28 +76,10 @@ namespace Sungero.BulkExchangeSolution.Module.Exchange.Server
     /// <param name="relatedExchangeDocInfo">Информация о связываемом документе обмена.</param>
     public override void AddRelations(Docflow.IOfficialDocument document, Sungero.Exchange.IExchangeDocumentInfo relatedExchangeDocInfo)
     {
-      var exchangeDocumentInfo = Sungero.BulkExchangeSolution.ExchangeDocumentInfos.GetAll().Where(d => Equals(d.Document, document)).FirstOrDefault();
       var relatedExchangeDocumentInfo = Sungero.BulkExchangeSolution.ExchangeDocumentInfos.As(relatedExchangeDocInfo);
-      
-      if (exchangeDocumentInfo == null || relatedExchangeDocumentInfo == null)
-        return;
-      
-      var relatedDocument = relatedExchangeDocumentInfo.Document;
       var documentSet = Sungero.BulkExchangeSolution.Functions.ExchangeDocumentInfo.GetDocumentSet(relatedExchangeDocumentInfo);
-      
-      if (documentSet != null && documentSet.IsFullSet)
-      {
-        var documentFormalizedFunction = Docflow.AccountingDocumentBases.Is(document) ?
-          Docflow.AccountingDocumentBases.As(document).FormalizedFunction :
-          null;
-        
-        if (documentFormalizedFunction == Docflow.AccountingDocumentBase.FormalizedFunction.Dop)
-          document.Relations.AddOrUpdate(Sungero.Exchange.Constants.Module.AddendumRelationName, null, relatedDocument);
-        
-        return;
-      }
-      
-      document.Relations.AddFromOrUpdate(Sungero.Exchange.Constants.Module.SimpleRelationRelationName, null, relatedDocument);
+      if (documentSet == null || !documentSet.IsFullSet)
+        base.AddRelations(document, relatedExchangeDocInfo);
     }
 
     public void CheckDocumentSet(Structures.Exchange.ExchangeDocumentInfo.DocumentSet documentSet)
@@ -198,5 +180,55 @@ namespace Sungero.BulkExchangeSolution.Module.Exchange.Server
                                   string.Equals(document.Document.Note.Trim(), "проведено", StringComparison.InvariantCultureIgnoreCase));
     }
     
+    /// <summary>
+    /// Обработать документы, созданные из сообщения.
+    /// </summary>
+    /// <param name="box">Абонентский ящик.</param>
+    /// <param name="messageUntyped">Сообщение.</param>
+    /// <param name="sender">Отправитель.</param>
+    /// <param name="queueItem">Элемент очереди.</param>
+    /// <param name="isIncoming">True - от контрагента, false - наше.</param>
+    /// <param name="needSign">Коллекция документов, требующих подписания.</param>
+    /// <param name="dontNeedSign">Коллекция документов, требующих подписания.</param>
+    /// <param name="signed">Коллекция уже подписанных документов.</param>
+    /// <param name="processingDocuments">Обрабатываемые документы.</param>
+    /// <param name="rejected">Коллекция документов, по которым отказано.</param>
+    protected override void ProcessMessageDocuments(ExchangeCore.IBoxBase box, object messageUntyped, Parties.ICounterparty sender,
+                                                    ExchangeCore.IMessageQueueItem queueItem, bool isIncoming, List<IOfficialDocument> needSign, List<IOfficialDocument> dontNeedSign, List<IOfficialDocument> signed,
+                                                    object untypedProcessingDocuments, object untypedRejected)
+    {
+      base.ProcessMessageDocuments(box, messageUntyped, sender, queueItem, isIncoming, needSign, dontNeedSign, signed, untypedProcessingDocuments, untypedRejected);
+      this.AddRelationsForDocumentSet(messageUntyped);
+    }
+    
+    /// <summary>
+    /// Создать связь документов комплекта.
+    /// </summary>
+    /// <param name="messageUntyped">Сообщение.</param>
+    private void AddRelationsForDocumentSet(object messageUntyped)
+    {
+      var message = messageUntyped as NpoComputer.DCX.Common.IMessage;
+      var exchangeDocumentInfo = Sungero.BulkExchangeSolution.ExchangeDocumentInfos.GetAll().Where(e => e.ServiceMessageId == message.ServiceMessageId).FirstOrDefault();
+      var documentSet = exchangeDocumentInfo != null
+        ? Sungero.BulkExchangeSolution.Functions.ExchangeDocumentInfo.GetDocumentSet(exchangeDocumentInfo)
+        : null;
+      
+      if (documentSet != null && documentSet.IsFullSet && documentSet.ExchangeDocumentInfos.Count == 2)
+      {
+        var exchangeDocuments = documentSet.ExchangeDocumentInfos.Select(e => e.Document).ToList();
+        var firstDocument = AccountingDocumentBases.As(exchangeDocuments[0]);
+        var secondDocument = AccountingDocumentBases.As(exchangeDocuments[1]);
+        if (firstDocument.FormalizedFunction == Docflow.AccountingDocumentBase.FormalizedFunction.Dop)
+        {
+          firstDocument.Relations.AddOrUpdate(Sungero.Exchange.Constants.Module.AddendumRelationName, null, secondDocument);
+          firstDocument.Save();
+        }
+        else
+        {
+          secondDocument.Relations.AddOrUpdate(Sungero.Exchange.Constants.Module.AddendumRelationName, null, firstDocument);
+          secondDocument.Save();
+        }
+      }
+    }
   }
 }
