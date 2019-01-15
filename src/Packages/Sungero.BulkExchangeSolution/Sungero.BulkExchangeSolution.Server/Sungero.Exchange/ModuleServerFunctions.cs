@@ -112,7 +112,7 @@ namespace Sungero.BulkExchangeSolution.Module.Exchange.Server
                                                              string.Equals(x.AlphaCode, Sungero.BulkExchangeSolution.Module.Exchange.Resources.RubAlphaCode,
                                                                            StringComparison.InvariantCultureIgnoreCase));
         
-        if (!Equals(document.Currency, rubCurrency) || document.TotalAmount >= 100000)
+        if (!Equals(document.Currency, rubCurrency) || document.TotalAmount >= Constants.Module.DocumentMaxTotalAmount)
         {
           result = false;
           reason = Resources.TotalAmountIsTooBig;
@@ -131,7 +131,7 @@ namespace Sungero.BulkExchangeSolution.Module.Exchange.Server
             this.IsCheckDocumentCompleted(documentInfo))
           result = true;
         var createTime = documentSet.ExchangeDocumentInfos.Select(x => x.Document.Created).Max();
-        if ((task == null || task.Status != Workflow.Task.Status.InProcess) && Calendar.Now - createTime > TimeSpan.FromHours(1) && !result)
+        if ((task == null || task.Status != Workflow.Task.Status.InProcess) && Calendar.Now - createTime > TimeSpan.FromHours(Constants.Module.CheckDocumentsDeadline) && !result)
         {
           var client = ExchangeCore.PublicFunctions.BusinessUnitBox.GetPublicClient(documentInfo.RootBox) as NpoComputer.DCX.ClientApi.Client;
           var message = client.GetMessage(documentInfo.ServiceMessageId);
