@@ -6,6 +6,8 @@ using Sungero.Commons;
 using Sungero.Core;
 using Sungero.CoreEntities;
 using Sungero.Docflow;
+using Sungero.ExchangeCore;
+using Sungero.Parties;
 using Sungero.Workflow;
 
 namespace Sungero.BulkExchangeSolution.Module.Exchange.Server
@@ -158,6 +160,24 @@ namespace Sungero.BulkExchangeSolution.Module.Exchange.Server
         documentInfo.Save();
       }
     }
+    
+    public override void StartExchangeTask(Sungero.ExchangeCore.IBoxBase box,
+                                           object messageUntyped,
+                                           Parties.ICounterparty sender,
+                                           bool isIncoming,
+                                           List<Sungero.Docflow.IOfficialDocument> needSign,
+                                           List<Sungero.Docflow.IOfficialDocument> signed,
+                                           object rejectedUntyped,
+                                           List<Sungero.Docflow.IOfficialDocument> dontNeedSign,
+                                           string exchangeTaskActiveTextBoundedDocuments)
+    {
+      var message = messageUntyped as NpoComputer.DCX.Common.IMessage;
+      var exchangeDocumentInfos = Sungero.BulkExchangeSolution.ExchangeDocumentInfos.GetAll().Where(e => e.ServiceMessageId == message.ServiceMessageId).ToList();
+      if (exchangeDocumentInfos.Any(i => i.CheckStatus == CheckStatus.Required))
+        return;
+      
+      base.StartExchangeTask(box, messageUntyped, sender, isIncoming, needSign, signed, rejectedUntyped, dontNeedSign, exchangeTaskActiveTextBoundedDocuments);
+    }
 
     public override Sungero.Exchange.IExchangeDocumentProcessingTask CreateExchangeTask(Sungero.ExchangeCore.IBoxBase box,
                                                                                         object messageUntyped,
@@ -197,6 +217,13 @@ namespace Sungero.BulkExchangeSolution.Module.Exchange.Server
                                                     ExchangeCore.IMessageQueueItem queueItem, bool isIncoming, List<IOfficialDocument> needSign, List<IOfficialDocument> dontNeedSign, List<IOfficialDocument> signed,
                                                     object untypedProcessingDocuments, object untypedRejected)
     {
+      var message = messageUntyped as NpoComputer.DCX.Common.IMessage;
+      var exchangeDocumentInfos = Sungero.BulkExchangeSolution.ExchangeDocumentInfos.GetAll().Where(e => e.ServiceMessageId == message.ServiceMessageId).ToList();
+      var documentSets = Sungero.BulkExchangeSolution.Functions.ExchangeDocumentInfo.GetDocumentSets(exchangeDocumentInfos);
+      foreach (var documentSet in documentSets)
+      {
+        Functions.Module.CheckDocumentSet(documentSet);
+      }
       base.ProcessMessageDocuments(box, messageUntyped, sender, queueItem, isIncoming, needSign, dontNeedSign, signed, untypedProcessingDocuments, untypedRejected);
       this.AddRelationsForDocumentSet(messageUntyped);
     }
