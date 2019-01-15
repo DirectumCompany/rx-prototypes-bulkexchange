@@ -137,7 +137,7 @@ namespace Sungero.BulkExchangeSolution.Module.Exchange.Server
         IExchangeDocumentInfo documentInfo = documentSet.ExchangeDocumentInfos.FirstOrDefault(x => Sungero.FinancialArchive.UniversalTransferDocuments.Is(x.Document));
         var task = documentInfo.CheckTask;
         if ((task == null || task != null && task.Status == Workflow.Task.Status.Completed) &&
-            this.IsCheckDocumentCompleted(OfficialDocuments.As(documentInfo.Document)))
+            this.IsCheckDocumentCompleted(documentInfo))
           result = true;
         var createTime = documentSet.ExchangeDocumentInfos.Select(x => x.Document.Created).Max();
         if ((task == null || task.Status != Workflow.Task.Status.InProcess) && Calendar.Now - createTime > TimeSpan.FromHours(1) && !result)
@@ -148,7 +148,7 @@ namespace Sungero.BulkExchangeSolution.Module.Exchange.Server
           var needSign = documentSet.ExchangeDocumentInfos.Select(i => i.Document).Where(d => FinancialArchive.UniversalTransferDocuments.Is(d)).ToList();
           var notNeedSign = documentSet.ExchangeDocumentInfos.Select(i => i.Document).Where(d => FinancialArchive.IncomingTaxInvoices.Is(d)).ToList();
 
-          var taskText = Environment.NewLine + "Не пройдена проверка: " + documentInfo.CheckFailReason;
+          var taskText = Environment.NewLine + Sungero.BulkExchangeSolution.Module.Exchange.Resources.CheckFailedTaskText + documentInfo.CheckFailReason;
           var processingTask = this.CreateExchangeTask(documentInfo.RootBox, message, documentInfo.Counterparty, isIncoming,
                                                        needSign, new List<IOfficialDocument>(), new List<NpoComputer.DCX.Common.IDocument>(),
                                                        notNeedSign, taskText);
@@ -191,11 +191,11 @@ namespace Sungero.BulkExchangeSolution.Module.Exchange.Server
       return task;
     }
     
-    private bool IsCheckDocumentCompleted(IOfficialDocument document)
+    private bool IsCheckDocumentCompleted(IExchangeDocumentInfo document)
     {
-      return document != null && (document.ExchangeState == Docflow.OfficialDocument.ExchangeState.Signed || document.ExchangeState == Docflow.OfficialDocument.ExchangeState.Obsolete ||
-                                  document.ExchangeState == Docflow.OfficialDocument.ExchangeState.Rejected || document.ExchangeState == Docflow.OfficialDocument.ExchangeState.Terminated ||
-                                  string.Equals(document.Note.Trim(), "проведено", StringComparison.InvariantCultureIgnoreCase));
+      return document != null && (document.ExchangeState == Sungero.Exchange.ExchangeDocumentInfo.ExchangeState.Signed || document.ExchangeState == Sungero.Exchange.ExchangeDocumentInfo.ExchangeState.Obsolete ||
+                                  document.ExchangeState == Sungero.Exchange.ExchangeDocumentInfo.ExchangeState.Rejected || document.ExchangeState == Sungero.Exchange.ExchangeDocumentInfo.ExchangeState.Terminated ||
+                                  string.Equals(document.Document.Note.Trim(), "проведено", StringComparison.InvariantCultureIgnoreCase));
     }
     
   }

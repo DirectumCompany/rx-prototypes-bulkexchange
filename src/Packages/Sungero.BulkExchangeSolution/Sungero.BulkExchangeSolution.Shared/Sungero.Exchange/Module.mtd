@@ -102,7 +102,8 @@
     "RubAlphaCode",
     "CheckSuccess",
     "CheckFail",
-    "DocumentSetWithIDs"
+    "DocumentSetWithIDs",
+    "CheckFailedTaskText"
   ],
   "SpecialFolders": [],
   "Version": "3.1.2.1",
