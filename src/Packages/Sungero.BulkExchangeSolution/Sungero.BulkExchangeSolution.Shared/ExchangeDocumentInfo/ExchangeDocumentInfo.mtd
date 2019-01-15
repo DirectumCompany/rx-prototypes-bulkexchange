@@ -117,6 +117,31 @@
       "Code": "CheckFailReaso",
       "ListDataBinderTypeName": "Sungero.Presentation.CommonDataBinders.StringEditorToStringBinder",
       "PreviousPropertyGuid": "a0f7bdec-26b7-48c8-befd-39a43a0dc866"
+    },
+    {
+      "$type": "Sungero.Metadata.EnumPropertyMetadata, Sungero.Metadata",
+      "NameGuid": "8ff226e0-8738-4556-9e59-54357cb620b5",
+      "Name": "RejectionStatus",
+      "Code": "RejectStatus",
+      "DirectValues": [
+        {
+          "NameGuid": "43770b9f-f74d-4e82-8bcd-8cf60ef25bda",
+          "Name": "Required",
+          "Code": "Required"
+        },
+        {
+          "NameGuid": "ac72f42a-3f8b-4bc6-9ab5-3f9cb49c8583",
+          "Name": "NotRequired",
+          "Code": "NotRequired"
+        },
+        {
+          "NameGuid": "eaa35395-46d2-4baa-809e-fe78fb0e4814",
+          "Name": "Sent",
+          "Code": "Sent"
+        }
+      ],
+      "ListDataBinderTypeName": "Sungero.Presentation.CommonDataBinders.DropDownEditorToEnumerationBinder",
+      "PreviousPropertyGuid": "3b47f7db-2f34-4a02-8886-314daf0bfd6b"
     }
   ],
   "PublicStructures": [],

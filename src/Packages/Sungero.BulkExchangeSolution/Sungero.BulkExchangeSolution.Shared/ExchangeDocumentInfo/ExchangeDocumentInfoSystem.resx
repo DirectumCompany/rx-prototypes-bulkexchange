@@ -159,4 +159,16 @@
   <data name="Property_CheckFailReason" xml:space="preserve">
     <value>CheckFailReaso</value>
   </data>
+  <data name="Property_RejectionStatus" xml:space="preserve">
+    <value>TODO</value>
+  </data>
+  <data name="Enum_RejectionStatus_Required" xml:space="preserve">
+    <value>TODO</value>
+  </data>
+  <data name="Enum_RejectionStatus_NotRequired" xml:space="preserve">
+    <value>TODO</value>
+  </data>
+  <data name="Enum_RejectionStatus_Sent" xml:space="preserve">
+    <value>TODO</value>
+  </data>
 </root>
