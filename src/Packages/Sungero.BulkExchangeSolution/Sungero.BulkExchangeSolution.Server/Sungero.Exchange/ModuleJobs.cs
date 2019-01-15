@@ -23,11 +23,13 @@ namespace Sungero.BulkExchangeSolution.Module.Exchange.Server
       var documentSets = Functions.Module.GetSignedAndNotSendedDocumentSets();
       foreach (var documentSet in documentSets)
       {
+        var infoIds = documentSet.ExchangeDocumentInfos.Select(e => e.Id).ToList();
         Transactions.Execute(
           () =>
           {
-            Logger.DebugFormat("Process document set with infos {0}", string.Join(", ", documentSet.ExchangeDocumentInfos.Select(i => i.Id)));
-            var boxes = documentSet.ExchangeDocumentInfos.GroupBy(i => i.RootBox);
+            Logger.DebugFormat("Process document set with infos {0}", string.Join(", ", infoIds));
+            var infos = ExchangeDocumentInfos.GetAll(i => infoIds.Contains(i.Id)).ToList();
+            var boxes = infos.GroupBy(i => i.RootBox);
             foreach (var box in boxes)
             {
               var counterparties = box.GroupBy(i => i.Counterparty);
@@ -38,7 +40,7 @@ namespace Sungero.BulkExchangeSolution.Module.Exchange.Server
                 var documents = counterpartyGroup.Select(g => g.Document).ToList();
                 Logger.DebugFormat("Try to send answer to documents {0}. Box {1}, counterparty {2}, certificate {3}.",
                                    string.Join(", ", documents.Select(d => d.Id)), businessUnitBox.Id, counterparty.Id, businessUnitBox.SignDocumentCertificate.Id);
-                Sungero.Exchange.PublicFunctions.Module.Remote.SendAnswers(documents, businessUnitBox, counterparty, businessUnitBox.SignDocumentCertificate);
+                Sungero.Exchange.PublicFunctions.Module.Remote.SendAnswers(documents, businessUnitBox, counterparty, businessUnitBox.SignDocumentCertificate, true);
               }
             }
           });

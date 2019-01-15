@@ -150,8 +150,8 @@ namespace Sungero.BulkExchangeSolution.Module.Exchange.Server
 
           var taskText = Environment.NewLine + "Не пройдена проверка: " + documentInfo.CheckFailReason;
           var processingTask = this.CreateExchangeTask(documentInfo.RootBox, message, documentInfo.Counterparty, isIncoming,
-                                  needSign, new List<IOfficialDocument>(), new List<NpoComputer.DCX.Common.IDocument>(), 
-                                  notNeedSign, taskText);
+                                                       needSign, new List<IOfficialDocument>(), new List<NpoComputer.DCX.Common.IDocument>(),
+                                                       notNeedSign, taskText);
           processingTask.Start();
           documentInfo.CheckTask = processingTask;
           documentInfo.Save();
@@ -176,7 +176,7 @@ namespace Sungero.BulkExchangeSolution.Module.Exchange.Server
         documentInfo.Save();
       }
     }
-    
+
     public override Sungero.Exchange.IExchangeDocumentProcessingTask CreateExchangeTask(Sungero.ExchangeCore.IBoxBase box,
                                                                                         object messageUntyped,
                                                                                         Parties.ICounterparty sender,
