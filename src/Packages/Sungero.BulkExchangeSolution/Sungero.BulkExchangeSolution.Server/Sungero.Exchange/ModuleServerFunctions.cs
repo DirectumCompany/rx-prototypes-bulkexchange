@@ -121,7 +121,7 @@ namespace Sungero.BulkExchangeSolution.Module.Exchange.Server
 
       var logMessage = Sungero.BulkExchangeSolution.Module.Exchange.Resources.DocumentSetWithIDs.ToString();
       for (int i = 0; i < documents.Count; i++)
-        logMessage += i == 0 ? documents[i].Id.ToString() : documents[i].Id + ", ";
+        logMessage += i == 0 ? documents[i].Id.ToString() : ", " + documents[i].Id;
       
       if (!result)
       {
