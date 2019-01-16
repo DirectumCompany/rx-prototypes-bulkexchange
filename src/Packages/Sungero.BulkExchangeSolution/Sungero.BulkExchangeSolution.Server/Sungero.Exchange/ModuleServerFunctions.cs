@@ -224,44 +224,81 @@ namespace Sungero.BulkExchangeSolution.Module.Exchange.Server
                                                     ExchangeCore.IMessageQueueItem queueItem, bool isIncoming, List<IOfficialDocument> needSign, List<IOfficialDocument> dontNeedSign, List<IOfficialDocument> signed,
                                                     object untypedProcessingDocuments, object untypedRejected)
     {
-      var message = messageUntyped as NpoComputer.DCX.Common.IMessage;
-      var exchangeDocumentInfos = Sungero.BulkExchangeSolution.ExchangeDocumentInfos.GetAll().Where(e => e.ServiceMessageId == message.ServiceMessageId).ToList();
-      var documentSets = Sungero.BulkExchangeSolution.Functions.ExchangeDocumentInfo.GetDocumentSets(exchangeDocumentInfos);
-      foreach (var documentSet in documentSets)
+      var documentSet = GetDocumentSet(messageUntyped);
+      var isFullSet = documentSet != null && documentSet.IsFullSet;
+      if (isFullSet)
       {
         Functions.Module.CheckDocumentSet(documentSet);
+        if (documentSet.ExchangeDocumentInfos.Count == 2)
+          this.AddRelationsForDocumentSet(documentSet);
       }
+      this.SetRejectionStatus(documentSet.ExchangeDocumentInfos, isFullSet);
       base.ProcessMessageDocuments(box, messageUntyped, sender, queueItem, isIncoming, needSign, dontNeedSign, signed, untypedProcessingDocuments, untypedRejected);
-      this.AddRelationsForDocumentSet(messageUntyped);
     }
     
     /// <summary>
     /// Создать связь документов комплекта.
     /// </summary>
     /// <param name="messageUntyped">Сообщение.</param>
-    private void AddRelationsForDocumentSet(object messageUntyped)
+    private void AddRelationsForDocumentSet(Structures.Exchange.ExchangeDocumentInfo.DocumentSet documentSet)
+    {
+      var exchangeDocuments = documentSet.ExchangeDocumentInfos.Select(e => e.Document).ToList();
+      var firstDocument = AccountingDocumentBases.As(exchangeDocuments[0]);
+      var secondDocument = AccountingDocumentBases.As(exchangeDocuments[1]);
+      if (firstDocument.FormalizedFunction == Docflow.AccountingDocumentBase.FormalizedFunction.Dop)
+      {
+        firstDocument.Relations.AddOrUpdate(Sungero.Exchange.Constants.Module.AddendumRelationName, null, secondDocument);
+        firstDocument.Save();
+      }
+      else
+      {
+        secondDocument.Relations.AddOrUpdate(Sungero.Exchange.Constants.Module.AddendumRelationName, null, firstDocument);
+        secondDocument.Save();
+      }
+    }
+    
+    /// <summary>
+    /// Отправлять задания/уведомления ответственному.
+    /// </summary>
+    /// <param name="box">Абонентский ящик.</param>
+    /// <returns>Признак отправки задания ответсвенному за ящик.</returns>
+    protected override bool NeedReceiveTask(IBoxBase box, object messageUntyped)
+    {
+      var documentSet = GetDocumentSet(messageUntyped);
+      var isFullSet = documentSet != null && documentSet.IsFullSet;
+      
+      return base.NeedReceiveTask(box, messageUntyped) && isFullSet;
+    }
+    
+    /// <summary>
+    /// Получить комплект документов.
+    /// </summary>
+    /// <param name="messageUntyped">Сообщение.</param>
+    /// <returns>Структура с комплектом - признак полноты и инфошки. Может быть null, если в сообщении нет никаких признаков комплекта.</returns>
+    private Structures.Exchange.ExchangeDocumentInfo.DocumentSet GetDocumentSet(object messageUntyped)
     {
       var message = messageUntyped as NpoComputer.DCX.Common.IMessage;
       var exchangeDocumentInfo = Sungero.BulkExchangeSolution.ExchangeDocumentInfos.GetAll().Where(e => e.ServiceMessageId == message.ServiceMessageId).FirstOrDefault();
-      var documentSet = exchangeDocumentInfo != null
+      return exchangeDocumentInfo != null
         ? Sungero.BulkExchangeSolution.Functions.ExchangeDocumentInfo.GetDocumentSet(exchangeDocumentInfo)
         : null;
+    }
+    
+    /// <summary>
+    /// Установить статусы отказа.
+    /// </summary>
+    /// <param name="documentInfos">Список информаций о документах обмена.</param>
+    /// <param name="isFullSet">True если комплект полный.</param>
+    private void SetRejectionStatus(List<Sungero.BulkExchangeSolution.IExchangeDocumentInfo> documentInfos, bool isFullSet)
+    {
+      var rejectionStatus = isFullSet
+        ? ExchangeDocumentInfo.RejectionStatus.NotRequired
+        : ExchangeDocumentInfo.RejectionStatus.Required;
       
-      if (documentSet != null && documentSet.IsFullSet && documentSet.ExchangeDocumentInfos.Count == 2)
+      foreach (var exhangeDoc in documentInfos)
       {
-        var exchangeDocuments = documentSet.ExchangeDocumentInfos.Select(e => e.Document).ToList();
-        var firstDocument = AccountingDocumentBases.As(exchangeDocuments[0]);
-        var secondDocument = AccountingDocumentBases.As(exchangeDocuments[1]);
-        if (firstDocument.FormalizedFunction == Docflow.AccountingDocumentBase.FormalizedFunction.Dop)
-        {
-          firstDocument.Relations.AddOrUpdate(Sungero.Exchange.Constants.Module.AddendumRelationName, null, secondDocument);
-          firstDocument.Save();
-        }
-        else
-        {
-          secondDocument.Relations.AddOrUpdate(Sungero.Exchange.Constants.Module.AddendumRelationName, null, firstDocument);
-          secondDocument.Save();
-        }
+        exhangeDoc.RejectionStatus = rejectionStatus;
+        exhangeDoc.Save();
       }
     }
   }
