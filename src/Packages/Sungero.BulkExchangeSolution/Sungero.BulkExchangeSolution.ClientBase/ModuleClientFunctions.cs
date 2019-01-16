@@ -55,7 +55,6 @@ namespace Sungero.BulkExchangeSolution.Client
         try
         {
           {
-            documentInfo.SignStatus = Sungero.BulkExchangeSolution.ExchangeDocumentInfo.SignStatus.Signed;
             var result = Sungero.Exchange.PublicFunctions.Module.SendAmendmentRequest(new List<IOfficialDocument> { documentInfo.Document },
               documentInfo.Counterparty, Sungero.BulkExchangeSolution.Resources.RejectMessage, true,
               documentInfo.RootBox, certificate, false);
