@@ -164,8 +164,8 @@ namespace Sungero.BulkExchangeSolution.Module.Exchange.Server
 
         var taskText = Environment.NewLine + Sungero.BulkExchangeSolution.Module.Exchange.Resources.CheckFailedTaskText + documentInfo.CheckFailReason;
         var processingTask = this.CreateExchangeTask(documentInfo.RootBox, message, documentInfo.Counterparty, isIncoming,
-          needSign, new List<IOfficialDocument>(), new List<NpoComputer.DCX.Common.IDocument>(),
-          notNeedSign, taskText);
+                                                     needSign, new List<IOfficialDocument>(), new List<NpoComputer.DCX.Common.IDocument>(),
+                                                     notNeedSign, taskText);
         processingTask.Start();
         documentInfo.CheckTask = processingTask;
         documentInfo.Save();
@@ -230,6 +230,7 @@ namespace Sungero.BulkExchangeSolution.Module.Exchange.Server
       var isFullSet = documentSet != null && documentSet.IsFullSet;
       if (isFullSet)
       {
+        this.ProcessResponsibleEmployeeInPurchaseOrderCard(documentSet);
         Functions.Module.CheckDocumentSet(documentSet);
         if (documentSet.ExchangeDocumentInfos.Count == 2)
           this.AddRelationsForDocumentSet(documentSet);
@@ -237,6 +238,37 @@ namespace Sungero.BulkExchangeSolution.Module.Exchange.Server
       if (documentSet != null)
         this.SetStatuses(documentSet.ExchangeDocumentInfos, isFullSet);
       base.ProcessMessageDocuments(box, messageUntyped, sender, queueItem, isIncoming, needSign, dontNeedSign, signed, untypedProcessingDocuments, untypedRejected);
+    }
+    
+    /// <summary>
+    /// Обработать комплект товарного потока - заполнить ответственного.
+    /// </summary>
+    /// <param name="documentSet">Комплект документов.</param>
+    public virtual void ProcessResponsibleEmployeeInPurchaseOrderCard(Structures.Exchange.ExchangeDocumentInfo.DocumentSet documentSet)
+    {
+      if (documentSet == null || !documentSet.IsFullSet)
+        return;
+      
+      var counterparty = documentSet.ExchangeDocumentInfos.Select(i => i.Counterparty).Distinct().Single();
+      var responsible = CompanyBases.Is(counterparty) ? CompanyBases.As(counterparty).Responsible : null;
+      if (responsible == null)
+        return;
+      
+      foreach (var document in documentSet.ExchangeDocumentInfos.Select(i => i.Document))
+      {
+        var accountingDocument = Docflow.AccountingDocumentBases.As(document);
+        if (accountingDocument == null)
+          continue;
+        
+        if (accountingDocument.ResponsibleEmployee == null || accountingDocument.Department == null)
+        {
+          var entityParams = (accountingDocument as Domain.Shared.IExtendedEntity).Params;
+          entityParams[Constants.Module.RepeatRegister] = true;
+          accountingDocument.ResponsibleEmployee = responsible;
+          accountingDocument.Department = responsible.Department;
+          accountingDocument.Save();
+        }
+      }
     }
     
     /// <summary>

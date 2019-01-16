@@ -7,5 +7,6 @@ namespace Sungero.BulkExchangeSolution.Module.Exchange.Constants
   {
     public const int DocumentMaxTotalAmount = 100000;
     public const int CheckDocumentsDeadline = 1;
+    public const string RepeatRegister = "repeatRegister";
   }
 }
