@@ -30,7 +30,6 @@ namespace Sungero.BulkExchangeSolution.Module.Exchange.Server
           {
             var exchangeDocumentInfo = ExchangeDocumentInfos.As(Sungero.Exchange.PublicFunctions.ExchangeDocumentInfo.GetExDocumentInfoByExternalId(box, serviceDocument.ServiceEntityId));
             exchangeDocumentInfo.PurchaseOrder = purchaseOrderElement.Attribute("Значен").Value;
-            exchangeDocumentInfo.CheckStatus = CheckStatus.Required;
             exchangeDocumentInfo.Save();
           }
           var caseFile = Docflow.CaseFiles.GetAll(c => c.Status == Docflow.CaseFile.Status.Active).FirstOrDefault();
@@ -236,7 +235,7 @@ namespace Sungero.BulkExchangeSolution.Module.Exchange.Server
           this.AddRelationsForDocumentSet(documentSet);
       }
       if (documentSet != null)
-        this.SetRejectionStatus(documentSet.ExchangeDocumentInfos, isFullSet);
+        this.SetStatuses(documentSet.ExchangeDocumentInfos, isFullSet);
       base.ProcessMessageDocuments(box, messageUntyped, sender, queueItem, isIncoming, needSign, dontNeedSign, signed, untypedProcessingDocuments, untypedRejected);
     }
     
@@ -289,19 +288,24 @@ namespace Sungero.BulkExchangeSolution.Module.Exchange.Server
     }
     
     /// <summary>
-    /// Установить статусы отказа.
+    /// Установить статусы отказа и сверки.
     /// </summary>
     /// <param name="documentInfos">Список информаций о документах обмена.</param>
     /// <param name="isFullSet">True если комплект полный.</param>
-    private void SetRejectionStatus(List<Sungero.BulkExchangeSolution.IExchangeDocumentInfo> documentInfos, bool isFullSet)
+    private void SetStatuses(List<Sungero.BulkExchangeSolution.IExchangeDocumentInfo> documentInfos, bool isFullSet)
     {
       var rejectionStatus = isFullSet
         ? ExchangeDocumentInfo.RejectionStatus.NotRequired
         : ExchangeDocumentInfo.RejectionStatus.Required;
+
+      var checkStatus = isFullSet
+        ? ExchangeDocumentInfo.CheckStatus.Required
+        : ExchangeDocumentInfo.CheckStatus.NotRequired;
       
       foreach (var exhangeDoc in documentInfos)
       {
         exhangeDoc.RejectionStatus = rejectionStatus;
+        exhangeDoc.CheckStatus = checkStatus;
         exhangeDoc.Save();
       }
     }
