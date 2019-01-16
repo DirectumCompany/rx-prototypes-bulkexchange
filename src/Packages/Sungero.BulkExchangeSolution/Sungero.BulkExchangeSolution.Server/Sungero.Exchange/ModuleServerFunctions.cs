@@ -235,7 +235,8 @@ namespace Sungero.BulkExchangeSolution.Module.Exchange.Server
         if (documentSet.ExchangeDocumentInfos.Count == 2)
           this.AddRelationsForDocumentSet(documentSet);
       }
-      this.SetRejectionStatus(documentSet.ExchangeDocumentInfos, isFullSet);
+      if (documentSet != null)
+        this.SetRejectionStatus(documentSet.ExchangeDocumentInfos, isFullSet);
       base.ProcessMessageDocuments(box, messageUntyped, sender, queueItem, isIncoming, needSign, dontNeedSign, signed, untypedProcessingDocuments, untypedRejected);
     }
     
