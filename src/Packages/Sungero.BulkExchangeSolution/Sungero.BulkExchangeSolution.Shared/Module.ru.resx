@@ -121,6 +121,6 @@
     <value>Не удалось подписать документ.</value>
   </data>
   <data name="RejectMessage" xml:space="preserve">
-    <value>Некорректный комплект</value>
+    <value>Некорректно сформирован комплект (накладная и счет-фактура)</value>
   </data>
 </root>
