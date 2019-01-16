@@ -260,14 +260,20 @@ namespace Sungero.BulkExchangeSolution.Module.Exchange.Server
         if (accountingDocument == null)
           continue;
         
-        if (accountingDocument.ResponsibleEmployee == null || accountingDocument.Department == null)
+        if (accountingDocument.Department == null)
         {
+          // Подразделение зарегистрированного документа можно менять только на смене рег.данных.
           var entityParams = (accountingDocument as Domain.Shared.IExtendedEntity).Params;
           entityParams[Constants.Module.RepeatRegister] = true;
-          accountingDocument.ResponsibleEmployee = responsible;
           accountingDocument.Department = responsible.Department;
-          accountingDocument.Save();
         }
+        
+        // Не у всех типов доступен ответственный на карточке.
+        if (accountingDocument.ResponsibleEmployee == null && accountingDocument.State.Properties.ResponsibleEmployee.IsVisible)
+          accountingDocument.ResponsibleEmployee = responsible;
+
+        if (accountingDocument.State.IsChanged)
+          accountingDocument.Save();
       }
     }
     
