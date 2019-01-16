@@ -185,20 +185,6 @@ namespace Sungero.BulkExchangeSolution.Module.Exchange.Server
       
       base.StartExchangeTask(box, messageUntyped, sender, isIncoming, needSign, signed, rejectedUntyped, dontNeedSign, exchangeTaskActiveTextBoundedDocuments);
     }
-
-    public override Sungero.Exchange.IExchangeDocumentProcessingTask CreateExchangeTask(Sungero.ExchangeCore.IBoxBase box,
-                                                                                        object messageUntyped,
-                                                                                        Parties.ICounterparty sender,
-                                                                                        bool isIncoming,
-                                                                                        List<Sungero.Docflow.IOfficialDocument> needSign,
-                                                                                        List<Sungero.Docflow.IOfficialDocument> signed,
-                                                                                        object rejectedUntyped,
-                                                                                        List<Sungero.Docflow.IOfficialDocument> dontNeedSign,
-                                                                                        string exchangeTaskActiveTextBoundedDocuments)
-    {
-      var task = base.CreateExchangeTask(box, messageUntyped, sender, isIncoming, needSign, signed, rejectedUntyped, dontNeedSign, exchangeTaskActiveTextBoundedDocuments);
-      return task;
-    }
     
     private bool IsCheckDocumentCompleted(IExchangeDocumentInfo document)
     {
