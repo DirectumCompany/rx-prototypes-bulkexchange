@@ -63,6 +63,12 @@ namespace Sungero.BulkExchangeSolution.Client
               documentInfo.RejectionStatus = RejectionStatus.Sent;
               Logger.DebugFormat("Send reject document with document ids {0} successfully.", documentInfo.Document.Id);
             }
+            else
+              Logger.Debug(result);
+
+            if (string.Equals(result, Sungero.Exchange.Resources.AllAnswersIsAlreadySent) ||
+                string.Equals(result, Sungero.Exchange.Resources.AnswerIsAlreadySent))
+              documentInfo.RejectionStatus = RejectionStatus.Sent;
             documentInfo.Save();
           }
         }
