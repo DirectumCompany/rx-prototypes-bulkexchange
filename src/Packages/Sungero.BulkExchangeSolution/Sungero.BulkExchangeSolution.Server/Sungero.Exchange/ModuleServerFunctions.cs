@@ -173,6 +173,18 @@ namespace Sungero.BulkExchangeSolution.Module.Exchange.Server
       }
     }
     
+    /// <summary>
+    /// Стартовать задачу на обработку.
+    /// </summary>
+    /// <param name="box">Абонентский ящик.</param>
+    /// <param name="messageUntyped">Сообщение.</param>
+    /// <param name="sender">Отправитель.</param>
+    /// <param name="isIncoming">True - от контрагента, false - наше.</param>
+    /// <param name="needSign">Коллекция документов, требующих подписания.</param>
+    /// <param name="signed">Коллекция уже подписанных документов.</param>
+    /// <param name="rejectedUntyped">Коллекция документов, по которым отказано.</param>
+    /// <param name="dontNeedSign">Коллекция документов, требующих подписания.</param>
+    /// <param name="exchangeTaskActiveTextBoundedDocuments">Часть ActiveText для формирования задачи на обработку для связанных документов.</param>
     public override void StartExchangeTask(Sungero.ExchangeCore.IBoxBase box,
                                            object messageUntyped,
                                            Parties.ICounterparty sender,
@@ -252,7 +264,7 @@ namespace Sungero.BulkExchangeSolution.Module.Exchange.Server
     /// Отправлять задания/уведомления ответственному.
     /// </summary>
     /// <param name="box">Абонентский ящик.</param>
-    /// <returns>Признак отправки задания ответсвенному за ящик.</returns>
+    /// <returns>Признак отправки задания ответственному за ящик/контрагента.</returns>
     protected override bool NeedReceiveTask(IBoxBase box, object messageUntyped)
     {
       var documentSet = GetDocumentSet(messageUntyped);
