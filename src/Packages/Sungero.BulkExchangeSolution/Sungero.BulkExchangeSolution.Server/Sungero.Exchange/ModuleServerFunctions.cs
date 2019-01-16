@@ -182,7 +182,7 @@ namespace Sungero.BulkExchangeSolution.Module.Exchange.Server
     /// <param name="needSign">Коллекция документов, требующих подписания.</param>
     /// <param name="signed">Коллекция уже подписанных документов.</param>
     /// <param name="rejectedUntyped">Коллекция документов, по которым отказано.</param>
-    /// <param name="dontNeedSign">Коллекция документов, требующих подписания.</param>
+    /// <param name="dontNeedSign">Коллекция документов, не требующих подписания.</param>
     /// <param name="exchangeTaskActiveTextBoundedDocuments">Часть ActiveText для формирования задачи на обработку для связанных документов.</param>
     public override void StartExchangeTask(Sungero.ExchangeCore.IBoxBase box,
                                            object messageUntyped,
@@ -218,15 +218,15 @@ namespace Sungero.BulkExchangeSolution.Module.Exchange.Server
     /// <param name="queueItem">Элемент очереди.</param>
     /// <param name="isIncoming">True - от контрагента, false - наше.</param>
     /// <param name="needSign">Коллекция документов, требующих подписания.</param>
-    /// <param name="dontNeedSign">Коллекция документов, требующих подписания.</param>
+    /// <param name="dontNeedSign">Коллекция документов, не требующих подписания.</param>
     /// <param name="signed">Коллекция уже подписанных документов.</param>
-    /// <param name="processingDocuments">Обрабатываемые документы.</param>
-    /// <param name="rejected">Коллекция документов, по которым отказано.</param>
+    /// <param name="untypedProcessingDocuments">Обрабатываемые документы.</param>
+    /// <param name="untypedRejected">Коллекция документов, по которым отказано.</param>
     protected override void ProcessMessageDocuments(ExchangeCore.IBoxBase box, object messageUntyped, Parties.ICounterparty sender,
                                                     ExchangeCore.IMessageQueueItem queueItem, bool isIncoming, List<IOfficialDocument> needSign, List<IOfficialDocument> dontNeedSign, List<IOfficialDocument> signed,
                                                     object untypedProcessingDocuments, object untypedRejected)
     {
-      var documentSet = GetDocumentSet(messageUntyped);
+      var documentSet = this.GetDocumentSet(messageUntyped);
       var isFullSet = documentSet != null && documentSet.IsFullSet;
       if (isFullSet)
       {
@@ -274,7 +274,7 @@ namespace Sungero.BulkExchangeSolution.Module.Exchange.Server
     /// <summary>
     /// Создать связь документов комплекта.
     /// </summary>
-    /// <param name="messageUntyped">Сообщение.</param>
+    /// <param name="documentSet">Комплект.</param>
     private void AddRelationsForDocumentSet(Structures.Exchange.ExchangeDocumentInfo.DocumentSet documentSet)
     {
       var exchangeDocuments = documentSet.ExchangeDocumentInfos.Select(e => e.Document).ToList();
@@ -296,10 +296,11 @@ namespace Sungero.BulkExchangeSolution.Module.Exchange.Server
     /// Отправлять задания/уведомления ответственному.
     /// </summary>
     /// <param name="box">Абонентский ящик.</param>
+    /// <param name="messageUntyped">Сообщение.</param>
     /// <returns>Признак отправки задания ответственному за ящик/контрагента.</returns>
     protected override bool NeedReceiveTask(IBoxBase box, object messageUntyped)
     {
-      var documentSet = GetDocumentSet(messageUntyped);
+      var documentSet = this.GetDocumentSet(messageUntyped);
       var isFullSet = documentSet != null && documentSet.IsFullSet;
       
       return base.NeedReceiveTask(box, messageUntyped) && isFullSet;
