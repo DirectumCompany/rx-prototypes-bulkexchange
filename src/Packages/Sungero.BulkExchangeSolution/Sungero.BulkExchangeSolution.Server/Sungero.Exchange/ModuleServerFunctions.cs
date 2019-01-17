@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Sungero.BulkExchangeSolution.ExchangeDocumentInfo;
+using Sungero.BulkExchangeSolution.Structures.Exchange.ExchangeDocumentInfo;
 using Sungero.Commons;
 using Sungero.Core;
 using Sungero.CoreEntities;
@@ -58,7 +59,7 @@ namespace Sungero.BulkExchangeSolution.Module.Exchange.Server
       return result;
     }
     
-    public virtual List<Structures.Exchange.ExchangeDocumentInfo.DocumentSet> GetSignedAndNotSendedDocumentSets()
+    public virtual List<Sungero.BulkExchangeSolution.Structures.Exchange.ExchangeDocumentInfo.DocumentSet> GetSignedAndNotSendedDocumentSets()
     {
       var boxes = Sungero.ExchangeCore.PublicFunctions.BusinessUnitBox.Remote.GetConnectedBoxes().ToList();
       
@@ -94,7 +95,7 @@ namespace Sungero.BulkExchangeSolution.Module.Exchange.Server
     /// Проверка документов по учетной системе.
     /// </summary>
     /// <param name="documentSet">Комплект документов.</param>
-    public void CheckDocumentSet(Structures.Exchange.ExchangeDocumentInfo.DocumentSet documentSet)
+    public void CheckDocumentSet(Sungero.BulkExchangeSolution.Structures.Exchange.ExchangeDocumentInfo.DocumentSet documentSet)
     {
       var totalAmount = Sungero.Docflow.AccountingDocumentBases.As(documentSet.ExchangeDocumentInfos.FirstOrDefault().Document).TotalAmount;
       var result = true;
@@ -122,11 +123,11 @@ namespace Sungero.BulkExchangeSolution.Module.Exchange.Server
         }
       }
 
-      var logMessage = Sungero.BulkExchangeSolution.Module.Exchange.Resources.DocumentSetWithIDs.ToString();
+      var logMessage = Resources.DocumentSetWithIDs.ToString();
       for (int i = 0; i < documents.Count; i++)
         logMessage += i == 0 ? documents[i].Id.ToString() : ", " + documents[i].Id;
       
-      IExchangeDocumentInfo documentInfo = documentSet.ExchangeDocumentInfos.FirstOrDefault(x => Sungero.FinancialArchive.UniversalTransferDocuments.Is(x.Document));
+      var documentInfo = documentSet.ExchangeDocumentInfos.FirstOrDefault(x => Sungero.FinancialArchive.UniversalTransferDocuments.Is(x.Document));
       var task = documentInfo.CheckTask;
       if (!result)
       {
@@ -135,43 +136,14 @@ namespace Sungero.BulkExchangeSolution.Module.Exchange.Server
           result = true;
       }
       
-      logMessage += result ? Sungero.BulkExchangeSolution.Module.Exchange.Resources.CheckSuccess : Sungero.BulkExchangeSolution.Module.Exchange.Resources.CheckFail + reason;
+      logMessage += result ? Resources.CheckSuccess : Resources.CheckFail + reason;
       Logger.Debug(logMessage);
       
-      foreach (var info in documentSet.ExchangeDocumentInfos)
-      {
-        if (result)
-        {
-          info.CheckStatus = CheckStatus.Completed;
-          info.CheckFailReason = null;
-        }
-        else
-        {
-          info.CheckFailReason = reason;
-          info.CheckStatus = CheckStatus.Required;
-        }
-        info.Save();
-      }
+      this.UpdateExchangeDocumentInfos(documentSet, result, reason);
       
-      var createTime = documentSet.ExchangeDocumentInfos.Select(x => x.Document.Created).Max();
-      if ((task == null || task.Status != Workflow.Task.Status.InProcess) && Calendar.Now - createTime > TimeSpan.FromHours(Constants.Module.DocumentCheckDeadlineInHours) && !result)
-      {
-        var client = ExchangeCore.PublicFunctions.BusinessUnitBox.GetPublicClient(documentInfo.RootBox) as NpoComputer.DCX.ClientApi.Client;
-        var message = client.GetMessage(documentInfo.ServiceMessageId);
-        var isIncoming = message.Sender.Organization.OrganizationId != documentInfo.RootBox.OrganizationId;
-        var needSign = documentSet.ExchangeDocumentInfos.Select(i => i.Document).Where(d => FinancialArchive.UniversalTransferDocuments.Is(d)).ToList();
-        var notNeedSign = documentSet.ExchangeDocumentInfos.Select(i => i.Document).Where(d => FinancialArchive.IncomingTaxInvoices.Is(d)).ToList();
-
-        var taskText = Environment.NewLine + Sungero.BulkExchangeSolution.Module.Exchange.Resources.CheckFailedTaskText + documentInfo.CheckFailReason;
-        var processingTask = this.CreateExchangeTask(documentInfo.RootBox, message, documentInfo.Counterparty, isIncoming,
-                                                     needSign, new List<IOfficialDocument>(), new List<NpoComputer.DCX.Common.IDocument>(),
-                                                     notNeedSign, taskText);
-        processingTask.Start();
-        documentInfo.CheckTask = processingTask;
-        documentInfo.Save();
-      }
+      this.SendDocumentProcessingTask(documentSet, result);
     }
-    
+
     /// <summary>
     /// Стартовать задачу на обработку.
     /// </summary>
@@ -244,7 +216,7 @@ namespace Sungero.BulkExchangeSolution.Module.Exchange.Server
     /// Обработать комплект товарного потока - заполнить ответственного.
     /// </summary>
     /// <param name="documentSet">Комплект документов.</param>
-    public virtual void ProcessResponsibleEmployeeInPurchaseOrderCard(Structures.Exchange.ExchangeDocumentInfo.DocumentSet documentSet)
+    public virtual void ProcessResponsibleEmployeeInPurchaseOrderCard(Sungero.BulkExchangeSolution.Structures.Exchange.ExchangeDocumentInfo.DocumentSet documentSet)
     {
       if (documentSet == null || !documentSet.IsFullSet)
         return;
@@ -281,7 +253,7 @@ namespace Sungero.BulkExchangeSolution.Module.Exchange.Server
     /// Создать связь документов комплекта.
     /// </summary>
     /// <param name="documentSet">Комплект.</param>
-    private void AddRelationsForDocumentSet(Structures.Exchange.ExchangeDocumentInfo.DocumentSet documentSet)
+    private void AddRelationsForDocumentSet(Sungero.BulkExchangeSolution.Structures.Exchange.ExchangeDocumentInfo.DocumentSet documentSet)
     {
       var exchangeDocuments = documentSet.ExchangeDocumentInfos.Select(e => e.Document).ToList();
       var firstDocument = AccountingDocumentBases.As(exchangeDocuments[0]);
@@ -312,12 +284,62 @@ namespace Sungero.BulkExchangeSolution.Module.Exchange.Server
       return base.NeedReceiveTask(box, messageUntyped) && isFullSet;
     }
     
+    private void SendDocumentProcessingTask(DocumentSet documentSet, bool result)
+    {
+      var documentInfo =
+        documentSet.ExchangeDocumentInfos.FirstOrDefault(x =>
+          Sungero.FinancialArchive.UniversalTransferDocuments.Is(x.Document));
+      var createTime = documentSet.ExchangeDocumentInfos.Select(x => x.Document.Created).Max();
+      
+      if ((documentInfo.CheckTask == null || documentInfo.CheckTask.Status != Workflow.Task.Status.InProcess) &&
+          Calendar.Now - createTime > TimeSpan.FromHours(Constants.Module.DocumentCheckDeadlineInHours) && !result)
+      {
+        var client =
+          ExchangeCore.PublicFunctions.BusinessUnitBox.GetPublicClient(documentInfo.RootBox) as
+            NpoComputer.DCX.ClientApi.Client;
+        var message = client.GetMessage(documentInfo.ServiceMessageId);
+        var isIncoming = message.Sender.Organization.OrganizationId != documentInfo.RootBox.OrganizationId;
+        var needSign = documentSet.ExchangeDocumentInfos.Select(i => i.Document)
+          .Where(d => FinancialArchive.UniversalTransferDocuments.Is(d)).ToList();
+        var notNeedSign = documentSet.ExchangeDocumentInfos.Select(i => i.Document)
+          .Where(d => FinancialArchive.IncomingTaxInvoices.Is(d)).ToList();
+
+        var taskText = Environment.NewLine + Sungero.BulkExchangeSolution.Module.Exchange.Resources.CheckFailedTaskText +
+                       documentInfo.CheckFailReason;
+        var processingTask = this.CreateExchangeTask(documentInfo.RootBox, message, documentInfo.Counterparty, isIncoming,
+          needSign, new List<IOfficialDocument>(), new List<NpoComputer.DCX.Common.IDocument>(),
+          notNeedSign, taskText);
+        processingTask.Start();
+        documentInfo.CheckTask = processingTask;
+        documentInfo.Save();
+      }
+    }
+    
+    private void UpdateExchangeDocumentInfos(DocumentSet documentSet, bool result, string reason)
+    {
+      foreach (var info in documentSet.ExchangeDocumentInfos)
+      {
+        if (result)
+        {
+          info.CheckStatus = CheckStatus.Completed;
+          info.CheckFailReason = null;
+        }
+        else
+        {
+          info.CheckFailReason = reason;
+          info.CheckStatus = CheckStatus.Required;
+        }
+
+        info.Save();
+      }
+    }
+    
     /// <summary>
     /// Получить комплект документов.
     /// </summary>
     /// <param name="messageUntyped">Сообщение.</param>
     /// <returns>Структура с комплектом - признак полноты и инфошки. Может быть null, если в сообщении нет никаких признаков комплекта.</returns>
-    private Structures.Exchange.ExchangeDocumentInfo.DocumentSet GetDocumentSet(object messageUntyped)
+    private Sungero.BulkExchangeSolution.Structures.Exchange.ExchangeDocumentInfo.DocumentSet GetDocumentSet(object messageUntyped)
     {
       var message = messageUntyped as NpoComputer.DCX.Common.IMessage;
       var exchangeDocumentInfo = Sungero.BulkExchangeSolution.ExchangeDocumentInfos.GetAll().Where(e => e.ServiceMessageId == message.ServiceMessageId).FirstOrDefault();
@@ -331,7 +353,7 @@ namespace Sungero.BulkExchangeSolution.Module.Exchange.Server
     /// </summary>
     /// <param name="documentInfos">Список информаций о документах обмена.</param>
     /// <param name="isFullSet">True если комплект полный.</param>
-    private void SetStatuses(List<Sungero.BulkExchangeSolution.IExchangeDocumentInfo> documentInfos, bool isFullSet)
+    private void SetStatuses(List<IExchangeDocumentInfo> documentInfos, bool isFullSet)
     {
       var rejectionStatus = isFullSet
         ? ExchangeDocumentInfo.RejectionStatus.NotRequired
