@@ -154,7 +154,7 @@ namespace Sungero.BulkExchangeSolution.Module.Exchange.Server
       }
       
       var createTime = documentSet.ExchangeDocumentInfos.Select(x => x.Document.Created).Max();
-      if ((task == null || task.Status != Workflow.Task.Status.InProcess) && Calendar.Now - createTime > TimeSpan.FromHours(Constants.Module.CheckDocumentsDeadline) && !result)
+      if ((task == null || task.Status != Workflow.Task.Status.InProcess) && Calendar.Now - createTime > TimeSpan.FromHours(Constants.Module.DocumentCheckDeadlineInHours) && !result)
       {
         var client = ExchangeCore.PublicFunctions.BusinessUnitBox.GetPublicClient(documentInfo.RootBox) as NpoComputer.DCX.ClientApi.Client;
         var message = client.GetMessage(documentInfo.ServiceMessageId);
