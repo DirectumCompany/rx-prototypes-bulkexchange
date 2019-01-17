@@ -37,7 +37,10 @@ namespace Sungero.BulkExchangeSolution.Server
       // Обработка по номеру заказа. Если номера заказа нет - вернётся null.
       var documentSet = this.GetPurchaseOrderDocumentSet();
       
-      // TODO в теории тут будет обработка других типов комплектов, не только товарных накладных.
+      // Обработка по номеру договора для актов.
+      if (documentSet == null)
+        documentSet = this.GetContractStatementDocumentSet();
+      
       return documentSet;
     }
     
@@ -76,6 +79,59 @@ namespace Sungero.BulkExchangeSolution.Server
       
       // Во всех остальных случаях, когда например документов в сообщении больше - комплект считаем "некорректным".
       return Structures.Exchange.ExchangeDocumentInfo.DocumentSet.Create(false, infos, Constants.Exchange.ExchangeDocumentInfo.DocumentSetType.Waybill);
+    }
+    
+    protected virtual Structures.Exchange.ExchangeDocumentInfo.DocumentSet GetContractStatementDocumentSet()
+    {
+      // Берем все инфошки по сообщению - нам надо их проанализировать (сортируем, чтобы создавались гарантированно одинаковые структуры).
+      var infos = Sungero.BulkExchangeSolution.ExchangeDocumentInfos
+        .GetAll(i => Equals(i.RootBox, _obj.RootBox) && i.ServiceMessageId == _obj.ServiceMessageId)
+        .OrderBy(i => i.Id)
+        .ToList();
+
+      // Берем уникальный признак решения - номер договора.
+      var uniqueContractNumbers = infos.Select(i => i.ContractNumber).Distinct().ToList();
+      
+      // Если номера договора в сообщении нет - комплекта тоже нет.
+      if (uniqueContractNumbers.All(cn => string.IsNullOrWhiteSpace(cn)))
+        return null;
+      
+      // Если в сообщении упомянуты разные номера договоров - комплект "некорректный".
+      if (uniqueContractNumbers.Count > 1)
+        return Structures.Exchange.ExchangeDocumentInfo.DocumentSet.Create(false, infos, Constants.Exchange.ExchangeDocumentInfo.DocumentSetType.ContractStatement);
+      
+      // Если такого договора нет в системе или таких договоров несколько - комплект некорретный.
+      var contracts = Sungero.Contracts.ContractBases.GetAll(c => Equals(_obj.Counterparty, c.Counterparty) && c.RegistrationNumber == uniqueContractNumbers.First());
+      if (contracts.Count() != 1)
+        return Structures.Exchange.ExchangeDocumentInfo.DocumentSet.Create(false, infos, Constants.Exchange.ExchangeDocumentInfo.DocumentSetType.ContractStatement);
+      
+      if (infos.Count == 1)
+      {
+        // Если в сообщении только один документ и он с функцией СЧФДОП - это "корректный" комплект.
+        var full = Functions.ExchangeDocumentInfo.ExchangeDocumentInfoHasFunction(infos.Single(), Docflow.AccountingDocumentBase.FormalizedFunction.SchfDop);
+        return Structures.Exchange.ExchangeDocumentInfo.DocumentSet.Create(full, infos, Constants.Exchange.ExchangeDocumentInfo.DocumentSetType.ContractStatement);
+      }
+      else if (infos.Count == 2)
+      {
+        var hasSchf = infos.Any(i => Functions.ExchangeDocumentInfo.ExchangeDocumentInfoHasFunction(i, Docflow.AccountingDocumentBase.FormalizedFunction.Schf));
+        if (infos.All(i => Docflow.AccountingDocumentBases.Is(i.Document) && Docflow.AccountingDocumentBases.As(i.Document).IsFormalized == true))
+        {
+          // Если в сообщении только два документа и это СЧФ и ДОП - это "корректный" комплект.
+          var hasDop = infos.Any(i => Functions.ExchangeDocumentInfo.ExchangeDocumentInfoHasFunction(i, Docflow.AccountingDocumentBase.FormalizedFunction.Dop));
+          return Structures.Exchange.ExchangeDocumentInfo.DocumentSet.Create(hasSchf && hasDop, infos,
+                                                                             Constants.Exchange.ExchangeDocumentInfo.DocumentSetType.ContractStatement);
+        }
+        else
+        {
+          // Если в сообщении только два документа и это СФЧ и акт - это "корректный" комплект.
+          var hasContractStatement = infos.Any(i => FinancialArchive.ContractStatements.Is(i.Document));
+          return Structures.Exchange.ExchangeDocumentInfo.DocumentSet.Create(hasSchf && hasContractStatement, infos,
+                                                                             Constants.Exchange.ExchangeDocumentInfo.DocumentSetType.ContractStatement);
+        }
+      }
+      
+      // Во всех остальных случаях, когда например документов в сообщении больше - комплект считаем "некорректным".
+      return Structures.Exchange.ExchangeDocumentInfo.DocumentSet.Create(false, infos, Constants.Exchange.ExchangeDocumentInfo.DocumentSetType.ContractStatement);
     }
     
     /// <summary>
