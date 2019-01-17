@@ -168,4 +168,7 @@
   <data name="Enum_RejectionStatus_Sent" xml:space="preserve">
     <value>Отправлен</value>
   </data>
+  <data name="Property_ContractNumber" xml:space="preserve">
+    <value>Номер договора</value>
+  </data>
 </root>

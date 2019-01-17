@@ -171,4 +171,7 @@
   <data name="Enum_RejectionStatus_Sent" xml:space="preserve">
     <value>TODO</value>
   </data>
+  <data name="Property_ContractNumber" xml:space="preserve">
+    <value>TODO</value>
+  </data>
 </root>

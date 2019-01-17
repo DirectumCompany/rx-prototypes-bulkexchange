@@ -142,6 +142,14 @@
       ],
       "ListDataBinderTypeName": "Sungero.Presentation.CommonDataBinders.DropDownEditorToEnumerationBinder",
       "PreviousPropertyGuid": "3b47f7db-2f34-4a02-8886-314daf0bfd6b"
+    },
+    {
+      "$type": "Sungero.Metadata.StringPropertyMetadata, Sungero.Metadata",
+      "NameGuid": "04abc803-220f-404c-9540-4356622cd409",
+      "Name": "ContractNumber",
+      "Code": "ContractNumber",
+      "ListDataBinderTypeName": "Sungero.Presentation.CommonDataBinders.StringEditorToStringBinder",
+      "PreviousPropertyGuid": "8ff226e0-8738-4556-9e59-54357cb620b5"
     }
   ],
   "PublicStructures": [],
