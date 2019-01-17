@@ -11,5 +11,7 @@ namespace Sungero.BulkExchangeSolution.Structures.Exchange.ExchangeDocumentInfo
     public bool IsFullSet { get; set; }
     
     public List<Sungero.BulkExchangeSolution.IExchangeDocumentInfo> ExchangeDocumentInfos { get; set; }
+    
+    public string Type {get; set; }
   }
 }

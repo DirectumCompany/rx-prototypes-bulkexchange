@@ -58,24 +58,24 @@ namespace Sungero.BulkExchangeSolution.Server
       
       // Если в сообщении упомянуты разные номера заказов - комплект "некорректный".
       if (uniquePurchaseOrders.Count > 1)
-        return Structures.Exchange.ExchangeDocumentInfo.DocumentSet.Create(false, infos);
+        return Structures.Exchange.ExchangeDocumentInfo.DocumentSet.Create(false, infos, Constants.Exchange.ExchangeDocumentInfo.DocumentSetType.Waybill);
       
       if (infos.Count == 1)
       {
         // Если в сообщении только один документ и он с функцией СЧФДОП - это "корректный" комплект.
         var full = Functions.ExchangeDocumentInfo.ExchangeDocumentInfoHasFunction(infos.Single(), Docflow.AccountingDocumentBase.FormalizedFunction.SchfDop);
-        return Structures.Exchange.ExchangeDocumentInfo.DocumentSet.Create(full, infos);
+        return Structures.Exchange.ExchangeDocumentInfo.DocumentSet.Create(full, infos, Constants.Exchange.ExchangeDocumentInfo.DocumentSetType.Waybill);
       }
       else if (infos.Count == 2)
       {
         // Если в сообщении только два документа и это СЧФ и ДОП - это "корректный" комплект.
         var hasSchf = infos.Any(i => Functions.ExchangeDocumentInfo.ExchangeDocumentInfoHasFunction(i, Docflow.AccountingDocumentBase.FormalizedFunction.Schf));
         var hasDop = infos.Any(i => Functions.ExchangeDocumentInfo.ExchangeDocumentInfoHasFunction(i, Docflow.AccountingDocumentBase.FormalizedFunction.Dop));
-        return Structures.Exchange.ExchangeDocumentInfo.DocumentSet.Create(hasSchf && hasDop, infos);
+        return Structures.Exchange.ExchangeDocumentInfo.DocumentSet.Create(hasSchf && hasDop, infos, Constants.Exchange.ExchangeDocumentInfo.DocumentSetType.Waybill);
       }
       
       // Во всех остальных случаях, когда например документов в сообщении больше - комплект считаем "некорректным".
-      return Structures.Exchange.ExchangeDocumentInfo.DocumentSet.Create(false, infos);
+      return Structures.Exchange.ExchangeDocumentInfo.DocumentSet.Create(false, infos, Constants.Exchange.ExchangeDocumentInfo.DocumentSetType.Waybill);
     }
     
     /// <summary>
