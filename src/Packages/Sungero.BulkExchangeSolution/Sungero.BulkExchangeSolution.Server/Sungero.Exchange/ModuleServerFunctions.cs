@@ -140,6 +140,8 @@ namespace Sungero.BulkExchangeSolution.Module.Exchange.Server
       Logger.Debug(logMessage);
       
       this.UpdateExchangeDocumentInfos(documentSet, result, reason);
+      foreach (var info in documentSet.ExchangeDocumentInfos.Where(i => i.CheckStatus == CheckStatus.Completed))
+        this.GenerateDefaultTitle(info.Document);
       
       this.SendDocumentProcessingTask(documentSet, result);
     }
@@ -198,8 +200,10 @@ namespace Sungero.BulkExchangeSolution.Module.Exchange.Server
                                                     ExchangeCore.IMessageQueueItem queueItem, bool isIncoming, List<IOfficialDocument> needSign, List<IOfficialDocument> dontNeedSign, List<IOfficialDocument> signed,
                                                     object untypedProcessingDocuments, object untypedRejected)
     {
-      var documentSet = this.GetDocumentSet(messageUntyped);
+      var documentSet = this.GetDocumentSet(messageUntyped);      
       var isFullSet = documentSet != null && documentSet.IsFullSet;
+      if (documentSet != null)
+        this.SetStatuses(documentSet.ExchangeDocumentInfos, isFullSet);      
       if (isFullSet)
       {
         this.ProcessResponsibleEmployeeInPurchaseOrderCard(documentSet);
@@ -207,8 +211,7 @@ namespace Sungero.BulkExchangeSolution.Module.Exchange.Server
         if (documentSet.ExchangeDocumentInfos.Count == 2)
           this.AddRelationsForDocumentSet(documentSet);
       }
-      if (documentSet != null)
-        this.SetStatuses(documentSet.ExchangeDocumentInfos, isFullSet);
+
       base.ProcessMessageDocuments(box, messageUntyped, sender, queueItem, isIncoming, needSign, dontNeedSign, signed, untypedProcessingDocuments, untypedRejected);
     }
     
@@ -368,6 +371,25 @@ namespace Sungero.BulkExchangeSolution.Module.Exchange.Server
         exhangeDoc.RejectionStatus = rejectionStatus;
         exhangeDoc.CheckStatus = checkStatus;
         exhangeDoc.Save();
+      }
+    }
+    /// <summary>
+    /// Сгенерировать титулы.
+    /// </summary>
+    /// <param name="document">Документ.</param>
+    private void GenerateDefaultTitle(Docflow.IOfficialDocument document)
+    {
+      if (!AccountingDocumentBases.Is(document))
+        return;
+      
+      var accountDocument = AccountingDocumentBases.As(document);      
+      if (accountDocument.ExchangeState == Docflow.OfficialDocument.ExchangeState.SignRequired && accountDocument.BuyerTitleId == null)
+      {
+        Docflow.PublicFunctions.AccountingDocumentBase.Remote.GenerateDefaultAnswer(accountDocument, document.BusinessUnit.CEO, true);
+      }
+      if (accountDocument.SellerTitleId != null && !Sungero.FinancialArchive.PublicFunctions.Module.Remote.HasSellerSignatoryInfo(accountDocument))
+      {
+        Docflow.PublicFunctions.AccountingDocumentBase.Remote.GenerateDefaultSellerTitle(accountDocument);
       }
     }
   }
