@@ -181,6 +181,10 @@ namespace Sungero.BulkExchangeSolution.Module.Exchange.Server
       if (exchangeDocumentInfos.Any(i => i.VerificationStatus == VerificationStatus.Required))
         return;
       
+      var documentSets = Sungero.BulkExchangeSolution.Functions.ExchangeDocumentInfo.GetDocumentSets(exchangeDocumentInfos);
+      if (documentSets.Any(s => s.IsFullSet && s.Type == BulkExchangeSolution.Constants.Exchange.ExchangeDocumentInfo.DocumentSetType.ContractStatement))
+        return;
+      
       base.StartExchangeTask(box, messageUntyped, sender, isIncoming, exchangeTaskActiveTextBoundedDocuments, infos);
     }
     
@@ -191,12 +195,12 @@ namespace Sungero.BulkExchangeSolution.Module.Exchange.Server
                                   string.Equals(document.Document.Note.Trim(), "проведено", StringComparison.InvariantCultureIgnoreCase));
     }
     
-    protected override void ProcessDocumentsFromNewIncomingMessage(List<Sungero.Exchange.IExchangeDocumentInfo> infos, 
-                                                                   object messageUntyped, 
-                                                                   IBoxBase box, 
+    protected override void ProcessDocumentsFromNewIncomingMessage(List<Sungero.Exchange.IExchangeDocumentInfo> infos,
+                                                                   object messageUntyped,
+                                                                   IBoxBase box,
                                                                    ICounterparty sender,
-                                                                   IMessageQueueItem queueItem, 
-                                                                   bool isIncoming, 
+                                                                   IMessageQueueItem queueItem,
+                                                                   bool isIncoming,
                                                                    object untypedProcessingDocuments)
     {
       var documentSet = this.GetDocumentSet(messageUntyped);
@@ -209,6 +213,7 @@ namespace Sungero.BulkExchangeSolution.Module.Exchange.Server
         Functions.Module.VerifyDocumentSet(documentSet);
         if (documentSet.ExchangeDocumentInfos.Count == 2)
           this.AddRelationsForDocumentSet(documentSet);
+        this.SendContractStatementForApproval(documentSet);
       }
 
       base.ProcessDocumentsFromNewIncomingMessage(infos, messageUntyped, box, sender, queueItem, isIncoming, untypedProcessingDocuments);
@@ -303,7 +308,7 @@ namespace Sungero.BulkExchangeSolution.Module.Exchange.Server
         var isIncoming = message.Sender.Organization.OrganizationId != documentInfo.RootBox.OrganizationId;
 
         var taskText = Environment.NewLine + Sungero.BulkExchangeSolution.Module.Exchange.Resources.VerificationFailedTaskText +
-                       documentInfo.VerificationFailReason;
+          documentInfo.VerificationFailReason;
         var processingTask = this.CreateExchangeTask(documentInfo.RootBox, message, documentInfo.Counterparty, isIncoming, taskText, documentSet.ExchangeDocumentInfos.ToList<Sungero.Exchange.IExchangeDocumentInfo>());
         processingTask.Start();
         documentInfo.VerificationTask = processingTask;
@@ -378,6 +383,26 @@ namespace Sungero.BulkExchangeSolution.Module.Exchange.Server
       var accountDocument = AccountingDocumentBases.As(document);
       if (accountDocument.ExchangeState == Docflow.OfficialDocument.ExchangeState.SignRequired && accountDocument.BuyerTitleId == null)
         Docflow.PublicFunctions.AccountingDocumentBase.Remote.GenerateDefaultAnswer(accountDocument, document.BusinessUnit.CEO, true);
+    }
+    
+    /// <summary>
+    /// Отправить комплект документов по услугам на согласование по регламенту.
+    /// </summary>
+    /// <param name="documentSet">Комплект.</param>
+    private void SendContractStatementForApproval(Sungero.BulkExchangeSolution.Structures.Exchange.ExchangeDocumentInfo.DocumentSet documentSet)
+    {
+      if (documentSet.Type != BulkExchangeSolution.Constants.Exchange.ExchangeDocumentInfo.DocumentSetType.ContractStatement)
+        return;
+      
+      var contractStatement = documentSet.ExchangeDocumentInfos.Select(i => i.Document).First(d => FinancialArchive.ContractStatements.Is(d) ||
+                                                                                              FinancialArchive.UniversalTransferDocuments.Is(d));
+      var task = Docflow.PublicFunctions.Module.Remote.CreateApprovalTask(contractStatement);
+      var counterparty = Docflow.AccountingDocumentBases.As(contractStatement).Counterparty;
+      var responsible = CompanyBases.Is(counterparty) ? CompanyBases.As(counterparty).Responsible : null;
+      if (responsible != null)
+        task.Author = responsible;
+      
+      task.Start();
     }
   }
 }
