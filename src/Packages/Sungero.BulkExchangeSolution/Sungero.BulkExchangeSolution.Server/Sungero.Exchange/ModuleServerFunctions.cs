@@ -18,9 +18,9 @@ namespace Sungero.BulkExchangeSolution.Module.Exchange.Server
 {
   partial class ModuleFunctions
   {
-    protected override Sungero.Docflow.IOfficialDocument GetOrCreateNewExchangeDocument(Sungero.ExchangeCore.IBoxBase box, object documentUntyped, Sungero.Parties.ICounterparty sender, string serviceCounterpartyId, DateTime messageDate, bool isIncoming)
+    protected override Sungero.Docflow.IOfficialDocument GetOrCreateNewExchangeDocument(object documentUntyped, Sungero.ExchangeCore.IBoxBase box, Sungero.Parties.ICounterparty sender, bool isIncoming, string serviceCounterpartyId, DateTime messageDate)
     {
-      var document = base.GetOrCreateNewExchangeDocument(box, documentUntyped, sender, serviceCounterpartyId, messageDate, isIncoming);
+      var document = base.GetOrCreateNewExchangeDocument(documentUntyped, box, sender, isIncoming, serviceCounterpartyId, messageDate);
       var serviceDocument = documentUntyped as NpoComputer.DCX.Common.IDocument;
       if (UniversalTransferDocuments.Is(document) || IncomingTaxInvoices.Is(document) || Waybills.Is(document) || ContractStatements.Is(document))
       {
@@ -173,35 +173,15 @@ namespace Sungero.BulkExchangeSolution.Module.Exchange.Server
       
       this.SendDocumentProcessingTask(documentSet, result);
     }
-
-    /// <summary>
-    /// Стартовать задачу на обработку.
-    /// </summary>
-    /// <param name="box">Абонентский ящик.</param>
-    /// <param name="messageUntyped">Сообщение.</param>
-    /// <param name="sender">Отправитель.</param>
-    /// <param name="isIncoming">True - от контрагента, false - наше.</param>
-    /// <param name="needSign">Коллекция документов, требующих подписания.</param>
-    /// <param name="signed">Коллекция уже подписанных документов.</param>
-    /// <param name="rejectedUntyped">Коллекция документов, по которым отказано.</param>
-    /// <param name="dontNeedSign">Коллекция документов, не требующих подписания.</param>
-    /// <param name="exchangeTaskActiveTextBoundedDocuments">Часть ActiveText для формирования задачи на обработку для связанных документов.</param>
-    public override void StartExchangeTask(Sungero.ExchangeCore.IBoxBase box,
-                                           object messageUntyped,
-                                           Parties.ICounterparty sender,
-                                           bool isIncoming,
-                                           List<Sungero.Docflow.IOfficialDocument> needSign,
-                                           List<Sungero.Docflow.IOfficialDocument> signed,
-                                           object rejectedUntyped,
-                                           List<Sungero.Docflow.IOfficialDocument> dontNeedSign,
-                                           string exchangeTaskActiveTextBoundedDocuments)
+    
+    public override void StartExchangeTask(IBoxBase box, object messageUntyped, ICounterparty sender, bool isIncoming, string exchangeTaskActiveTextBoundedDocuments, List<Sungero.Exchange.IExchangeDocumentInfo> infos)
     {
       var message = messageUntyped as NpoComputer.DCX.Common.IMessage;
       var exchangeDocumentInfos = Sungero.BulkExchangeSolution.ExchangeDocumentInfos.GetAll().Where(e => e.ServiceMessageId == message.ServiceMessageId).ToList();
       if (exchangeDocumentInfos.Any(i => i.VerificationStatus == VerificationStatus.Required))
         return;
       
-      base.StartExchangeTask(box, messageUntyped, sender, isIncoming, needSign, signed, rejectedUntyped, dontNeedSign, exchangeTaskActiveTextBoundedDocuments);
+      base.StartExchangeTask(box, messageUntyped, sender, isIncoming, exchangeTaskActiveTextBoundedDocuments, infos);
     }
     
     private bool IsDocumentVerificationCompleted(IExchangeDocumentInfo document)
@@ -211,27 +191,18 @@ namespace Sungero.BulkExchangeSolution.Module.Exchange.Server
                                   string.Equals(document.Document.Note.Trim(), "проведено", StringComparison.InvariantCultureIgnoreCase));
     }
     
-    /// <summary>
-    /// Обработать документы, созданные из сообщения.
-    /// </summary>
-    /// <param name="box">Абонентский ящик.</param>
-    /// <param name="messageUntyped">Сообщение.</param>
-    /// <param name="sender">Отправитель.</param>
-    /// <param name="queueItem">Элемент очереди.</param>
-    /// <param name="isIncoming">True - от контрагента, false - наше.</param>
-    /// <param name="needSign">Коллекция документов, требующих подписания.</param>
-    /// <param name="dontNeedSign">Коллекция документов, не требующих подписания.</param>
-    /// <param name="signed">Коллекция уже подписанных документов.</param>
-    /// <param name="untypedProcessingDocuments">Обрабатываемые документы.</param>
-    /// <param name="untypedRejected">Коллекция документов, по которым отказано.</param>
-    protected override void ProcessMessageDocuments(ExchangeCore.IBoxBase box, object messageUntyped, Parties.ICounterparty sender,
-                                                    ExchangeCore.IMessageQueueItem queueItem, bool isIncoming, List<IOfficialDocument> needSign, List<IOfficialDocument> dontNeedSign, List<IOfficialDocument> signed,
-                                                    object untypedProcessingDocuments, object untypedRejected)
+    protected override void ProcessDocumentsFromNewIncomingMessage(List<Sungero.Exchange.IExchangeDocumentInfo> infos, 
+                                                                   object messageUntyped, 
+                                                                   IBoxBase box, 
+                                                                   ICounterparty sender,
+                                                                   IMessageQueueItem queueItem, 
+                                                                   bool isIncoming, 
+                                                                   object untypedProcessingDocuments)
     {
-      var documentSet = this.GetDocumentSet(messageUntyped);      
+      var documentSet = this.GetDocumentSet(messageUntyped);
       var isFullSet = documentSet != null && documentSet.IsFullSet;
       if (documentSet != null)
-        this.SetStatuses(documentSet.ExchangeDocumentInfos, isFullSet);      
+        this.SetStatuses(documentSet.ExchangeDocumentInfos, isFullSet);
       if (isFullSet)
       {
         this.ProcessResponsibleEmployeeInPurchaseOrderCard(documentSet);
@@ -240,7 +211,7 @@ namespace Sungero.BulkExchangeSolution.Module.Exchange.Server
           this.AddRelationsForDocumentSet(documentSet);
       }
 
-      base.ProcessMessageDocuments(box, messageUntyped, sender, queueItem, isIncoming, needSign, dontNeedSign, signed, untypedProcessingDocuments, untypedRejected);
+      base.ProcessDocumentsFromNewIncomingMessage(infos, messageUntyped, box, sender, queueItem, isIncoming, untypedProcessingDocuments);
     }
     
     /// <summary>
@@ -319,7 +290,7 @@ namespace Sungero.BulkExchangeSolution.Module.Exchange.Server
     {
       var documentInfo =
         documentSet.ExchangeDocumentInfos.FirstOrDefault(x =>
-          Sungero.FinancialArchive.UniversalTransferDocuments.Is(x.Document));
+                                                         Sungero.FinancialArchive.UniversalTransferDocuments.Is(x.Document));
       var createTime = documentSet.ExchangeDocumentInfos.Select(x => x.Document.Created).Max();
       
       if ((documentInfo.VerificationTask == null || documentInfo.VerificationTask.Status != Workflow.Task.Status.InProcess) &&
@@ -327,19 +298,13 @@ namespace Sungero.BulkExchangeSolution.Module.Exchange.Server
       {
         var client =
           ExchangeCore.PublicFunctions.BusinessUnitBox.GetPublicClient(documentInfo.RootBox) as
-            NpoComputer.DCX.ClientApi.Client;
+          NpoComputer.DCX.ClientApi.Client;
         var message = client.GetMessage(documentInfo.ServiceMessageId);
         var isIncoming = message.Sender.Organization.OrganizationId != documentInfo.RootBox.OrganizationId;
-        var needSign = documentSet.ExchangeDocumentInfos.Select(i => i.Document)
-          .Where(d => FinancialArchive.UniversalTransferDocuments.Is(d)).ToList();
-        var notNeedSign = documentSet.ExchangeDocumentInfos.Select(i => i.Document)
-          .Where(d => FinancialArchive.IncomingTaxInvoices.Is(d)).ToList();
 
         var taskText = Environment.NewLine + Sungero.BulkExchangeSolution.Module.Exchange.Resources.VerificationFailedTaskText +
                        documentInfo.VerificationFailReason;
-        var processingTask = this.CreateExchangeTask(documentInfo.RootBox, message, documentInfo.Counterparty, isIncoming,
-          needSign, new List<IOfficialDocument>(), new List<NpoComputer.DCX.Common.IDocument>(),
-          notNeedSign, taskText);
+        var processingTask = this.CreateExchangeTask(documentInfo.RootBox, message, documentInfo.Counterparty, isIncoming, taskText);
         processingTask.Start();
         documentInfo.VerificationTask = processingTask;
         documentInfo.Save();
