@@ -315,7 +315,7 @@ namespace Sungero.BulkExchangeSolution.Module.Exchange.Server
       return base.NeedReceiveTask(box, messageUntyped) && isFullSet;
     }
     
-    private void SendDocumentProcessingTask(DocumentSet documentSet, bool result)
+    private void SendDocumentProcessingTask(DocumentSet documentSet, bool verificationResult)
     {
       var documentInfo =
         documentSet.ExchangeDocumentInfos.FirstOrDefault(x =>
@@ -323,7 +323,7 @@ namespace Sungero.BulkExchangeSolution.Module.Exchange.Server
       var createTime = documentSet.ExchangeDocumentInfos.Select(x => x.Document.Created).Max();
       
       if ((documentInfo.VerificationTask == null || documentInfo.VerificationTask.Status != Workflow.Task.Status.InProcess) &&
-          Calendar.Now - createTime > TimeSpan.FromHours(Constants.Module.DocumentVerificationDeadlineInHours) && !result)
+          Calendar.Now - createTime > TimeSpan.FromHours(Constants.Module.DocumentVerificationDeadlineInHours) && !verificationResult)
       {
         var client =
           ExchangeCore.PublicFunctions.BusinessUnitBox.GetPublicClient(documentInfo.RootBox) as
