@@ -31,11 +31,11 @@ namespace Sungero.BulkExchangeSolution.Module.Exchange.Server
         {
           var exchangeDocumentInfo = ExchangeDocumentInfos.As(Sungero.Exchange.PublicFunctions.ExchangeDocumentInfo.GetExDocumentInfoByExternalId(box, serviceDocument.ServiceEntityId));
           
-          var purchaseOrderElement = additionalProperties.FirstOrDefault(i => (string)i.Attribute("Идентиф") == "номер_заказа");
+          var purchaseOrderElement = additionalProperties.FirstOrDefault(i => (string)i.Attribute("Идентиф") == Constants.Module.PurchaseOrder);
           if (purchaseOrderElement != null)
             exchangeDocumentInfo.PurchaseOrder = purchaseOrderElement.Attribute("Значен").Value;
           
-          var contractStatementElement = additionalProperties.FirstOrDefault(i => (string)i.Attribute("Идентиф") == "номер_договора");
+          var contractStatementElement = additionalProperties.FirstOrDefault(i => (string)i.Attribute("Идентиф") == Constants.Module.ContractNumber);
           if (contractStatementElement != null)
             exchangeDocumentInfo.ContractNumber = contractStatementElement.Attribute("Значен").Value;
           
@@ -55,7 +55,7 @@ namespace Sungero.BulkExchangeSolution.Module.Exchange.Server
         if (System.Text.RegularExpressions.Regex.IsMatch(document.Name.ToLower(), pattern))
         {
           var noteArray  = document.Note.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
-          var index = Array.IndexOf(noteArray, "номер_договора");
+          var index = Array.IndexOf(noteArray, Constants.Module.ContractNumber);
           var contractNumber = noteArray.ElementAtOrDefault(index + 1);
           
           if (!string.IsNullOrEmpty(contractNumber))
