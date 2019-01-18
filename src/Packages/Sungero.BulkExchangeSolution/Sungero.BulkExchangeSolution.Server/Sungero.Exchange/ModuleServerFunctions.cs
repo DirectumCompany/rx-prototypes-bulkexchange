@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Sungero.BulkExchangeSolution.ExchangeDocumentInfo;
 using Sungero.BulkExchangeSolution.Structures.Exchange.ExchangeDocumentInfo;
+using Sungero.FinancialArchive;
 using Sungero.Commons;
 using Sungero.Core;
 using Sungero.CoreEntities;
@@ -18,24 +19,49 @@ namespace Sungero.BulkExchangeSolution.Module.Exchange.Server
     protected override Sungero.Docflow.IOfficialDocument GetOrCreateNewExchangeDocument(Sungero.ExchangeCore.IBoxBase box, object documentUntyped, Sungero.Parties.ICounterparty sender, string serviceCounterpartyId, DateTime messageDate, bool isIncoming)
     {
       var document = base.GetOrCreateNewExchangeDocument(box, documentUntyped, sender, serviceCounterpartyId, messageDate, isIncoming);
-      if (FinancialArchive.UniversalTransferDocuments.Is(document) || FinancialArchive.IncomingTaxInvoices.Is(document) || FinancialArchive.Waybills.Is(document))
+      var serviceDocument = documentUntyped as NpoComputer.DCX.Common.IDocument;
+      if (UniversalTransferDocuments.Is(document) || IncomingTaxInvoices.Is(document) || Waybills.Is(document) || ContractStatements.Is(document))
       {
-        var serviceDocument = documentUntyped as NpoComputer.DCX.Common.IDocument;
         var xdoc = System.Xml.Linq.XDocument.Load(new System.IO.MemoryStream(serviceDocument.Content));
         RemoveNamespaces(xdoc);
         var additionalProperties = xdoc.Descendants("ТекстИнф");
         if (additionalProperties.Any())
         {
+          var exchangeDocumentInfo = ExchangeDocumentInfos.As(Sungero.Exchange.PublicFunctions.ExchangeDocumentInfo.GetExDocumentInfoByExternalId(box, serviceDocument.ServiceEntityId));
+          
           var purchaseOrderElement = additionalProperties.FirstOrDefault(i => (string)i.Attribute("Идентиф") == "номер_заказа");
           if (purchaseOrderElement != null)
+            exchangeDocumentInfo.PurchaseOrder = purchaseOrderElement.Attribute("Значен").Value;
+          
+          var contractStatementElement = additionalProperties.FirstOrDefault(i => (string)i.Attribute("Идентиф") == "номер_договора");
+          if (contractStatementElement != null)
+            exchangeDocumentInfo.ContractNumber = contractStatementElement.Attribute("Значен").Value;
+          
+          if (purchaseOrderElement != null || contractStatementElement != null)
+          {
+            exchangeDocumentInfo.Save();
+            
+            var caseFile = Docflow.CaseFiles.GetAll(c => c.Status == Docflow.CaseFile.Status.Active).FirstOrDefault();
+            document.CaseFile = caseFile;
+            document.Save();
+          }
+        }
+      }
+      else if (Docflow.ExchangeDocuments.Is(document))
+      {
+        var nameArray = document.Name.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+        if (nameArray.Contains("акт", StringComparer.OrdinalIgnoreCase))
+        {
+          var noteArray  = document.Note.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+          var index = Array.IndexOf(noteArray, "номер_договора");
+          var contractNumber = noteArray.ElementAtOrDefault(index + 1);
+          
+          if (!string.IsNullOrEmpty(contractNumber))
           {
             var exchangeDocumentInfo = ExchangeDocumentInfos.As(Sungero.Exchange.PublicFunctions.ExchangeDocumentInfo.GetExDocumentInfoByExternalId(box, serviceDocument.ServiceEntityId));
-            exchangeDocumentInfo.PurchaseOrder = purchaseOrderElement.Attribute("Значен").Value;
+            exchangeDocumentInfo.ContractNumber = contractNumber;
             exchangeDocumentInfo.Save();
           }
-          var caseFile = Docflow.CaseFiles.GetAll(c => c.Status == Docflow.CaseFile.Status.Active).FirstOrDefault();
-          document.CaseFile = caseFile;
-          document.Save();
         }
       }
       return document;
@@ -382,7 +408,7 @@ namespace Sungero.BulkExchangeSolution.Module.Exchange.Server
       if (!AccountingDocumentBases.Is(document))
         return;
       
-      var accountDocument = AccountingDocumentBases.As(document);      
+      var accountDocument = AccountingDocumentBases.As(document);
       if (accountDocument.ExchangeState == Docflow.OfficialDocument.ExchangeState.SignRequired && accountDocument.BuyerTitleId == null)
         Docflow.PublicFunctions.AccountingDocumentBase.Remote.GenerateDefaultAnswer(accountDocument, document.BusinessUnit.CEO, true);
     }
