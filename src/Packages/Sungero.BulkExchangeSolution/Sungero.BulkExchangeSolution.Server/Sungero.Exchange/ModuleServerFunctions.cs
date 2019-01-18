@@ -304,7 +304,7 @@ namespace Sungero.BulkExchangeSolution.Module.Exchange.Server
 
         var taskText = Environment.NewLine + Sungero.BulkExchangeSolution.Module.Exchange.Resources.VerificationFailedTaskText +
                        documentInfo.VerificationFailReason;
-        var processingTask = this.CreateExchangeTask(documentInfo.RootBox, message, documentInfo.Counterparty, isIncoming, taskText);
+        var processingTask = this.CreateExchangeTask(documentInfo.RootBox, message, documentInfo.Counterparty, isIncoming, taskText, documentSet.ExchangeDocumentInfos.ToList<Sungero.Exchange.IExchangeDocumentInfo>());
         processingTask.Start();
         documentInfo.VerificationTask = processingTask;
         documentInfo.Save();
