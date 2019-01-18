@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Sungero.BulkExchangeSolution.ExchangeDocumentInfo;
@@ -56,13 +56,13 @@ namespace Sungero.BulkExchangeSolution.Module.Exchange.Server
     /// <summary>
     /// Сверка документов.
     /// </summary>
-    public virtual void CheckDocuments()
+    public virtual void VerifyDocuments()
     {
-      var infos = ExchangeDocumentInfos.GetAll(d => (d.CheckStatus == CheckStatus.Required) && d.PurchaseOrder != null);
+      var infos = ExchangeDocumentInfos.GetAll(d => (d.VerificationStatus == VerificationStatus.Required) && d.PurchaseOrder != null);
       var documentSets = BulkExchangeSolution.Functions.ExchangeDocumentInfo.GetDocumentSets(infos.ToList()).Where(s => s.IsFullSet).ToList();
       foreach (var documentSet in documentSets)
       {
-        Functions.Module.CheckDocumentSet(documentSet);
+        Functions.Module.VerifyDocumentSet(documentSet);
       }
     }
   }

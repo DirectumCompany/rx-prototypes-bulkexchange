@@ -65,7 +65,7 @@
     },
     {
       "NameGuid": "5db5338d-6db7-4463-8819-81587d164a5c",
-      "Name": "CheckDocuments",
+      "Name": "VerifyDocuments",
       "Daily": "Repeat",
       "GenerateHandler": true,
       "MonthSchedule": "Monthly",
@@ -100,10 +100,10 @@
     "DocumentsTotalAmountError",
     "TotalAmountIsTooBig",
     "RubAlphaCode",
-    "CheckSuccess",
-    "CheckFail",
+    "VerificationSuccess",
+    "VerificationFail",
     "DocumentSetWithIDs",
-    "CheckFailedTaskText"
+    "VerificationFailedTaskText"
   ],
   "SpecialFolders": [],
   "Version": "3.1.6.1",

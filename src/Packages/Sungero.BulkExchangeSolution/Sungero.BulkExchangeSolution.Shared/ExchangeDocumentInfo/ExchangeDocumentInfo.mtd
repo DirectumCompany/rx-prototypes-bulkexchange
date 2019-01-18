@@ -45,8 +45,8 @@
     {
       "$type": "Sungero.Metadata.EnumPropertyMetadata, Sungero.Metadata",
       "NameGuid": "3e2e3e39-8870-42ec-8d82-a5f224301909",
-      "Name": "CheckStatus",
-      "Code": "CheckStatus",
+      "Name": "VerificationStatus",
+      "Code": "Verification",
       "DirectValues": [
         {
           "NameGuid": "24e62a85-dddb-4a2a-9b6e-f0876c3fc3e4",
@@ -78,8 +78,8 @@
     {
       "$type": "Sungero.Metadata.NavigationPropertyMetadata, Sungero.Metadata",
       "NameGuid": "9fdb065a-1584-4804-b42b-7d18af8aa47a",
-      "Name": "CheckTask",
-      "Code": "CheckTask",
+      "Name": "VerificationTask",
+      "Code": "VerifyTask",
       "EntityGuid": "d795d1f6-45c1-4e5e-9677-b53fb7280c7e",
       "FlatListInStandaloneLookup": true,
       "ListDataBinderTypeName": "Sungero.Presentation.CommonDataBinders.DropDownEditorToNavigationBinder",
@@ -113,8 +113,8 @@
     {
       "$type": "Sungero.Metadata.StringPropertyMetadata, Sungero.Metadata",
       "NameGuid": "3b47f7db-2f34-4a02-8886-314daf0bfd6b",
-      "Name": "CheckFailReason",
-      "Code": "CheckFailReaso",
+      "Name": "VerificationFailReason",
+      "Code": "VerifyFailRsn",
       "ListDataBinderTypeName": "Sungero.Presentation.CommonDataBinders.StringEditorToStringBinder",
       "PreviousPropertyGuid": "a0f7bdec-26b7-48c8-befd-39a43a0dc866"
     },

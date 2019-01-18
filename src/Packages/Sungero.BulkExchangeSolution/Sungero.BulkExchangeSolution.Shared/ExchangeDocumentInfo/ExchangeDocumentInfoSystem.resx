@@ -117,22 +117,22 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="Property_CheckStatus" xml:space="preserve">
+  <data name="Property_VerificationStatus" xml:space="preserve">
     <value>TODO</value>
   </data>
-  <data name="Enum_CheckStatus_Required" xml:space="preserve">
+  <data name="Enum_VerificationStatus_Required" xml:space="preserve">
     <value>TODO</value>
   </data>
-  <data name="Enum_CheckStatus_NotRequired" xml:space="preserve">
+  <data name="Enum_VerificationStatus_NotRequired" xml:space="preserve">
     <value>TODO</value>
   </data>
   <data name="Property_PurchaseOrder" xml:space="preserve">
     <value>TODO</value>
   </data>
-  <data name="Property_CheckTask" xml:space="preserve">
+  <data name="Property_VerificationTask" xml:space="preserve">
     <value>TODO</value>
   </data>
-  <data name="Enum_CheckStatus_Completed" xml:space="preserve">
+  <data name="Enum_VerificationStatus_Completed" xml:space="preserve">
     <value>TODO</value>
   </data>
   <data name="Property_SenderSignId" xml:space="preserve">
@@ -156,7 +156,7 @@
   <data name="Enum_SignStatus_Signed" xml:space="preserve">
     <value>TODO</value>
   </data>
-  <data name="Property_CheckFailReason" xml:space="preserve">
+  <data name="Property_VerificationFailReason" xml:space="preserve">
     <value>CheckFailReaso</value>
   </data>
   <data name="Property_RejectionStatus" xml:space="preserve">

@@ -11,14 +11,14 @@ namespace Sungero.BulkExchangeSolution.Client
 {
   public class ModuleFunctions
   {
-    public virtual void SignCheckedDocuments()
+    public virtual void SignVerifiedDocuments()
     {
-      var checkedSets = Module.Exchange.Functions.Module.Remote.GetCheckedSets().Where(c => c.RootBox.HasExchangeServiceCertificates == true &&
+      var verifiedSets = Module.Exchange.Functions.Module.Remote.GetVerifiedSets().Where(c => c.RootBox.HasExchangeServiceCertificates == true &&
                                                                                        c.RootBox.ExchangeServiceCertificates.Any(x => Equals(x.Certificate.Owner, Users.Current) && x.Certificate.Enabled == true));
-      var messageIds = checkedSets.Select(x => x.ServiceMessageId).Distinct().ToList();
+      var messageIds = verifiedSets.Select(x => x.ServiceMessageId).Distinct().ToList();
       foreach (var messageId in messageIds)
       {
-        var infos = checkedSets.Where(x => x.ServiceMessageId == messageId);
+        var infos = verifiedSets.Where(x => x.ServiceMessageId == messageId);
         Logger.DebugFormat("Start sign document set with document ids {0}.", string.Join(", ", infos.Select(i => i.Document.Id)));
         foreach (var info in infos)
         {

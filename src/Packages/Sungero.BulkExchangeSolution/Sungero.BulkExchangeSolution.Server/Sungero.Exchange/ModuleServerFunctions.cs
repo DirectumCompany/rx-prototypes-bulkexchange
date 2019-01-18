@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using NpoComputer.DCX.Common;
 using Sungero.BulkExchangeSolution.ExchangeDocumentInfo;
 using Sungero.BulkExchangeSolution.Structures.Exchange.ExchangeDocumentInfo;
 using Sungero.FinancialArchive;
@@ -11,6 +12,7 @@ using Sungero.Docflow;
 using Sungero.ExchangeCore;
 using Sungero.Parties;
 using Sungero.Workflow;
+using SignStatus = Sungero.BulkExchangeSolution.ExchangeDocumentInfo.SignStatus;
 
 namespace Sungero.BulkExchangeSolution.Module.Exchange.Server
 {
@@ -68,7 +70,7 @@ namespace Sungero.BulkExchangeSolution.Module.Exchange.Server
     }
     
     [Remote]
-    public virtual List<Sungero.BulkExchangeSolution.IExchangeDocumentInfo> GetCheckedSets()
+    public virtual List<Sungero.BulkExchangeSolution.IExchangeDocumentInfo> GetVerifiedSets()
     {
       // все накладные с РО, прошедшие сверку
       var boxes = Sungero.ExchangeCore.PublicFunctions.BusinessUnitBox.Remote.GetConnectedBoxes().Where(c => c.HasExchangeServiceCertificates == true &&
@@ -76,7 +78,7 @@ namespace Sungero.BulkExchangeSolution.Module.Exchange.Server
                                                                                                                                           x.Certificate.Enabled == true)).ToList();
       var infos = ExchangeDocumentInfos.GetAll()
         .Where(x => boxes.Contains(x.RootBox) && x.ExchangeState == ExchangeDocumentInfo.ExchangeState.SignRequired &&
-               (x.SignStatus == null || x.SignStatus != SignStatus.Signed) && x.CheckStatus == ExchangeDocumentInfo.CheckStatus.Completed);
+               (x.SignStatus == null || x.SignStatus != SignStatus.Signed) && x.VerificationStatus == ExchangeDocumentInfo.VerificationStatus.Completed);
       
       var result = new List<Sungero.BulkExchangeSolution.IExchangeDocumentInfo>();
       foreach (var documentSet in Sungero.BulkExchangeSolution.Functions.ExchangeDocumentInfo.GetDocumentSets(infos.ToList()).Where(x => x.IsFullSet).ToList())
@@ -91,7 +93,7 @@ namespace Sungero.BulkExchangeSolution.Module.Exchange.Server
       
       var infos = ExchangeDocumentInfos.GetAll()
         .Where(x => boxes.Contains(x.RootBox)
-               && x.CheckStatus == ExchangeDocumentInfo.CheckStatus.Completed
+               && x.VerificationStatus == ExchangeDocumentInfo.VerificationStatus.Completed
                && x.ExchangeState == ExchangeDocumentInfo.ExchangeState.SignRequired
                && x.SignStatus == ExchangeDocumentInfo.SignStatus.Signed
                && x.ReceiverSignId == null);
@@ -121,7 +123,7 @@ namespace Sungero.BulkExchangeSolution.Module.Exchange.Server
     /// Проверка документов по учетной системе.
     /// </summary>
     /// <param name="documentSet">Комплект документов.</param>
-    public void CheckDocumentSet(Sungero.BulkExchangeSolution.Structures.Exchange.ExchangeDocumentInfo.DocumentSet documentSet)
+    public void VerifyDocumentSet(Sungero.BulkExchangeSolution.Structures.Exchange.ExchangeDocumentInfo.DocumentSet documentSet)
     {
       var totalAmount = Sungero.Docflow.AccountingDocumentBases.As(documentSet.ExchangeDocumentInfos.FirstOrDefault().Document).TotalAmount;
       var result = true;
@@ -154,19 +156,19 @@ namespace Sungero.BulkExchangeSolution.Module.Exchange.Server
         logMessage += i == 0 ? documents[i].Id.ToString() : ", " + documents[i].Id;
       
       var documentInfo = documentSet.ExchangeDocumentInfos.FirstOrDefault(x => Sungero.FinancialArchive.UniversalTransferDocuments.Is(x.Document));
-      var task = documentInfo.CheckTask;
+      var task = documentInfo.VerificationTask;
       if (!result)
       {
         if ((task == null || task != null && task.Status == Workflow.Task.Status.Completed) &&
-            this.IsCheckDocumentCompleted(documentInfo))
+            this.IsDocumentVerificationCompleted(documentInfo))
           result = true;
       }
       
-      logMessage += result ? Resources.CheckSuccess : Resources.CheckFail + reason;
+      logMessage += result ? Resources.VerificationSuccess : Resources.VerificationFail + reason;
       Logger.Debug(logMessage);
       
-      this.UpdateExchangeDocumentInfos(documentSet, result, reason);
-      foreach (var info in documentSet.ExchangeDocumentInfos.Where(i => i.CheckStatus == CheckStatus.Completed))
+      this.SetVerificationResult(documentSet, result, reason);
+      foreach (var info in documentSet.ExchangeDocumentInfos.Where(i => i.VerificationStatus == VerificationStatus.Completed))
         this.GenerateDefaultTitle(info.Document);
       
       this.SendDocumentProcessingTask(documentSet, result);
@@ -196,13 +198,13 @@ namespace Sungero.BulkExchangeSolution.Module.Exchange.Server
     {
       var message = messageUntyped as NpoComputer.DCX.Common.IMessage;
       var exchangeDocumentInfos = Sungero.BulkExchangeSolution.ExchangeDocumentInfos.GetAll().Where(e => e.ServiceMessageId == message.ServiceMessageId).ToList();
-      if (exchangeDocumentInfos.Any(i => i.CheckStatus == CheckStatus.Required))
+      if (exchangeDocumentInfos.Any(i => i.VerificationStatus == VerificationStatus.Required))
         return;
       
       base.StartExchangeTask(box, messageUntyped, sender, isIncoming, needSign, signed, rejectedUntyped, dontNeedSign, exchangeTaskActiveTextBoundedDocuments);
     }
     
-    private bool IsCheckDocumentCompleted(IExchangeDocumentInfo document)
+    private bool IsDocumentVerificationCompleted(IExchangeDocumentInfo document)
     {
       return document != null && (document.ExchangeState == Sungero.Exchange.ExchangeDocumentInfo.ExchangeState.Signed || document.ExchangeState == Sungero.Exchange.ExchangeDocumentInfo.ExchangeState.Obsolete ||
                                   document.ExchangeState == Sungero.Exchange.ExchangeDocumentInfo.ExchangeState.Rejected || document.ExchangeState == Sungero.Exchange.ExchangeDocumentInfo.ExchangeState.Terminated ||
@@ -233,7 +235,7 @@ namespace Sungero.BulkExchangeSolution.Module.Exchange.Server
       if (isFullSet)
       {
         this.ProcessResponsibleEmployeeInPurchaseOrderCard(documentSet);
-        Functions.Module.CheckDocumentSet(documentSet);
+        Functions.Module.VerifyDocumentSet(documentSet);
         if (documentSet.ExchangeDocumentInfos.Count == 2)
           this.AddRelationsForDocumentSet(documentSet);
       }
@@ -320,8 +322,8 @@ namespace Sungero.BulkExchangeSolution.Module.Exchange.Server
           Sungero.FinancialArchive.UniversalTransferDocuments.Is(x.Document));
       var createTime = documentSet.ExchangeDocumentInfos.Select(x => x.Document.Created).Max();
       
-      if ((documentInfo.CheckTask == null || documentInfo.CheckTask.Status != Workflow.Task.Status.InProcess) &&
-          Calendar.Now - createTime > TimeSpan.FromHours(Constants.Module.DocumentCheckDeadlineInHours) && !result)
+      if ((documentInfo.VerificationTask == null || documentInfo.VerificationTask.Status != Workflow.Task.Status.InProcess) &&
+          Calendar.Now - createTime > TimeSpan.FromHours(Constants.Module.DocumentVerificationDeadlineInHours) && !result)
       {
         var client =
           ExchangeCore.PublicFunctions.BusinessUnitBox.GetPublicClient(documentInfo.RootBox) as
@@ -333,30 +335,30 @@ namespace Sungero.BulkExchangeSolution.Module.Exchange.Server
         var notNeedSign = documentSet.ExchangeDocumentInfos.Select(i => i.Document)
           .Where(d => FinancialArchive.IncomingTaxInvoices.Is(d)).ToList();
 
-        var taskText = Environment.NewLine + Sungero.BulkExchangeSolution.Module.Exchange.Resources.CheckFailedTaskText +
-                       documentInfo.CheckFailReason;
+        var taskText = Environment.NewLine + Sungero.BulkExchangeSolution.Module.Exchange.Resources.VerificationFailedTaskText +
+                       documentInfo.VerificationFailReason;
         var processingTask = this.CreateExchangeTask(documentInfo.RootBox, message, documentInfo.Counterparty, isIncoming,
           needSign, new List<IOfficialDocument>(), new List<NpoComputer.DCX.Common.IDocument>(),
           notNeedSign, taskText);
         processingTask.Start();
-        documentInfo.CheckTask = processingTask;
+        documentInfo.VerificationTask = processingTask;
         documentInfo.Save();
       }
     }
     
-    private void UpdateExchangeDocumentInfos(DocumentSet documentSet, bool result, string reason)
+    private void SetVerificationResult(DocumentSet documentSet, bool result, string reason)
     {
       foreach (var info in documentSet.ExchangeDocumentInfos)
       {
         if (result)
         {
-          info.CheckStatus = CheckStatus.Completed;
-          info.CheckFailReason = null;
+          info.VerificationStatus = VerificationStatus.Completed;
+          info.VerificationFailReason = null;
         }
         else
         {
-          info.CheckFailReason = reason;
-          info.CheckStatus = CheckStatus.Required;
+          info.VerificationFailReason = reason;
+          info.VerificationStatus = VerificationStatus.Required;
         }
 
         info.Save();
@@ -388,14 +390,14 @@ namespace Sungero.BulkExchangeSolution.Module.Exchange.Server
         ? ExchangeDocumentInfo.RejectionStatus.NotRequired
         : ExchangeDocumentInfo.RejectionStatus.Required;
 
-      var checkStatus = isFullSet
-        ? ExchangeDocumentInfo.CheckStatus.Required
-        : ExchangeDocumentInfo.CheckStatus.NotRequired;
+      var verificationStatus = isFullSet
+        ? ExchangeDocumentInfo.VerificationStatus.Required
+        : ExchangeDocumentInfo.VerificationStatus.NotRequired;
       
       foreach (var exhangeDoc in documentInfos)
       {
         exhangeDoc.RejectionStatus = rejectionStatus;
-        exhangeDoc.CheckStatus = checkStatus;
+        exhangeDoc.VerificationStatus = verificationStatus;
         exhangeDoc.Save();
       }
     }
