@@ -384,13 +384,7 @@ namespace Sungero.BulkExchangeSolution.Module.Exchange.Server
       
       var accountDocument = AccountingDocumentBases.As(document);      
       if (accountDocument.ExchangeState == Docflow.OfficialDocument.ExchangeState.SignRequired && accountDocument.BuyerTitleId == null)
-      {
         Docflow.PublicFunctions.AccountingDocumentBase.Remote.GenerateDefaultAnswer(accountDocument, document.BusinessUnit.CEO, true);
-      }
-      if (accountDocument.SellerTitleId != null && !Sungero.FinancialArchive.PublicFunctions.Module.Remote.HasSellerSignatoryInfo(accountDocument))
-      {
-        Docflow.PublicFunctions.AccountingDocumentBase.Remote.GenerateDefaultSellerTitle(accountDocument);
-      }
     }
   }
 }
