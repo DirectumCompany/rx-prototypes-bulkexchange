@@ -51,8 +51,8 @@ namespace Sungero.BulkExchangeSolution.Module.Exchange.Server
       }
       else if (Docflow.ExchangeDocuments.Is(document))
       {
-        var nameArray = document.Name.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
-        if (nameArray.Contains("акт", StringComparer.OrdinalIgnoreCase))
+        var pattern = @"(^|[^А-Яа-я])акт([^А-Яа-я]|$)";
+        if (System.Text.RegularExpressions.Regex.IsMatch(document.Name.ToLower(), pattern))
         {
           var noteArray  = document.Note.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
           var index = Array.IndexOf(noteArray, "номер_договора");
