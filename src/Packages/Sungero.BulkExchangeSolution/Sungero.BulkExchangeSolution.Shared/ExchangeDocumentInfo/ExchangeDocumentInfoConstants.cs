@@ -7,10 +7,10 @@ namespace Sungero.BulkExchangeSolution.Constants.Exchange
   {
     public static class DocumentSetType
     {
-      // Товарный комплект.
+      // Реализация товаров.
       public const string Waybill = "Waybill";
       
-      // Нетоварный комплект.
+      // Оказание услуг (выполнение работ).
       public const string ContractStatement = "ContractStatement";
     }
   }
