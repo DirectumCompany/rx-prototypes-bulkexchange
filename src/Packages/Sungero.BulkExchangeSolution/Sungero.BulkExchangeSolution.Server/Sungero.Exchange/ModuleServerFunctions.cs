@@ -20,9 +20,13 @@ namespace Sungero.BulkExchangeSolution.Module.Exchange.Server
   {
     protected override Sungero.Docflow.IOfficialDocument GetOrCreateNewExchangeDocument(object documentUntyped, Sungero.ExchangeCore.IBoxBase box, Sungero.Parties.ICounterparty sender, bool isIncoming, string serviceCounterpartyId, DateTime messageDate)
     {
-      var document = base.GetOrCreateNewExchangeDocument(documentUntyped, box, sender, isIncoming, serviceCounterpartyId, messageDate);
       var serviceDocument = documentUntyped as NpoComputer.DCX.Common.IDocument;
-      if (UniversalTransferDocuments.Is(document) || IncomingTaxInvoices.Is(document) || Waybills.Is(document) || ContractStatements.Is(document))
+      var document = base.GetOrCreateNewExchangeDocument(documentUntyped, box, sender, isIncoming, serviceCounterpartyId, messageDate);
+
+      var accountingDocument = AccountingDocumentBases.As(document);
+      
+      if (accountingDocument != null && accountingDocument.IsFormalized == true && (UniversalTransferDocuments.Is(document) || 
+                                                                        IncomingTaxInvoices.Is(document) || Waybills.Is(document) || ContractStatements.Is(document)))
       {
         var xdoc = System.Xml.Linq.XDocument.Load(new System.IO.MemoryStream(serviceDocument.Content));
         RemoveNamespaces(xdoc);
@@ -49,7 +53,7 @@ namespace Sungero.BulkExchangeSolution.Module.Exchange.Server
           }
         }
       }
-      else if (Docflow.ExchangeDocuments.Is(document))
+      else if (serviceDocument.FileName.ToLowerInvariant().Contains("акт"))
       {
         var pattern = @"(^|[^А-Яа-я])акт([^А-Яа-я]|$)";
         if (System.Text.RegularExpressions.Regex.IsMatch(document.Name.ToLower(), pattern))
@@ -255,7 +259,39 @@ namespace Sungero.BulkExchangeSolution.Module.Exchange.Server
           accountingDocument.Save();
       }
     }
-    
+
+    /// <summary>
+    /// Создать документ обмена.
+    /// </summary>
+    /// <param name="fileName">Имя файла.</param>
+    /// <param name="comment">Комментарий.</param>
+    /// <param name="box">Ящик обмена.</param>
+    /// <param name="counterparty">Контрагент.</param>
+    /// <returns>Созданный документ.</returns>
+    public override IOfficialDocument CreateExchangeDocument(string fileName, string comment, IBoxBase box, ICounterparty counterparty)
+    {
+      if (fileName.ToLowerInvariant().Contains("акт") && comment.ToLowerInvariant().Contains("номер_договора"))
+      {
+        var contractStatement = FinancialArchive.ContractStatements.Create();
+        
+//        if (fileName.Length > contractStatement.Info.Properties.Name.Length)
+//          fileName = fileName.Substring(0, contractStatement.Info.Properties.Name.Length);
+//      
+//        if (!string.IsNullOrEmpty(comment) && comment.Length > contractStatement.Info.Properties.Note.Length)
+//          comment = comment.Substring(0, contractStatement.Info.Properties.Note.Length);
+      
+        contractStatement.Name = fileName;
+        contractStatement.Subject = "Выполнение услуг";
+        contractStatement.Note = comment;
+        contractStatement.BusinessUnit = ExchangeCore.PublicFunctions.BoxBase.GetBusinessUnit(box);
+        contractStatement.BusinessUnitBox = ExchangeCore.PublicFunctions.BoxBase.GetRootBox(box);
+        contractStatement.Counterparty = counterparty;
+        contractStatement.AccessRights.Grant(ExchangeCore.PublicFunctions.BoxBase.GetExchangeDocumentResponsible(box, counterparty), DefaultAccessRightsTypes.FullAccess);
+        return contractStatement;
+      }
+      return base.CreateExchangeDocument(fileName, comment, box, counterparty);
+    }
+
     /// <summary>
     /// Создать связь документов комплекта.
     /// </summary>
@@ -308,8 +344,9 @@ namespace Sungero.BulkExchangeSolution.Module.Exchange.Server
         var isIncoming = message.Sender.Organization.OrganizationId != documentInfo.RootBox.OrganizationId;
 
         var taskText = Environment.NewLine + Sungero.BulkExchangeSolution.Module.Exchange.Resources.VerificationFailedTaskText +
-          documentInfo.VerificationFailReason;
-        var processingTask = this.CreateExchangeTask(documentInfo.RootBox, message, documentInfo.Counterparty, isIncoming, taskText, documentSet.ExchangeDocumentInfos.ToList<Sungero.Exchange.IExchangeDocumentInfo>());
+                       documentInfo.VerificationFailReason;
+        var processingTask = this.CreateExchangeTask(documentInfo.RootBox, message, documentInfo.Counterparty, isIncoming, taskText, 
+                                                     documentSet.ExchangeDocumentInfos.Select(x => Sungero.Exchange.ExchangeDocumentInfos.As(x)).ToList());
         processingTask.Start();
         documentInfo.VerificationTask = processingTask;
         documentInfo.Save();
