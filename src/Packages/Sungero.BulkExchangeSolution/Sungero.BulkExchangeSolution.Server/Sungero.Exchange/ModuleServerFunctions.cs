@@ -25,8 +25,8 @@ namespace Sungero.BulkExchangeSolution.Module.Exchange.Server
 
       var accountingDocument = AccountingDocumentBases.As(document);
       
-      if (accountingDocument != null && accountingDocument.IsFormalized == true && (UniversalTransferDocuments.Is(document) || 
-                                                                        IncomingTaxInvoices.Is(document) || Waybills.Is(document) || ContractStatements.Is(document)))
+      if (accountingDocument != null && accountingDocument.IsFormalized == true && (UniversalTransferDocuments.Is(document) ||
+                                                                                    IncomingTaxInvoices.Is(document) || Waybills.Is(document) || ContractStatements.Is(document)))
       {
         var xdoc = System.Xml.Linq.XDocument.Load(new System.IO.MemoryStream(serviceDocument.Content));
         RemoveNamespaces(xdoc);
@@ -44,13 +44,7 @@ namespace Sungero.BulkExchangeSolution.Module.Exchange.Server
             exchangeDocumentInfo.ContractNumber = contractStatementElement.Attribute("Значен").Value;
           
           if (purchaseOrderElement != null || contractStatementElement != null)
-          {
             exchangeDocumentInfo.Save();
-            
-            var caseFile = Docflow.CaseFiles.GetAll(c => c.Status == Docflow.CaseFile.Status.Active).FirstOrDefault();
-            document.CaseFile = caseFile;
-            document.Save();
-          }
         }
       }
       else if (serviceDocument.FileName.ToLowerInvariant().Contains("акт"))
@@ -208,56 +202,78 @@ namespace Sungero.BulkExchangeSolution.Module.Exchange.Server
                                                                    object untypedProcessingDocuments)
     {
       var documentSet = this.GetDocumentSet(messageUntyped);
-      var isFullSet = documentSet != null && documentSet.IsFullSet;
       if (documentSet != null)
-        this.SetStatuses(documentSet.ExchangeDocumentInfos, isFullSet);
-      if (isFullSet)
       {
-        this.ProcessResponsibleEmployeeInPurchaseOrderCard(documentSet);
-        Functions.Module.VerifyDocumentSet(documentSet);
-        if (documentSet.ExchangeDocumentInfos.Count == 2)
-          this.AddRelationsForDocumentSet(documentSet);
-        this.SendContractStatementForApproval(documentSet);
+        var isFullSet = documentSet.IsFullSet;
+        this.SetStatuses(documentSet.ExchangeDocumentInfos, isFullSet, documentSet.Type);
+        this.ProcessDocumenSetFromNewIncomingMessage(documentSet);
+        
+        if (isFullSet && documentSet.Type == BulkExchangeSolution.Constants.Exchange.ExchangeDocumentInfo.DocumentSetType.Waybill)
+          Functions.Module.VerifyDocumentSet(documentSet);
       }
-
       base.ProcessDocumentsFromNewIncomingMessage(infos, messageUntyped, box, sender, queueItem, isIncoming, untypedProcessingDocuments);
     }
     
     /// <summary>
-    /// Обработать комплект товарного потока - заполнить ответственного.
+    /// Обработать бухгалтерские документы в комплекте.
     /// </summary>
     /// <param name="documentSet">Комплект документов.</param>
-    public virtual void ProcessResponsibleEmployeeInPurchaseOrderCard(Sungero.BulkExchangeSolution.Structures.Exchange.ExchangeDocumentInfo.DocumentSet documentSet)
+    public virtual void ProcessDocumenSetFromNewIncomingMessage(Sungero.BulkExchangeSolution.Structures.Exchange.ExchangeDocumentInfo.DocumentSet documentSet)
     {
-      if (documentSet == null || !documentSet.IsFullSet)
+      if (documentSet == null)
         return;
       
       var counterparty = documentSet.ExchangeDocumentInfos.Select(i => i.Counterparty).Distinct().Single();
       var responsible = CompanyBases.Is(counterparty) ? CompanyBases.As(counterparty).Responsible : null;
-      if (responsible == null)
-        return;
+      var caseFile = Docflow.CaseFiles.GetAll(c => c.Status == Docflow.CaseFile.Status.Active).FirstOrDefault();
       
-      foreach (var document in documentSet.ExchangeDocumentInfos.Select(i => i.Document))
+      foreach (var info in documentSet.ExchangeDocumentInfos)
       {
-        var accountingDocument = Docflow.AccountingDocumentBases.As(document);
+        var accountingDocument = Docflow.AccountingDocumentBases.As(info.Document);
         if (accountingDocument == null)
           continue;
         
-        if (accountingDocument.Department == null)
+        if (documentSet.Type != BulkExchangeSolution.Constants.Exchange.ExchangeDocumentInfo.DocumentSetType.ContractStatement &&
+            documentSet.Type != BulkExchangeSolution.Constants.Exchange.ExchangeDocumentInfo.DocumentSetType.Waybill)
+          continue;
+        
+        // Заполнить договор для акта.
+        if (documentSet.Type == BulkExchangeSolution.Constants.Exchange.ExchangeDocumentInfo.DocumentSetType.ContractStatement &&
+            !string.IsNullOrEmpty(info.ContractNumber))
         {
-          // Подразделение зарегистрированного документа можно менять только на смене рег.данных.
-          var entityParams = (accountingDocument as Domain.Shared.IExtendedEntity).Params;
-          entityParams[Constants.Module.RepeatRegister] = true;
-          accountingDocument.Department = responsible.Department;
+          var contract = Contracts.ContractBases.GetAll(c => Equals(accountingDocument.Counterparty, c.Counterparty) && c.RegistrationNumber == info.ContractNumber).FirstOrDefault();
+          accountingDocument.LeadingDocument = contract;
         }
         
-        // Не у всех типов доступен ответственный на карточке.
-        if (accountingDocument.ResponsibleEmployee == null && accountingDocument.State.Properties.ResponsibleEmployee.IsVisible)
-          accountingDocument.ResponsibleEmployee = responsible;
-
+        if (documentSet.IsFullSet == true)
+        {          
+          // Заполнить номенклатуру дела.
+          if (caseFile != null)
+            accountingDocument.CaseFile = caseFile;
+          
+          // Заполнить ответственного и подразделение.
+          if (responsible != null)
+          {
+            if (accountingDocument.Department == null)
+            {
+              // Подразделение зарегистрированного документа можно менять только на смене рег.данных.
+              var entityParams = (accountingDocument as Domain.Shared.IExtendedEntity).Params;
+              entityParams[Constants.Module.RepeatRegister] = true;
+              accountingDocument.Department = responsible.Department;
+            }
+            
+            // Не у всех типов доступен ответственный на карточке.
+            if (accountingDocument.ResponsibleEmployee == null && accountingDocument.State.Properties.ResponsibleEmployee.IsVisible)
+              accountingDocument.ResponsibleEmployee = responsible;
+          }
+        }
+        
+        // Сохранить документ, если были изменения.
         if (accountingDocument.State.IsChanged)
           accountingDocument.Save();
       }
+      if (documentSet.IsFullSet == true && documentSet.ExchangeDocumentInfos.Count == 2)
+        this.AddRelationsForDocumentSet(documentSet);
     }
 
     /// <summary>
@@ -272,14 +288,7 @@ namespace Sungero.BulkExchangeSolution.Module.Exchange.Server
     {
       if (fileName.ToLowerInvariant().Contains("акт") && comment.ToLowerInvariant().Contains("номер_договора"))
       {
-        var contractStatement = FinancialArchive.ContractStatements.Create();
-        
-//        if (fileName.Length > contractStatement.Info.Properties.Name.Length)
-//          fileName = fileName.Substring(0, contractStatement.Info.Properties.Name.Length);
-//      
-//        if (!string.IsNullOrEmpty(comment) && comment.Length > contractStatement.Info.Properties.Note.Length)
-//          comment = comment.Substring(0, contractStatement.Info.Properties.Note.Length);
-      
+        var contractStatement = FinancialArchive.ContractStatements.Create();        
         contractStatement.Name = fileName;
         contractStatement.Subject = "Выполнение услуг";
         contractStatement.Note = comment;
@@ -299,17 +308,19 @@ namespace Sungero.BulkExchangeSolution.Module.Exchange.Server
     private void AddRelationsForDocumentSet(Sungero.BulkExchangeSolution.Structures.Exchange.ExchangeDocumentInfo.DocumentSet documentSet)
     {
       var exchangeDocuments = documentSet.ExchangeDocumentInfos.Select(e => e.Document).ToList();
-      var firstDocument = AccountingDocumentBases.As(exchangeDocuments[0]);
-      var secondDocument = AccountingDocumentBases.As(exchangeDocuments[1]);
-      if (firstDocument.FormalizedFunction == Docflow.AccountingDocumentBase.FormalizedFunction.Dop)
-      {
-        firstDocument.Relations.AddOrUpdate(Sungero.Exchange.Constants.Module.AddendumRelationName, null, secondDocument);
-        firstDocument.Save();
-      }
-      else
+      var firstDocument = OfficialDocuments.As(exchangeDocuments[0]);
+      var secondDocument = OfficialDocuments.As(exchangeDocuments[1]);
+      
+      var accountingDocument = AccountingDocumentBases.As(firstDocument);
+      if (accountingDocument != null && accountingDocument.FormalizedFunction == Docflow.AccountingDocumentBase.FormalizedFunction.Schf)
       {
         secondDocument.Relations.AddOrUpdate(Sungero.Exchange.Constants.Module.AddendumRelationName, null, firstDocument);
         secondDocument.Save();
+      }
+      else
+      {
+        firstDocument.Relations.AddOrUpdate(Sungero.Exchange.Constants.Module.AddendumRelationName, null, secondDocument);
+        firstDocument.Save();
       }
     }
     
@@ -344,8 +355,8 @@ namespace Sungero.BulkExchangeSolution.Module.Exchange.Server
         var isIncoming = message.Sender.Organization.OrganizationId != documentInfo.RootBox.OrganizationId;
 
         var taskText = Environment.NewLine + Sungero.BulkExchangeSolution.Module.Exchange.Resources.VerificationFailedTaskText +
-                       documentInfo.VerificationFailReason;
-        var processingTask = this.CreateExchangeTask(documentInfo.RootBox, message, documentInfo.Counterparty, isIncoming, taskText, 
+          documentInfo.VerificationFailReason;
+        var processingTask = this.CreateExchangeTask(documentInfo.RootBox, message, documentInfo.Counterparty, isIncoming, taskText,
                                                      documentSet.ExchangeDocumentInfos.Select(x => Sungero.Exchange.ExchangeDocumentInfos.As(x)).ToList());
         processingTask.Start();
         documentInfo.VerificationTask = processingTask;
@@ -391,11 +402,11 @@ namespace Sungero.BulkExchangeSolution.Module.Exchange.Server
     /// </summary>
     /// <param name="documentInfos">Список информаций о документах обмена.</param>
     /// <param name="isFullSet">True если комплект полный.</param>
-    private void SetStatuses(List<IExchangeDocumentInfo> documentInfos, bool isFullSet)
+    private void SetStatuses(List<IExchangeDocumentInfo> documentInfos, bool isFullSet, string documentSetType)
     {
-      var rejectionStatus = isFullSet
-        ? ExchangeDocumentInfo.RejectionStatus.NotRequired
-        : ExchangeDocumentInfo.RejectionStatus.Required;
+      var rejectionStatus = !isFullSet && documentSetType == BulkExchangeSolution.Constants.Exchange.ExchangeDocumentInfo.DocumentSetType.Waybill
+        ? ExchangeDocumentInfo.RejectionStatus.Required
+        : ExchangeDocumentInfo.RejectionStatus.NotRequired;
 
       var verificationStatus = isFullSet
         ? ExchangeDocumentInfo.VerificationStatus.Required
