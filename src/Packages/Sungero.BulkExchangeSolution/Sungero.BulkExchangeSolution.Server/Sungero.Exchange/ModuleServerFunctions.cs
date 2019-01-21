@@ -73,24 +73,6 @@ namespace Sungero.BulkExchangeSolution.Module.Exchange.Server
       return document;
     }
     
-    [Remote]
-    public virtual List<Sungero.BulkExchangeSolution.IExchangeDocumentInfo> GetVerifiedSets()
-    {
-      // все накладные с РО, прошедшие сверку
-      var boxes = Sungero.ExchangeCore.PublicFunctions.BusinessUnitBox.Remote.GetConnectedBoxes().Where(c => c.HasExchangeServiceCertificates == true &&
-                                                                                                        c.ExchangeServiceCertificates.Any(x => Equals(x.Certificate.Owner, Users.Current) &&
-                                                                                                                                          x.Certificate.Enabled == true)).ToList();
-      var infos = ExchangeDocumentInfos.GetAll()
-        .Where(x => boxes.Contains(x.RootBox) && x.ExchangeState == ExchangeDocumentInfo.ExchangeState.SignRequired &&
-               (x.SignStatus == null || x.SignStatus != SignStatus.Signed) && x.VerificationStatus == ExchangeDocumentInfo.VerificationStatus.Completed);
-      
-      var result = new List<Sungero.BulkExchangeSolution.IExchangeDocumentInfo>();
-      foreach (var documentSet in Sungero.BulkExchangeSolution.Functions.ExchangeDocumentInfo.GetDocumentSets(infos.ToList()).Where(x => x.IsFullSet).ToList())
-        result.AddRange(documentSet.ExchangeDocumentInfos);
-      
-      return result;
-    }
-    
     public virtual List<Sungero.BulkExchangeSolution.Structures.Exchange.ExchangeDocumentInfo.DocumentSet> GetSignedAndNotSendedDocumentSets()
     {
       var boxes = Sungero.ExchangeCore.PublicFunctions.BusinessUnitBox.Remote.GetConnectedBoxes().ToList();

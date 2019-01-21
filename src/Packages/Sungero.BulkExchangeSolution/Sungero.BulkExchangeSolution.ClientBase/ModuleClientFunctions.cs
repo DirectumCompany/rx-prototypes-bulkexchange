@@ -13,12 +13,11 @@ namespace Sungero.BulkExchangeSolution.Client
   {
     public virtual void SignVerifiedDocuments()
     {
-      var verifiedSets = Module.Exchange.Functions.Module.Remote.GetVerifiedSets().Where(c => c.RootBox.HasExchangeServiceCertificates == true &&
-                                                                                       c.RootBox.ExchangeServiceCertificates.Any(x => Equals(x.Certificate.Owner, Users.Current) && x.Certificate.Enabled == true));
-      var messageIds = verifiedSets.Select(x => x.ServiceMessageId).Distinct().ToList();
-      foreach (var messageId in messageIds)
+      var verifiedSets = Sungero.BulkExchangeSolution.Functions.Module.Remote.GetVerifiedSets();
+      foreach (var verifiedSet in verifiedSets)
       {
-        var infos = verifiedSets.Where(x => x.ServiceMessageId == messageId);
+        var infos = verifiedSet.ExchangeDocumentInfos.Where(c => c.RootBox.HasExchangeServiceCertificates == true &&
+                                                            c.RootBox.ExchangeServiceCertificates.Any(x => Equals(x.Certificate.Owner, Users.Current) && x.Certificate.Enabled == true));
         Logger.DebugFormat("Start sign document set with document ids {0}.", string.Join(", ", infos.Select(i => i.Document.Id)));
         foreach (var info in infos)
         {
@@ -51,13 +50,13 @@ namespace Sungero.BulkExchangeSolution.Client
         var certificate = documentInfo.RootBox.ExchangeServiceCertificates
           .Where(x => Equals(x.Certificate.Owner, Users.Current) && x.Certificate.Enabled == true)
           .Select(x => x.Certificate)
-          .FirstOrDefault();    
+          .FirstOrDefault();
         try
         {
           {
             var result = Sungero.Exchange.PublicFunctions.Module.SendAmendmentRequest(new List<IOfficialDocument> { documentInfo.Document },
-              documentInfo.Counterparty, Sungero.BulkExchangeSolution.Resources.RejectMessage, true,
-              documentInfo.RootBox, certificate, false);
+                                                                                      documentInfo.Counterparty, Sungero.BulkExchangeSolution.Resources.RejectMessage, true,
+                                                                                      documentInfo.RootBox, certificate, false);
             if (result == string.Empty)
             {
               documentInfo.RejectionStatus = RejectionStatus.Sent;

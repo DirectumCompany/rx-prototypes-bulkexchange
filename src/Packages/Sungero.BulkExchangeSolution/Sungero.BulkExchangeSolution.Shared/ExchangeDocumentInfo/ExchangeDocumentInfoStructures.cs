@@ -12,6 +12,6 @@ namespace Sungero.BulkExchangeSolution.Structures.Exchange.ExchangeDocumentInfo
     
     public List<Sungero.BulkExchangeSolution.IExchangeDocumentInfo> ExchangeDocumentInfos { get; set; }
     
-    public string Type {get; set; }
+    public string Type { get; set; }
   }
 }
