@@ -114,7 +114,7 @@ namespace Sungero.BulkExchangeSolution.Server
       else if (infos.Count == 2)
       {
         var hasSchf = infos.Any(i => Functions.ExchangeDocumentInfo.ExchangeDocumentInfoHasFunction(i, Docflow.AccountingDocumentBase.FormalizedFunction.Schf));
-        if (infos.All(i => Docflow.AccountingDocumentBases.Is(i.Document) && Docflow.AccountingDocumentBases.As(i.Document).IsFormalized == true))
+        if (infos.All(i => Docflow.AccountingDocumentBases.Is(i.Document) && Docflow.AccountingDocumentBases.As(i.Document).FormalizedFunction != null))
         {
           // Если в сообщении только два документа и это СЧФ и ДОП - это "корректный" комплект.
           var hasDop = infos.Any(i => Functions.ExchangeDocumentInfo.ExchangeDocumentInfoHasFunction(i, Docflow.AccountingDocumentBase.FormalizedFunction.Dop));

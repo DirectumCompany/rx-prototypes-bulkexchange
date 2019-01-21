@@ -30,7 +30,13 @@ namespace Sungero.BulkExchangeSolution.Module.Exchange.Server
       {
         var xdoc = System.Xml.Linq.XDocument.Load(new System.IO.MemoryStream(serviceDocument.Content));
         RemoveNamespaces(xdoc);
-        var additionalProperties = xdoc.Descendants("ТекстИнф");
+        var additionalProperties = xdoc.Descendants("ТекстИнф").ToList();
+        
+        // В ДПРР это может быть другой xml элемент.
+        var contractStatementAdditionalProperties = xdoc.Descendants("ИнфПолФХЖ2").ToList();
+        if (contractStatementAdditionalProperties.Any())
+          additionalProperties.AddRange(contractStatementAdditionalProperties);
+        
         if (additionalProperties.Any())
         {
           var exchangeDocumentInfo = ExchangeDocumentInfos.As(Sungero.Exchange.PublicFunctions.ExchangeDocumentInfo.GetExDocumentInfoByExternalId(box, serviceDocument.ServiceEntityId));
@@ -265,6 +271,9 @@ namespace Sungero.BulkExchangeSolution.Module.Exchange.Server
             // Не у всех типов доступен ответственный на карточке.
             if (accountingDocument.ResponsibleEmployee == null && accountingDocument.State.Properties.ResponsibleEmployee.IsVisible)
               accountingDocument.ResponsibleEmployee = responsible;
+
+            // Выдать права на документ ответственному за контрагента.
+            GrantAccessRightsForResponsible(accountingDocument, responsible);
           }
         }
         
@@ -336,6 +345,15 @@ namespace Sungero.BulkExchangeSolution.Module.Exchange.Server
       var isFullSet = documentSet != null && documentSet.IsFullSet;
       
       return base.NeedReceiveTask(box, messageUntyped) && isFullSet;
+    }
+    
+    protected virtual void GrantAccessRightsForResponsible(IOfficialDocument document, Company.IEmployee responsible)
+    {
+      if (!document.AccessRights.IsGranted(DefaultAccessRightsTypes.FullAccess, responsible))
+      {
+        document.AccessRights.Grant(responsible, DefaultAccessRightsTypes.FullAccess);
+        document.AccessRights.Save();
+      }
     }
     
     private void SendDocumentProcessingTask(DocumentSet documentSet, bool verificationResult)
