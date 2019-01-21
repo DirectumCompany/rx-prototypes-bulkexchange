@@ -66,6 +66,9 @@ namespace Sungero.BulkExchangeSolution.Module.Exchange.Server
           {
             var exchangeDocumentInfo = ExchangeDocumentInfos.As(Sungero.Exchange.PublicFunctions.ExchangeDocumentInfo.GetExDocumentInfoByExternalId(box, serviceDocument.ServiceEntityId));
             exchangeDocumentInfo.ContractNumber = contractNumber;
+            document.Subject = "Выполнение услуг";
+            document.Note = serviceDocument.Comment;
+            document.Save();
             exchangeDocumentInfo.Save();
           }
         }
@@ -279,14 +282,13 @@ namespace Sungero.BulkExchangeSolution.Module.Exchange.Server
     {
       if (fileName.ToLowerInvariant().Contains("акт") && comment.ToLowerInvariant().Contains("номер_договора"))
       {
-        var contractStatement = FinancialArchive.ContractStatements.Create();        
-        contractStatement.Name = fileName;
-        contractStatement.Subject = "Выполнение услуг";
+        var contractStatement = FinancialArchive.ContractStatements.Create();   
         contractStatement.Note = comment;
         contractStatement.BusinessUnit = ExchangeCore.PublicFunctions.BoxBase.GetBusinessUnit(box);
         contractStatement.BusinessUnitBox = ExchangeCore.PublicFunctions.BoxBase.GetRootBox(box);
         contractStatement.Counterparty = counterparty;
         contractStatement.AccessRights.Grant(ExchangeCore.PublicFunctions.BoxBase.GetExchangeDocumentResponsible(box, counterparty), DefaultAccessRightsTypes.FullAccess);
+        contractStatement.IsFormalized = false;
         return contractStatement;
       }
       return base.CreateExchangeDocument(fileName, comment, box, counterparty);
