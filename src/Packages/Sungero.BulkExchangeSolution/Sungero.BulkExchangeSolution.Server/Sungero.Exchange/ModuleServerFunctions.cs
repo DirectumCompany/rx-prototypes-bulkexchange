@@ -114,6 +114,9 @@ namespace Sungero.BulkExchangeSolution.Module.Exchange.Server
     /// <param name="documentSet">Комплект документов.</param>
     public void VerifyDocumentSet(Sungero.BulkExchangeSolution.Structures.Exchange.ExchangeDocumentInfo.DocumentSet documentSet)
     {
+      if (documentSet.Type != BulkExchangeSolution.Constants.Exchange.ExchangeDocumentInfo.DocumentSetType.Waybill)
+       return;
+      
       var totalAmount = Sungero.Docflow.AccountingDocumentBases.As(documentSet.ExchangeDocumentInfos.FirstOrDefault().Document).TotalAmount;
       var result = true;
       var reason = string.Empty;
@@ -199,8 +202,11 @@ namespace Sungero.BulkExchangeSolution.Module.Exchange.Server
         this.SetStatuses(documentSet.ExchangeDocumentInfos, isFullSet, documentSet.Type);
         this.ProcessDocumenSetFromNewIncomingMessage(documentSet);
         
-        if (isFullSet && documentSet.Type == BulkExchangeSolution.Constants.Exchange.ExchangeDocumentInfo.DocumentSetType.Waybill)
-          Functions.Module.VerifyDocumentSet(documentSet);
+        if (isFullSet)
+        {
+          Functions.Module.VerifyDocumentSet(documentSet);          
+          this.SendContractStatementForApproval(documentSet);
+        }
       }
       base.ProcessDocumentsFromNewIncomingMessage(infos, messageUntyped, box, sender, queueItem, isIncoming, untypedProcessingDocuments);
     }
@@ -237,7 +243,7 @@ namespace Sungero.BulkExchangeSolution.Module.Exchange.Server
         }
         
         if (documentSet.IsFullSet == true)
-        {          
+        {
           // Заполнить номенклатуру дела.
           if (caseFile != null)
             accountingDocument.CaseFile = caseFile;
@@ -282,7 +288,7 @@ namespace Sungero.BulkExchangeSolution.Module.Exchange.Server
     {
       if (fileName.ToLowerInvariant().Contains("акт") && comment.ToLowerInvariant().Contains("номер_договора"))
       {
-        var contractStatement = FinancialArchive.ContractStatements.Create();   
+        var contractStatement = FinancialArchive.ContractStatements.Create();
         contractStatement.Note = comment;
         contractStatement.BusinessUnit = ExchangeCore.PublicFunctions.BoxBase.GetBusinessUnit(box);
         contractStatement.BusinessUnitBox = ExchangeCore.PublicFunctions.BoxBase.GetRootBox(box);
@@ -328,7 +334,7 @@ namespace Sungero.BulkExchangeSolution.Module.Exchange.Server
       var documentSet = this.GetDocumentSet(messageUntyped);
       var isFullSet = documentSet != null && documentSet.IsFullSet;
       
-      return base.NeedReceiveTask(box, messageUntyped) && isFullSet;
+      return base.NeedReceiveTask(box, messageUntyped) && !isFullSet;
     }
     
     protected virtual void GrantAccessRightsForResponsible(IOfficialDocument document, Company.IEmployee responsible)
