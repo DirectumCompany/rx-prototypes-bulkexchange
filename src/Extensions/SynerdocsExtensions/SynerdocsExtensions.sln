@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SynerdocsExtensions", "SynerdocsExtensions\SynerdocsExtensions.csproj", "{69858D43-A063-4552-B493-B99FDBF2BE7D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SynerdocsExample", "SynerdocsExample\SynerdocsExample.csproj", "{93E305F1-EE24-4DAB-9B2E-8A12BFF34005}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{69858D43-A063-4552-B493-B99FDBF2BE7D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{69858D43-A063-4552-B493-B99FDBF2BE7D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{69858D43-A063-4552-B493-B99FDBF2BE7D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{69858D43-A063-4552-B493-B99FDBF2BE7D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{93E305F1-EE24-4DAB-9B2E-8A12BFF34005}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{93E305F1-EE24-4DAB-9B2E-8A12BFF34005}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{93E305F1-EE24-4DAB-9B2E-8A12BFF34005}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{93E305F1-EE24-4DAB-9B2E-8A12BFF34005}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
