@@ -115,7 +115,7 @@ namespace Sungero.BulkExchangeSolution.Module.Exchange.Server
     public void VerifyDocumentSet(Sungero.BulkExchangeSolution.Structures.Exchange.ExchangeDocumentInfo.DocumentSet documentSet)
     {
       if (documentSet.Type != BulkExchangeSolution.Constants.Exchange.ExchangeDocumentInfo.DocumentSetType.Waybill)
-       return;
+        return;
       
       var totalAmount = Sungero.Docflow.AccountingDocumentBases.As(documentSet.ExchangeDocumentInfos.FirstOrDefault().Document).TotalAmount;
       var result = true;
@@ -204,7 +204,7 @@ namespace Sungero.BulkExchangeSolution.Module.Exchange.Server
         
         if (isFullSet)
         {
-          Functions.Module.VerifyDocumentSet(documentSet);          
+          Functions.Module.VerifyDocumentSet(documentSet);
           this.SendContractStatementForApproval(documentSet);
         }
       }
@@ -344,6 +344,43 @@ namespace Sungero.BulkExchangeSolution.Module.Exchange.Server
       {
         document.AccessRights.Grant(responsible, DefaultAccessRightsTypes.FullAccess);
         document.AccessRights.Save();
+      }
+    }
+    
+    protected override void ProcessMessageError(object clientUntyped, List<int> queueItemsIds, object messageUntyped, string exception)
+    {
+      base.ProcessMessageError(clientUntyped, queueItemsIds, messageUntyped, exception);
+      
+      var regexMatch = System.Text.RegularExpressions.Regex.Match(exception, "^#([0-9])+:", System.Text.RegularExpressions.RegexOptions.Compiled);
+      if (regexMatch.Success)
+      {
+        var client = clientUntyped as NpoComputer.DCX.ClientApi.Client;
+        var message = messageUntyped as NpoComputer.DCX.Common.IMessage;
+        
+        var queueItems = ExchangeCore.MessageQueueItems.GetAll(q => queueItemsIds.Contains(q.Id)).ToList();
+        var queueItem = queueItems.Single(x => x.ExternalId == message.ServiceMessageId);
+        
+        var box = queueItem.Box;
+        var businessUnitBox = queueItem.RootBox;
+        
+        var organizationId = message.Sender.Organization.OrganizationId;
+        var isIncoming = true;
+        
+        // Обрабатываем исходящие сообщения для поддержки параллельных действий.
+        if (organizationId == businessUnitBox.OrganizationId)
+        {
+          organizationId = message.Receiver.Organization.OrganizationId;
+          isIncoming = false;
+        }
+        
+        var sender = Parties.Counterparties.GetAll(c => c.ExchangeBoxes.Any(e => Equals(e.OrganizationId, organizationId) && Equals(businessUnitBox, e.Box))).SingleOrDefault();
+        
+        var code = int.Parse(regexMatch.Groups[1].Value);
+        if (code == 1)
+        {
+          var task = SimpleTasks.Create("Необходимо заполнить ответственного за контрагента " + sender.Name, box.Responsible);
+          task.Start();
+        }
       }
     }
     

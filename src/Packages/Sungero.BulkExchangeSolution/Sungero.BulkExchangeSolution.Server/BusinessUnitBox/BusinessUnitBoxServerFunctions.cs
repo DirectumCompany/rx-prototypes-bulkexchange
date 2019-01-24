@@ -40,7 +40,7 @@ namespace Sungero.BulkExchangeSolution.Server
       if (company != null && company.Responsible != null)
         return company.Responsible;
       else
-        throw AppliedCodeException.Create(string.Format("Не указан ответственный за контрагента {0}", counterparty.Name));
+        throw AppliedCodeException.Create(string.Format("#1: Не указан ответственный за контрагента {0}", counterparty.Name));
     }
   }
 }
