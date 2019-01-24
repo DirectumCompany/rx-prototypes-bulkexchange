@@ -141,4 +141,7 @@
   <data name="VerificationFailedTaskText" xml:space="preserve">
     <value>Не пройдена проверка: </value>
   </data>
+  <data name="Incurred" xml:space="preserve">
+    <value>Проведено</value>
+  </data>
 </root>

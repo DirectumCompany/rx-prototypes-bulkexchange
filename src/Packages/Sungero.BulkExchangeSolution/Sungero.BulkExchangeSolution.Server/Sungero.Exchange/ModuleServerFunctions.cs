@@ -184,7 +184,7 @@ namespace Sungero.BulkExchangeSolution.Module.Exchange.Server
     {
       return document != null && (document.ExchangeState == Sungero.Exchange.ExchangeDocumentInfo.ExchangeState.Signed || document.ExchangeState == Sungero.Exchange.ExchangeDocumentInfo.ExchangeState.Obsolete ||
                                   document.ExchangeState == Sungero.Exchange.ExchangeDocumentInfo.ExchangeState.Rejected || document.ExchangeState == Sungero.Exchange.ExchangeDocumentInfo.ExchangeState.Terminated ||
-                                  string.Equals(document.Document.Note.Trim(), "проведено", StringComparison.InvariantCultureIgnoreCase));
+                                  string.Equals(document.Document.Note.Trim(), Sungero.BulkExchangeSolution.Module.Exchange.Resources.Incurred, StringComparison.InvariantCultureIgnoreCase));
     }
     
     protected override void ProcessDocumentsFromNewIncomingMessage(List<Sungero.Exchange.IExchangeDocumentInfo> infos,
@@ -417,7 +417,7 @@ namespace Sungero.BulkExchangeSolution.Module.Exchange.Server
         if (result)
         {
           info.VerificationStatus = VerificationStatus.Completed;
-          info.Document.Note = "Проведено";
+          info.Document.Note = Sungero.BulkExchangeSolution.Module.Exchange.Resources.Incurred;
           info.VerificationFailReason = null;
         }
         else

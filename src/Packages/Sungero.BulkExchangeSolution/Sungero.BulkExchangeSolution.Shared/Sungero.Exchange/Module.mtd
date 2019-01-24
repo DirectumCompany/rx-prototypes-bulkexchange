@@ -103,7 +103,8 @@
     "VerificationSuccess",
     "VerificationFail",
     "DocumentSetWithIDs",
-    "VerificationFailedTaskText"
+    "VerificationFailedTaskText",
+    "Incurred"
   ],
   "SpecialFolders": [],
   "Version": "3.1.6.1",
