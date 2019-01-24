@@ -283,8 +283,9 @@ namespace Sungero.BulkExchangeSolution.Module.Exchange.Server
     /// <param name="comment">Комментарий.</param>
     /// <param name="box">Ящик обмена.</param>
     /// <param name="counterparty">Контрагент.</param>
+    /// <param name="info">Информация о документе.</param>
     /// <returns>Созданный документ.</returns>
-    public override IOfficialDocument CreateExchangeDocument(string fileName, string comment, IBoxBase box, ICounterparty counterparty)
+    public override IOfficialDocument CreateExchangeDocument(string fileName, string comment, IBoxBase box, ICounterparty counterparty, Sungero.Exchange.IExchangeDocumentInfo info)
     {
       if (fileName.ToLowerInvariant().Contains("акт") && comment.ToLowerInvariant().Contains("номер_договора"))
       {
@@ -293,11 +294,11 @@ namespace Sungero.BulkExchangeSolution.Module.Exchange.Server
         contractStatement.BusinessUnit = ExchangeCore.PublicFunctions.BoxBase.GetBusinessUnit(box);
         contractStatement.BusinessUnitBox = ExchangeCore.PublicFunctions.BoxBase.GetRootBox(box);
         contractStatement.Counterparty = counterparty;
-        contractStatement.AccessRights.Grant(ExchangeCore.PublicFunctions.BoxBase.GetExchangeDocumentResponsible(box, counterparty), DefaultAccessRightsTypes.FullAccess);
+        contractStatement.AccessRights.Grant(ExchangeCore.PublicFunctions.BoxBase.GetExchangeDocumentResponsible(box, counterparty,  new List<Sungero.Exchange.IExchangeDocumentInfo>() { info }), DefaultAccessRightsTypes.FullAccess);
         contractStatement.IsFormalized = false;
         return contractStatement;
       }
-      return base.CreateExchangeDocument(fileName, comment, box, counterparty);
+      return base.CreateExchangeDocument(fileName, comment, box, counterparty, info);
     }
 
     /// <summary>
