@@ -417,6 +417,7 @@ namespace Sungero.BulkExchangeSolution.Module.Exchange.Server
         if (result)
         {
           info.VerificationStatus = VerificationStatus.Completed;
+          info.Document.Note = "Проведено";
           info.VerificationFailReason = null;
         }
         else
