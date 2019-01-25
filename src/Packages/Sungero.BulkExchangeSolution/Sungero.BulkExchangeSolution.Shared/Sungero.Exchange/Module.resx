@@ -147,7 +147,7 @@
   <data name="CounterpartyResponsibleNotFoundText" xml:space="preserve">
     <value>TODO</value>
   </data>
-  <data name="Incurred">
+  <data name="Incurred" xml:space="preserve">
     <value>TODO</value>
   </data>
 </root>

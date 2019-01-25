@@ -105,7 +105,8 @@
     "DocumentSetWithIDs",
     "VerificationFailedTaskText",
     "CounterpartyResponsibleNotFoundSubject",
-    "CounterpartyResponsibleNotFoundText"
+    "CounterpartyResponsibleNotFoundText",
+    "Incurred"
   ],
   "SpecialFolders": [],
   "Version": "3.1.6.1",

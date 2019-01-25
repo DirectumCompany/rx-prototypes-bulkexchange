@@ -147,7 +147,7 @@
   <data name="CounterpartyResponsibleNotFoundText" xml:space="preserve">
     <value>Заполните ответственного в карточке контрагента {0}</value>
   </data>
-  <data name="Incurred">
+  <data name="Incurred" xml:space="preserve">
     <value>Проведено</value>
   </data>
 </root>
