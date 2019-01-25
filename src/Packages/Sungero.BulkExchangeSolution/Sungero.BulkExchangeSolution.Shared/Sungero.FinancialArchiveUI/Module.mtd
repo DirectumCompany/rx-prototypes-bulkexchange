@@ -1,0 +1,80 @@
+{
+  "$type": "Sungero.Metadata.LayerModuleMetadata, Sungero.Metadata",
+  "NameGuid": "95126478-8b70-49cd-8f4e-9635f753fe85",
+  "Name": "FinancialArchiveUI",
+  "AssociatedGuid": "50f2374f-3b0a-4a4b-b161-0073e1165a67",
+  "BaseGuid": "e99ae7e2-edb7-4904-a19a-4577f07609a4",
+  "ClientBaseAssemblyName": "Sungero.BulkExchangeSolution.ClientBase",
+  "ClientBaseNamespace": "Sungero.BulkExchangeSolution.Module.FinancialArchiveUI.ClientBase",
+  "Code": "FinArUI",
+  "CompanyCode": "Sungero",
+  "Cover": {
+    "NameGuid": "b567c089-d959-4833-bfbd-4d7751a2ad34",
+    "Actions": [
+      {
+        "$type": "Sungero.Metadata.CoverComputableFolderActionMetadata, Sungero.Metadata",
+        "NameGuid": "7bbadbf1-b40c-4daa-9e5b-fb055d5c9279",
+        "Name": "ForSignature",
+        "ComputableFolderId": "254be29d-ab75-4e4d-9439-87a1a5b98c32",
+        "GroupId": "ccc97d8c-88e4-4da9-a58d-7308320824f8"
+      }
+    ],
+    "Groups": [
+      {
+        "NameGuid": "ccc97d8c-88e4-4da9-a58d-7308320824f8",
+        "Name": "IncomingDocuments",
+        "BackgroundPosition": "Stretch",
+        "IconName": "GroupIconIncomingDocuments_ccc97d8c88e44da9a58d7308320824f8.png",
+        "PreviousItemGuid": "7f8ba0a3-7b13-474b-bc99-86a21a6f7b6a"
+      }
+    ],
+    "IsAncestorMetadata": true,
+    "Overridden": [
+      "Groups",
+      "Actions"
+    ]
+  },
+  "ExplorerTreeOrder": [
+    {
+      "ItemId": "254be29d-ab75-4e4d-9439-87a1a5b98c32",
+      "PreviousItemId": "0e79392a-07bb-42e8-85fa-3be38d8a4cc5"
+    }
+  ],
+  "IconResourcesKeys": [],
+  "Importance": "High",
+  "IsLicensed": true,
+  "LayeredFromGuid": "e99ae7e2-edb7-4904-a19a-4577f07609a4",
+  "PublicStructures": [],
+  "ResourceInterfaceAssemblyName": "Sungero.Domain.Interfaces",
+  "ResourceInterfaceNamespace": "Sungero.BulkExchangeSolution.Module.FinancialArchiveUI",
+  "ResourcesKeys": [],
+  "SpecialFolders": [
+    {
+      "NameGuid": "254be29d-ab75-4e4d-9439-87a1a5b98c32",
+      "Name": "ForSignature",
+      "DefaultContentType": "96c4f4f3-dc74-497a-b347-e8faf4afe320",
+      "DisplayType": "Module",
+      "FilterPanel": {
+        "NameGuid": "93baa4dc-4baf-4543-a9f7-35e14ba4d99e",
+        "Name": "FilterPanel",
+        "Controls": []
+      },
+      "IsShow": false,
+      "Kind": "Computable",
+      "NeedShowMarkedCount": false,
+      "OpenCardByDefault": true
+    }
+  ],
+  "Version": "3.1.6.1",
+  "Widgets": [],
+  "Versions": [
+    {
+      "Type": "LayerModuleMetadata",
+      "Number": 6
+    },
+    {
+      "Type": "ModuleMetadata",
+      "Number": 6
+    }
+  ]
+}

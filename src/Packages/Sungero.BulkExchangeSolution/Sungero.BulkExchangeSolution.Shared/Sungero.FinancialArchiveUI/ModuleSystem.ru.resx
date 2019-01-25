@@ -117,37 +117,16 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="DocumentSetError" xml:space="preserve">
-    <value>Ошибочный комплект документов</value>
+  <data name="CoverGroup_IncomingDocuments" xml:space="preserve">
+    <value>Входящие документы</value>
   </data>
-  <data name="DocumentsTotalAmountError" xml:space="preserve">
-    <value>Суммы документов должны быть одинаковыми</value>
+  <data name="CoverAction_ForSignature" xml:space="preserve">
+    <value>На подписание</value>
   </data>
-  <data name="TotalAmountIsTooBig" xml:space="preserve">
-    <value>Сумма должна быть меньше 100 000 российских рублей</value>
+  <data name="CoverDescription_ForSignature" xml:space="preserve">
+    <value>Массовое подписание финансовых документов, полученных через сервисы юридически значимого электронного документооборота</value>
   </data>
-  <data name="RubAlphaCode" xml:space="preserve">
-    <value>RUB</value>
-  </data>
-  <data name="VerificationSuccess" xml:space="preserve">
-    <value>) успешно прошел проверку: </value>
-  </data>
-  <data name="VerificationFail" xml:space="preserve">
-    <value>) не прошел проверку: </value>
-  </data>
-  <data name="DocumentSetWithIDs" xml:space="preserve">
-    <value>Комплект с документами (id </value>
-  </data>
-  <data name="VerificationFailedTaskText" xml:space="preserve">
-    <value>Не пройдена проверка: </value>
-  </data>
-  <data name="CounterpartyResponsibleNotFoundSubject" xml:space="preserve">
-    <value>Необходимо заполнить ответственного за контрагента {0}</value>
-  </data>
-  <data name="CounterpartyResponsibleNotFoundText" xml:space="preserve">
-    <value>Заполните ответственного в карточке контрагента {0}</value>
-  </data>
-  <data name="Incurred">
-    <value>Проведено</value>
+  <data name="sf_254be29d_ab75_4e4d_9439_87a1a5b98c32" xml:space="preserve">
+    <value>На подписание</value>
   </data>
 </root>

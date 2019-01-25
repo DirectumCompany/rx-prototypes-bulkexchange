@@ -36,6 +36,11 @@ namespace Sungero.BulkExchangeSolution.Module.Exchange.Server
         var contractStatementAdditionalProperties = xdoc.Descendants("ИнфПолФХЖ2").ToList();
         if (contractStatementAdditionalProperties.Any())
           additionalProperties.AddRange(contractStatementAdditionalProperties);
+         
+        // В ДПТ это может быть другой xml элемент.
+        var waybillAdditionalProperties = xdoc.Descendants("ИнфПолФХЖ3").ToList();
+        if (waybillAdditionalProperties.Any())
+          additionalProperties.AddRange(waybillAdditionalProperties);   
         
         if (additionalProperties.Any())
         {
@@ -184,7 +189,7 @@ namespace Sungero.BulkExchangeSolution.Module.Exchange.Server
     {
       return document != null && (document.ExchangeState == Sungero.Exchange.ExchangeDocumentInfo.ExchangeState.Signed || document.ExchangeState == Sungero.Exchange.ExchangeDocumentInfo.ExchangeState.Obsolete ||
                                   document.ExchangeState == Sungero.Exchange.ExchangeDocumentInfo.ExchangeState.Rejected || document.ExchangeState == Sungero.Exchange.ExchangeDocumentInfo.ExchangeState.Terminated ||
-                                  string.Equals(document.Document.Note.Trim(), "проведено", StringComparison.InvariantCultureIgnoreCase));
+                                  document.Document.Note.IndexOf(Resources.Incurred, StringComparison.InvariantCultureIgnoreCase) >= 0);
     }
     
     protected override void ProcessDocumentsFromNewIncomingMessage(List<Sungero.Exchange.IExchangeDocumentInfo> infos,
@@ -334,8 +339,8 @@ namespace Sungero.BulkExchangeSolution.Module.Exchange.Server
     {
       var documentSet = this.GetDocumentSet(messageUntyped);
       var isFullSet = documentSet != null && documentSet.IsFullSet;
-      
-      return base.NeedReceiveTask(box, messageUntyped) && !isFullSet;
+      var isReject = documentSet != null && documentSet.ExchangeDocumentInfos.Any(i => i.RejectionStatus != RejectionStatus.NotRequired);
+      return base.NeedReceiveTask(box, messageUntyped) && !isFullSet && !isReject;
     }
     
     protected virtual void GrantAccessRightsForResponsible(IOfficialDocument document, Company.IEmployee responsible)
@@ -439,6 +444,15 @@ namespace Sungero.BulkExchangeSolution.Module.Exchange.Server
         if (result)
         {
           info.VerificationStatus = VerificationStatus.Completed;
+          if (info.Document.Note.IndexOf(Resources.Incurred, StringComparison.InvariantCultureIgnoreCase) < 0)
+          {
+            var incurredNote = "*" + Resources.Incurred.ToString().ToUpper() + "*";
+            if (string.IsNullOrWhiteSpace(info.Document.Note))
+              info.Document.Note = incurredNote;
+            else
+              info.Document.Note += Environment.NewLine + incurredNote;
+          }
+
           info.VerificationFailReason = null;
         }
         else

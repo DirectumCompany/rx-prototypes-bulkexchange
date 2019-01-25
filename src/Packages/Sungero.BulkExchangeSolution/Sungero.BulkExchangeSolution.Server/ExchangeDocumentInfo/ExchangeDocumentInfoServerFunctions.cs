@@ -73,7 +73,8 @@ namespace Sungero.BulkExchangeSolution.Server
       {
         // Если в сообщении только два документа и это СЧФ и ДОП - это "корректный" комплект.
         var hasSchf = infos.Any(i => Functions.ExchangeDocumentInfo.ExchangeDocumentInfoHasFunction(i, Docflow.AccountingDocumentBase.FormalizedFunction.Schf));
-        var hasDop = infos.Any(i => Functions.ExchangeDocumentInfo.ExchangeDocumentInfoHasFunction(i, Docflow.AccountingDocumentBase.FormalizedFunction.Dop));
+        var hasDop = infos.Any(i => Functions.ExchangeDocumentInfo.ExchangeDocumentInfoHasFunction(i, Docflow.AccountingDocumentBase.FormalizedFunction.Dop) ||
+                               FinancialArchive.Waybills.Is(i.Document));
         return Structures.Exchange.ExchangeDocumentInfo.DocumentSet.Create(hasSchf && hasDop, infos, Constants.Exchange.ExchangeDocumentInfo.DocumentSetType.Waybill);
       }
       
