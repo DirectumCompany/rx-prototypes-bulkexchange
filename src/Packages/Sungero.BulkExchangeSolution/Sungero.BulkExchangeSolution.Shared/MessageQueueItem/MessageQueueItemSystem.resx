@@ -117,34 +117,7 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="DocumentSetError" xml:space="preserve">
-    <value>TODO</value>
-  </data>
-  <data name="DocumentsTotalAmountError" xml:space="preserve">
-    <value>TODO</value>
-  </data>
-  <data name="TotalAmountIsTooBig" xml:space="preserve">
-    <value>TODO</value>
-  </data>
-  <data name="RubAlphaCode" xml:space="preserve">
-    <value>RUB</value>
-  </data>
-  <data name="VerificationSuccess" xml:space="preserve">
-    <value>TODO</value>
-  </data>
-  <data name="VerificationFail" xml:space="preserve">
-    <value>TODO</value>
-  </data>
-  <data name="DocumentSetWithIDs" xml:space="preserve">
-    <value>TODO</value>
-  </data>
-  <data name="VerificationFailedTaskText" xml:space="preserve">
-    <value>TODO</value>
-  </data>
-  <data name="CounterpartyResponsibleNotFoundSubject" xml:space="preserve">
-    <value>TODO</value>
-  </data>
-  <data name="CounterpartyResponsibleNotFoundText" xml:space="preserve">
+  <data name="Property_ResponsibleTask" xml:space="preserve">
     <value>TODO</value>
   </data>
 </root>

@@ -103,7 +103,9 @@
     "VerificationSuccess",
     "VerificationFail",
     "DocumentSetWithIDs",
-    "VerificationFailedTaskText"
+    "VerificationFailedTaskText",
+    "CounterpartyResponsibleNotFoundSubject",
+    "CounterpartyResponsibleNotFoundText"
   ],
   "SpecialFolders": [],
   "Version": "3.1.6.1",

@@ -1,0 +1,73 @@
+{
+  "$type": "Sungero.Metadata.EntityMetadata, Sungero.Metadata",
+  "NameGuid": "73992f76-289b-40d1-be76-d4019a6ff0b4",
+  "Name": "MessageQueueItem",
+  "AccessRightsMode": "NoRight",
+  "BaseGuid": "f9a3ec37-0fd4-4343-a295-9394ba830a0e",
+  "CanBeNavigationPropertyType": true,
+  "CreationAreaMetadata": {
+    "NameGuid": "f7766750-eee2-4fcd-8003-5c06a90d1f44",
+    "Name": "CreationArea",
+    "Buttons": [],
+    "IsAncestorMetadata": true
+  },
+  "ExtraSearchProperties": [],
+  "FilterPanel": {
+    "NameGuid": "b0125fbd-3b91-4dbb-914a-689276216404",
+    "Name": "FilterPanel",
+    "Controls": [],
+    "IsAncestorMetadata": true
+  },
+  "IconResourcesKeys": [],
+  "LayeredFromGuid": "f9a3ec37-0fd4-4343-a295-9394ba830a0e",
+  "OperationsClass": "",
+  "Properties": [
+    {
+      "$type": "Sungero.Metadata.CollectionPropertyMetadata, Sungero.Metadata",
+      "NameGuid": "7712cf03-7d5d-4449-8cff-2225a5a2e9df",
+      "Name": "Documents",
+      "EntityGuid": "becc000c-ee1d-408d-ba1a-48d6b7c7ec5a",
+      "IsAncestorMetadata": true,
+      "Overridden": [
+        "EntityGuid"
+      ]
+    },
+    {
+      "$type": "Sungero.Metadata.NavigationPropertyMetadata, Sungero.Metadata",
+      "NameGuid": "7f160450-92b2-4c8c-8e5c-681354611b3d",
+      "Name": "ResponsibleTask",
+      "Code": "ResponsibleTas",
+      "EntityGuid": "d795d1f6-45c1-4e5e-9677-b53fb7280c7e",
+      "FlatListInStandaloneLookup": true,
+      "ListDataBinderTypeName": "Sungero.Presentation.CommonDataBinders.DropDownEditorToNavigationBinder",
+      "PreviousPropertyGuid": "7712cf03-7d5d-4449-8cff-2225a5a2e9df"
+    }
+  ],
+  "PublicStructures": [],
+  "ResourcesKeys": [],
+  "RibbonCardMetadata": {
+    "NameGuid": "1f931c81-22d9-48c9-ac93-6f4186ccdbac",
+    "Name": "RibbonCard",
+    "Categories": [],
+    "Elements": [],
+    "Groups": [],
+    "IsAncestorMetadata": true,
+    "Pages": [],
+    "RibbonKind": "Card"
+  },
+  "RibbonCollectionMetadata": {
+    "NameGuid": "b885e43d-ebcd-417f-9cf4-19450994a61d",
+    "Name": "RibbonCollection",
+    "Categories": [],
+    "Elements": [],
+    "Groups": [],
+    "IsAncestorMetadata": true,
+    "Pages": []
+  },
+  "Versions": [
+    {
+      "Type": "EntityMetadata",
+      "Number": 9
+    }
+  ]
+}

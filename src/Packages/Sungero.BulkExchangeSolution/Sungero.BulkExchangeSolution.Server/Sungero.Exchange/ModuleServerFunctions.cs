@@ -191,7 +191,7 @@ namespace Sungero.BulkExchangeSolution.Module.Exchange.Server
                                                                    object messageUntyped,
                                                                    IBoxBase box,
                                                                    ICounterparty sender,
-                                                                   IMessageQueueItem queueItem,
+                                                                   ExchangeCore.IMessageQueueItem queueItem,
                                                                    bool isIncoming,
                                                                    object untypedProcessingDocuments)
     {
@@ -357,7 +357,7 @@ namespace Sungero.BulkExchangeSolution.Module.Exchange.Server
         var client = clientUntyped as NpoComputer.DCX.ClientApi.Client;
         var message = messageUntyped as NpoComputer.DCX.Common.IMessage;
         
-        var queueItems = ExchangeCore.MessageQueueItems.GetAll(q => queueItemsIds.Contains(q.Id)).ToList();
+        var queueItems = MessageQueueItems.GetAll(q => queueItemsIds.Contains(q.Id)).ToList();
         var queueItem = queueItems.Single(x => x.ExternalId == message.ServiceMessageId);
         
         var box = queueItem.Box;
@@ -378,9 +378,31 @@ namespace Sungero.BulkExchangeSolution.Module.Exchange.Server
         var code = int.Parse(regexMatch.Groups[1].Value);
         if (code == 1)
         {
-          var task = SimpleTasks.Create("Необходимо заполнить ответственного за контрагента " + sender.Name, box.Responsible);
-          task.Start();
+          this.StartSimpleTaskWhenCounterpartyResponsibleNotFound(queueItem, sender, businessUnitBox);
         }
+      }
+    }
+    
+    /// <summary>
+    /// Обработка ситуации, когда не указан ответственный за контрагента.
+    /// </summary>
+    /// <param name="queueItem">Элемент очереди, по которому идёт обработка.</param>
+    /// <param name="sender">Контрагент.</param>
+    /// <param name="box">Ящик эл. обмена.</param>
+    protected virtual void StartSimpleTaskWhenCounterpartyResponsibleNotFound(IMessageQueueItem queueItem,
+                                                                              Parties.ICounterparty sender,
+                                                                              ExchangeCore.IBusinessUnitBox box)
+    {
+      if (queueItem.ResponsibleTask == null || queueItem.ResponsibleTask.Status != Workflow.SimpleTask.Status.InProcess)
+      {
+        var task = SimpleTasks.Create(Resources.CounterpartyResponsibleNotFoundSubjectFormat(sender.Name), box.Responsible);
+        task.ActiveText += Resources.CounterpartyResponsibleNotFoundTextFormat(Hyperlinks.Get(sender));
+        task.Attachments.Add(sender);
+        task.Deadline = Calendar.Today.AddWorkingDays(2);
+        task.Save();
+        task.Start();
+        queueItem.ResponsibleTask = task;
+        queueItem.Save();
       }
     }
     

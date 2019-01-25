@@ -141,4 +141,10 @@
   <data name="VerificationFailedTaskText" xml:space="preserve">
     <value>Не пройдена проверка: </value>
   </data>
+  <data name="CounterpartyResponsibleNotFoundSubject" xml:space="preserve">
+    <value>Необходимо заполнить ответственного за контрагента {0}</value>
+  </data>
+  <data name="CounterpartyResponsibleNotFoundText" xml:space="preserve">
+    <value>Заполните ответственного в карточке контрагента {0}</value>
+  </data>
 </root>
