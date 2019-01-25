@@ -184,7 +184,7 @@ namespace Sungero.BulkExchangeSolution.Module.Exchange.Server
     {
       return document != null && (document.ExchangeState == Sungero.Exchange.ExchangeDocumentInfo.ExchangeState.Signed || document.ExchangeState == Sungero.Exchange.ExchangeDocumentInfo.ExchangeState.Obsolete ||
                                   document.ExchangeState == Sungero.Exchange.ExchangeDocumentInfo.ExchangeState.Rejected || document.ExchangeState == Sungero.Exchange.ExchangeDocumentInfo.ExchangeState.Terminated ||
-                                  string.Equals(document.Document.Note.Trim(), Sungero.BulkExchangeSolution.Module.Exchange.Resources.Incurred, StringComparison.InvariantCultureIgnoreCase));
+                                  document.Document.Note.IndexOf(Resources.Incurred, StringComparison.InvariantCultureIgnoreCase) >= 0);
     }
     
     protected override void ProcessDocumentsFromNewIncomingMessage(List<Sungero.Exchange.IExchangeDocumentInfo> infos,
@@ -417,12 +417,13 @@ namespace Sungero.BulkExchangeSolution.Module.Exchange.Server
         if (result)
         {
           info.VerificationStatus = VerificationStatus.Completed;
-          if (!info.Document.Note.Contains(Resources.Incurred))
+          if (info.Document.Note.IndexOf(Resources.Incurred, StringComparison.InvariantCultureIgnoreCase) < 0)
           {
+            var incurredNote = "*" + Resources.Incurred.ToString().ToUpper() + "*";
             if (string.IsNullOrWhiteSpace(info.Document.Note))
-              info.Document.Note = Resources.Incurred;
+              info.Document.Note = incurredNote;
             else
-              info.Document.Note += Environment.NewLine + Resources.Incurred;
+              info.Document.Note += Environment.NewLine + incurredNote;
           }
 
           info.VerificationFailReason = null;
