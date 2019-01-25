@@ -417,7 +417,14 @@ namespace Sungero.BulkExchangeSolution.Module.Exchange.Server
         if (result)
         {
           info.VerificationStatus = VerificationStatus.Completed;
-          info.Document.Note = Sungero.BulkExchangeSolution.Module.Exchange.Resources.Incurred;
+          if (!info.Document.Note.Contains(Resources.Incurred))
+          {
+            if (string.IsNullOrWhiteSpace(info.Document.Note))
+              info.Document.Note = Resources.Incurred;
+            else
+              info.Document.Note += Environment.NewLine + Resources.Incurred;
+          }
+
           info.VerificationFailReason = null;
         }
         else
