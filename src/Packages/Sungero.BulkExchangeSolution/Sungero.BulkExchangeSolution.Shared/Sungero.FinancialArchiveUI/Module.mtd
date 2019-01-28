@@ -40,6 +40,9 @@
       "PreviousItemId": "0e79392a-07bb-42e8-85fa-3be38d8a4cc5"
     }
   ],
+  "HandledEvents": [
+    "InitializingServer"
+  ],
   "IconResourcesKeys": [],
   "Importance": "High",
   "IsLicensed": true,
@@ -59,6 +62,9 @@
         "Name": "FilterPanel",
         "Controls": []
       },
+      "HandledEvents": [
+        "DataQueryServer"
+      ],
       "IsShow": false,
       "Kind": "Computable",
       "NeedShowMarkedCount": false,
