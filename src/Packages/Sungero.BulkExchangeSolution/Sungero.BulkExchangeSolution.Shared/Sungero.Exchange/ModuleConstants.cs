@@ -12,6 +12,6 @@ namespace Sungero.BulkExchangeSolution.Module.Exchange.Constants
     public const string ContractNumber = "номер_договора";
     
     // GUID роли "Главный бухгалтер".
-    public const string ControllerRoleName = "Главный бухгалтер";
+    public const string ChiefAccountantRoleName = "Главный бухгалтер";
   }
 }

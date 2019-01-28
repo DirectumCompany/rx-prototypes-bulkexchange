@@ -271,8 +271,8 @@ namespace Sungero.BulkExchangeSolution.Module.Exchange.Server
             GrantAccessRightsForResponsible(accountingDocument, responsible);
             
             // Выдать права главному бухгалтеру.
-            var controller = Roles.GetAll(r => r.Name.Equals(Constants.Module.ControllerRoleName)).FirstOrDefault();
-            accountingDocument.AccessRights.Grant(controller, DefaultAccessRightsTypes.FullAccess);
+            var chiefAccountant = Roles.GetAll(r => r.Name.Equals(Constants.Module.ChiefAccountantRoleName)).FirstOrDefault();
+            accountingDocument.AccessRights.Grant(chiefAccountant, DefaultAccessRightsTypes.FullAccess);
           }
         }
         
