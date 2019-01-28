@@ -71,7 +71,18 @@
     "NameGuid": "bb027c39-5bdb-4927-a18f-da531efcab82",
     "Name": "RibbonCollection",
     "Categories": [],
-    "Elements": [],
+    "Elements": [
+      {
+        "$type": "Sungero.Metadata.RibbonActionButtonMetadata, Sungero.Metadata",
+        "NameGuid": "541655fb-b65e-49f6-8ca9-42f2af3a8e51",
+        "Name": "Reject",
+        "ActionGuid": "f0f0c8b5-44cf-4589-b483-a74bee640c82",
+        "ButtonSize": "Large",
+        "Index": 22,
+        "IsVisible": false,
+        "ParentGuid": "495214c9-a353-4cfa-9440-acb5840fa265"
+      }
+    ],
     "Groups": [],
     "IsAncestorMetadata": true,
     "Pages": []

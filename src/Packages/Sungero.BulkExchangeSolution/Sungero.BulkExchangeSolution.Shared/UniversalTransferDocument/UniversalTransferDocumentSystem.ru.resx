@@ -126,4 +126,7 @@
   <data name="Action_RejectHint" xml:space="preserve">
     <value>Отказать в подписании документа</value>
   </data>
+  <data name="Ribbon_Sign_ae67db64ab394d5b969584ab345030a7" xml:space="preserve">
+    <value>Подписание</value>
+  </data>
 </root>

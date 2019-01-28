@@ -132,4 +132,7 @@
   <data name="Action_RejectConfirmationDescription" xml:space="preserve">
     <value />
   </data>
+  <data name="Ribbon_Sign_ae67db64ab394d5b969584ab345030a7" xml:space="preserve">
+    <value>Sign</value>
+  </data>
 </root>

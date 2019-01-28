@@ -4,6 +4,8 @@ using System.Linq;
 using Sungero.BulkExchangeSolution.ExchangeDocumentInfo;
 using Sungero.Core;
 using Sungero.CoreEntities;
+using Sungero.Docflow;
+using Status = Sungero.Workflow.AssignmentBase.Status;
 
 namespace Sungero.BulkExchangeSolution.Server
 {
@@ -30,6 +32,20 @@ namespace Sungero.BulkExchangeSolution.Server
                (x.SignStatus == null || x.SignStatus != SignStatus.Signed) && x.VerificationStatus == Sungero.BulkExchangeSolution.ExchangeDocumentInfo.VerificationStatus.Completed);
       
       return Sungero.BulkExchangeSolution.Functions.ExchangeDocumentInfo.GetDocumentSets(infos.ToList()).Where(x => x.IsFullSet).ToList();
+    }
+    
+    [Remote]
+    public IQueryable<IApprovalSigningAssignment> GetApprovalSigningAssignments(IAccountingDocumentBase document)
+    {
+      var documents = ApprovalSigningAssignments
+        .GetAll(a => Equals(a.Performer, Users.Current) && a.Status == Status.InProcess)
+        .ToList()
+        .SelectMany(a => a.DocumentGroup.OfficialDocuments)
+        .ToList();
+      
+      return ApprovalSigningAssignments
+        .GetAll(a => Equals(a.Performer, Users.Current) && a.Status == Status.InProcess)
+        .Where(a => documents.Contains(document));
     }
   }
 }

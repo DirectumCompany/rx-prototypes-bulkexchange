@@ -6,6 +6,9 @@ using Sungero.Core;
 using Sungero.CoreEntities;
 using Sungero.Docflow;
 using Sungero.ExchangeCore;
+using Sungero.RecordManagement;
+using MessageType = Sungero.Core.MessageType;
+using Status = Sungero.Workflow.Assignment.Status;
 
 namespace Sungero.BulkExchangeSolution.Client
 {
@@ -39,6 +42,42 @@ namespace Sungero.BulkExchangeSolution.Client
             }
           }
         }
+      }
+    }
+    
+    public virtual void RejectDocument(IAccountingDocumentBase document)
+    {
+      var approvalSigningAssignments = Functions.Module.Remote.GetApprovalSigningAssignments(document);
+      if (approvalSigningAssignments.Count() > 1)
+      {
+        Dialogs.ShowMessage("много заданий", MessageType.Error);
+        return;
+      }
+
+      var assignment = approvalSigningAssignments.FirstOrDefault();
+      var task = ApprovalTasks.As(assignment.MainTask);
+      if (assignment == null)
+        return;
+      var dialog = Dialogs.CreateInputDialog("Отказ");
+      var abortingReason = dialog.AddMultilineString(task.Info.Properties.AbortingReason.LocalizedName, true);
+      dialog.Buttons.AddOkCancel();
+      dialog.Buttons.Default = DialogButtons.Ok;
+      
+      // TODO: сделать свой ресурс.
+      dialog.SetOnButtonClick(args =>
+      {
+        if (string.IsNullOrWhiteSpace(abortingReason.Value))
+          args.AddError(ActionItemExecutionTasks.Resources.EmptyAbortingReason, abortingReason);
+      });
+      
+      if (dialog.Show() == DialogButtons.Ok)
+      {
+        ApprovalTasks.As(assignment.MainTask).AbortingReason = abortingReason.Value;
+        // ???? Functions.ActionItemExecutionTask.DisablePropertiesRequirement(_obj)
+        assignment.ActiveText += string.IsNullOrWhiteSpace(assignment.ActiveText)
+          ? abortingReason.Value
+          : Environment.NewLine + abortingReason.Value;
+        assignment.Complete(Sungero.Docflow.ApprovalSigningAssignment.Result.Abort);
       }
     }
     
