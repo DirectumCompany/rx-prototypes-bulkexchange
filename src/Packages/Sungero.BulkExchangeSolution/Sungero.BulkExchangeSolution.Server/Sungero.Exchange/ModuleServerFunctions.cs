@@ -151,7 +151,7 @@ namespace Sungero.BulkExchangeSolution.Module.Exchange.Server
       for (int i = 0; i < documents.Count; i++)
         logMessage += i == 0 ? documents[i].Id.ToString() : ", " + documents[i].Id;
       
-      var documentInfo = documentSet.ExchangeDocumentInfos.FirstOrDefault(x => Sungero.FinancialArchive.UniversalTransferDocuments.Is(x.Document));
+      var documentInfo = documentSet.ExchangeDocumentInfos.FirstOrDefault(x => Sungero.FinancialArchive.UniversalTransferDocuments.Is(x.Document) || Waybills.Is(x.Document));
       var task = documentInfo.VerificationTask;
       if (!result)
       {
@@ -269,6 +269,10 @@ namespace Sungero.BulkExchangeSolution.Module.Exchange.Server
 
             // Выдать права на документ ответственному за контрагента.
             GrantAccessRightsForResponsible(accountingDocument, responsible);
+            
+            // Выдать права главному бухгалтеру.
+            var controller = Roles.GetAll(r => r.Name.Equals(Constants.Module.ControllerRoleName)).FirstOrDefault();
+            accountingDocument.AccessRights.Grant(controller, DefaultAccessRightsTypes.FullAccess);
           }
         }
         
@@ -302,6 +306,7 @@ namespace Sungero.BulkExchangeSolution.Module.Exchange.Server
         contractStatement.IsFormalized = false;
         return contractStatement;
       }
+      
       return base.CreateExchangeDocument(fileName, comment, box, counterparty, info);
     }
 
@@ -411,7 +416,7 @@ namespace Sungero.BulkExchangeSolution.Module.Exchange.Server
     {
       var documentInfo =
         documentSet.ExchangeDocumentInfos.FirstOrDefault(x =>
-                                                         Sungero.FinancialArchive.UniversalTransferDocuments.Is(x.Document));
+                                                         Sungero.FinancialArchive.UniversalTransferDocuments.Is(x.Document) || Waybills.Is(x.Document));
       var createTime = documentSet.ExchangeDocumentInfos.Select(x => x.Document.Created).Max();
       
       if ((documentInfo.VerificationTask == null || documentInfo.VerificationTask.Status != Workflow.Task.Status.InProcess) &&
@@ -496,6 +501,7 @@ namespace Sungero.BulkExchangeSolution.Module.Exchange.Server
         exhangeDoc.Save();
       }
     }
+    
     /// <summary>
     /// Сгенерировать титулы.
     /// </summary>
