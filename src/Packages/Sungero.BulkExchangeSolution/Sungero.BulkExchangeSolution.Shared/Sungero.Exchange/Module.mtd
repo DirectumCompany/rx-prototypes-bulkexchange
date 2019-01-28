@@ -25,6 +25,7 @@
     {
       "NameGuid": "13f61e21-8bb9-4a3d-b72b-e92da64c60b4",
       "Name": "GetMessages",
+      "Daily": "Repeat",
       "DaysOfWeekSchedule": "Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday",
       "IsAncestorMetadata": true,
       "Monthly": "Weekly",
@@ -36,9 +37,10 @@
         "IsAtEndOfMonth",
         "Daily",
         "EndAt",
-        "TimePeriod"
+        "TimePeriod",
+        "StartAt"
       ],
-      "StartAt": "1753-01-01T00:00:00"
+      "TimePeriod": 10
     },
     {
       "NameGuid": "e7b6f44d-78eb-4c9f-b6e5-ffa66a262e91",
