@@ -17,11 +17,11 @@ namespace Sungero.BulkExchangeSolution.Module.FinancialArchiveUI.Server
         .SelectMany(d => d.DocumentGroup.OfficialDocuments)
         .Distinct()
         .ToList();
-      var infos = Sungero.Exchange.ExchangeDocumentInfos.GetAll()
+      var incomingExchangeDocuments = Sungero.Exchange.ExchangeDocumentInfos.GetAll()
         .Where(x => x.MessageType == ExchangeDocumentInfo.MessageType.Incoming)
         .Where(x => assignmentsDocuments.Contains(x.Document)).Select(d => d.Document).ToList();
 
-      return query = query.Where(x => infos.Contains(x));;
+      return query = query.Where(x => incomingExchangeDocuments.Contains(x));
     }
   }
 
