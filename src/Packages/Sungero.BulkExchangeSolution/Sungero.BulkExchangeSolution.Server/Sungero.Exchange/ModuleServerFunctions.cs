@@ -18,17 +18,16 @@ namespace Sungero.BulkExchangeSolution.Module.Exchange.Server
 {
   partial class ModuleFunctions
   {
-    protected override Sungero.Docflow.IOfficialDocument GetOrCreateNewExchangeDocument(object documentUntyped, Sungero.ExchangeCore.IBoxBase box, Sungero.Parties.ICounterparty sender, bool isIncoming, string serviceCounterpartyId, DateTime messageDate)
+    protected override Sungero.Docflow.IOfficialDocument GetOrCreateNewExchangeDocument(IDocument document, IBoxBase box, ICounterparty sender, bool isIncoming, string serviceCounterpartyId, DateTime messageDate)
     {
-      var serviceDocument = documentUntyped as NpoComputer.DCX.Common.IDocument;
-      var document = base.GetOrCreateNewExchangeDocument(documentUntyped, box, sender, isIncoming, serviceCounterpartyId, messageDate);
+      var createdDocument = base.GetOrCreateNewExchangeDocument(document, box, sender, isIncoming, serviceCounterpartyId, messageDate);
 
-      var accountingDocument = AccountingDocumentBases.As(document);
+      var accountingDocument = AccountingDocumentBases.As(createdDocument);
       
-      if (accountingDocument != null && accountingDocument.IsFormalized == true && (UniversalTransferDocuments.Is(document) ||
-                                                                                    IncomingTaxInvoices.Is(document) || Waybills.Is(document) || ContractStatements.Is(document)))
+      if (accountingDocument != null && accountingDocument.IsFormalized == true && (UniversalTransferDocuments.Is(createdDocument) ||
+                                                                                    IncomingTaxInvoices.Is(createdDocument) || Waybills.Is(createdDocument) || ContractStatements.Is(createdDocument)))
       {
-        var xdoc = System.Xml.Linq.XDocument.Load(new System.IO.MemoryStream(serviceDocument.Content));
+        var xdoc = System.Xml.Linq.XDocument.Load(new System.IO.MemoryStream(document.Content));
         RemoveNamespaces(xdoc);
         var additionalProperties = xdoc.Descendants("ТекстИнф").ToList();
         
@@ -36,15 +35,15 @@ namespace Sungero.BulkExchangeSolution.Module.Exchange.Server
         var contractStatementAdditionalProperties = xdoc.Descendants("ИнфПолФХЖ2").ToList();
         if (contractStatementAdditionalProperties.Any())
           additionalProperties.AddRange(contractStatementAdditionalProperties);
-         
+        
         // В ДПТ это может быть другой xml элемент.
         var waybillAdditionalProperties = xdoc.Descendants("ИнфПолФХЖ3").ToList();
         if (waybillAdditionalProperties.Any())
-          additionalProperties.AddRange(waybillAdditionalProperties);   
+          additionalProperties.AddRange(waybillAdditionalProperties);
         
         if (additionalProperties.Any())
         {
-          var exchangeDocumentInfo = ExchangeDocumentInfos.As(Sungero.Exchange.PublicFunctions.ExchangeDocumentInfo.GetExDocumentInfoByExternalId(box, serviceDocument.ServiceEntityId));
+          var exchangeDocumentInfo = ExchangeDocumentInfos.As(Sungero.Exchange.PublicFunctions.ExchangeDocumentInfo.GetExDocumentInfoByExternalId(box, document.ServiceEntityId));
           
           var purchaseOrderElement = additionalProperties.FirstOrDefault(i => (string)i.Attribute("Идентиф") == Constants.Module.PurchaseOrder);
           if (purchaseOrderElement != null)
@@ -58,27 +57,27 @@ namespace Sungero.BulkExchangeSolution.Module.Exchange.Server
             exchangeDocumentInfo.Save();
         }
       }
-      else if (serviceDocument.FileName.ToLowerInvariant().Contains("акт"))
+      else if (document.FileName.ToLowerInvariant().Contains("акт"))
       {
         var pattern = @"(^|[^А-Яа-я])акт([^А-Яа-я]|$)";
-        if (System.Text.RegularExpressions.Regex.IsMatch(document.Name.ToLower(), pattern))
+        if (System.Text.RegularExpressions.Regex.IsMatch(createdDocument.Name.ToLower(), pattern))
         {
-          var noteArray  = document.Note.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+          var noteArray  = createdDocument.Note.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
           var index = Array.IndexOf(noteArray, Constants.Module.ContractNumber);
           var contractNumber = noteArray.ElementAtOrDefault(index + 1);
           
           if (!string.IsNullOrEmpty(contractNumber))
           {
-            var exchangeDocumentInfo = ExchangeDocumentInfos.As(Sungero.Exchange.PublicFunctions.ExchangeDocumentInfo.GetExDocumentInfoByExternalId(box, serviceDocument.ServiceEntityId));
+            var exchangeDocumentInfo = ExchangeDocumentInfos.As(Sungero.Exchange.PublicFunctions.ExchangeDocumentInfo.GetExDocumentInfoByExternalId(box, document.ServiceEntityId));
             exchangeDocumentInfo.ContractNumber = contractNumber;
-            document.Subject = "Выполнение услуг";
-            document.Note = serviceDocument.Comment;
-            document.Save();
+            createdDocument.Subject = "Выполнение услуг";
+            createdDocument.Note = document.Comment;
+            createdDocument.Save();
             exchangeDocumentInfo.Save();
           }
         }
       }
-      return document;
+      return createdDocument;
     }
     
     public virtual List<Sungero.BulkExchangeSolution.Structures.Exchange.ExchangeDocumentInfo.DocumentSet> GetSignedAndNotSendedDocumentSets()
@@ -171,9 +170,9 @@ namespace Sungero.BulkExchangeSolution.Module.Exchange.Server
       this.SendDocumentProcessingTask(documentSet, result);
     }
     
-    public override void StartExchangeTask(IBoxBase box, object messageUntyped, ICounterparty sender, bool isIncoming, string exchangeTaskActiveTextBoundedDocuments, List<Sungero.Exchange.IExchangeDocumentInfo> infos)
+    public override void StartExchangeTask(IBoxBase box, NpoComputer.DCX.Common.IMessage message, ICounterparty sender, bool isIncoming,
+                                           string exchangeTaskActiveTextBoundedDocuments, List<Sungero.Exchange.IExchangeDocumentInfo> infos)
     {
-      var message = messageUntyped as NpoComputer.DCX.Common.IMessage;
       var exchangeDocumentInfos = Sungero.BulkExchangeSolution.ExchangeDocumentInfos.GetAll().Where(e => e.ServiceMessageId == message.ServiceMessageId).ToList();
       if (exchangeDocumentInfos.Any(i => i.VerificationStatus == VerificationStatus.Required))
         return;
@@ -182,7 +181,7 @@ namespace Sungero.BulkExchangeSolution.Module.Exchange.Server
       if (documentSets.Any(s => s.IsFullSet && s.Type == BulkExchangeSolution.Constants.Exchange.ExchangeDocumentInfo.DocumentSetType.ContractStatement))
         return;
       
-      base.StartExchangeTask(box, messageUntyped, sender, isIncoming, exchangeTaskActiveTextBoundedDocuments, infos);
+      base.StartExchangeTask(box, message, sender, isIncoming, exchangeTaskActiveTextBoundedDocuments, infos);
     }
     
     private bool IsDocumentVerificationCompleted(IExchangeDocumentInfo document)
@@ -193,14 +192,14 @@ namespace Sungero.BulkExchangeSolution.Module.Exchange.Server
     }
     
     protected override void ProcessDocumentsFromNewIncomingMessage(List<Sungero.Exchange.IExchangeDocumentInfo> infos,
-                                                                   object messageUntyped,
+                                                                   IMessage message,
                                                                    IBoxBase box,
                                                                    ICounterparty sender,
-                                                                   ExchangeCore.IMessageQueueItem queueItem,
+                                                                   Sungero.ExchangeCore.IMessageQueueItem queueItem,
                                                                    bool isIncoming,
-                                                                   object untypedProcessingDocuments)
+                                                                   List<IDocument> processingDocuments)
     {
-      var documentSet = this.GetDocumentSet(messageUntyped);
+      var documentSet = this.GetDocumentSet(message);
       if (documentSet != null)
       {
         var isFullSet = documentSet.IsFullSet;
@@ -213,7 +212,7 @@ namespace Sungero.BulkExchangeSolution.Module.Exchange.Server
           this.SendContractStatementForApproval(documentSet);
         }
       }
-      base.ProcessDocumentsFromNewIncomingMessage(infos, messageUntyped, box, sender, queueItem, isIncoming, untypedProcessingDocuments);
+      base.ProcessDocumentsFromNewIncomingMessage(infos, message, box, sender, queueItem, isIncoming, processingDocuments);
     }
     
     /// <summary>
@@ -333,14 +332,14 @@ namespace Sungero.BulkExchangeSolution.Module.Exchange.Server
     /// Отправлять задания/уведомления ответственному.
     /// </summary>
     /// <param name="box">Абонентский ящик.</param>
-    /// <param name="messageUntyped">Сообщение.</param>
+    /// <param name="message">Сообщение.</param>
     /// <returns>Признак отправки задания ответственному за ящик/контрагента.</returns>
-    protected override bool NeedReceiveTask(IBoxBase box, object messageUntyped)
+    protected override bool NeedReceiveTask(IBoxBase box, IMessage message)
     {
-      var documentSet = this.GetDocumentSet(messageUntyped);
+      var documentSet = this.GetDocumentSet(message);
       var isFullSet = documentSet != null && documentSet.IsFullSet;
       var isReject = documentSet != null && documentSet.ExchangeDocumentInfos.Any(i => i.RejectionStatus != RejectionStatus.NotRequired);
-      return base.NeedReceiveTask(box, messageUntyped) && !isFullSet && !isReject;
+      return base.NeedReceiveTask(box, message) && !isFullSet && !isReject;
     }
     
     protected virtual void GrantAccessRightsForResponsible(IOfficialDocument document, Company.IEmployee responsible)
@@ -352,16 +351,13 @@ namespace Sungero.BulkExchangeSolution.Module.Exchange.Server
       }
     }
     
-    protected override void ProcessMessageError(object clientUntyped, List<int> queueItemsIds, object messageUntyped, string exception)
+    protected override void ProcessMessageError(NpoComputer.DCX.ClientApi.Client client, List<int> queueItemsIds, IMessage message, string exception)
     {
-      base.ProcessMessageError(clientUntyped, queueItemsIds, messageUntyped, exception);
+      base.ProcessMessageError(client, queueItemsIds, message, exception);
       
       var regexMatch = System.Text.RegularExpressions.Regex.Match(exception, "^#([0-9])+:", System.Text.RegularExpressions.RegexOptions.Compiled);
       if (regexMatch.Success)
       {
-        var client = clientUntyped as NpoComputer.DCX.ClientApi.Client;
-        var message = messageUntyped as NpoComputer.DCX.Common.IMessage;
-        
         var queueItems = MessageQueueItems.GetAll(q => queueItemsIds.Contains(q.Id)).ToList();
         var queueItem = queueItems.Single(x => x.ExternalId == message.ServiceMessageId);
         
@@ -468,11 +464,10 @@ namespace Sungero.BulkExchangeSolution.Module.Exchange.Server
     /// <summary>
     /// Получить комплект документов.
     /// </summary>
-    /// <param name="messageUntyped">Сообщение.</param>
+    /// <param name="message">Сообщение.</param>
     /// <returns>Структура с комплектом - признак полноты и инфошки. Может быть null, если в сообщении нет никаких признаков комплекта.</returns>
-    private Sungero.BulkExchangeSolution.Structures.Exchange.ExchangeDocumentInfo.DocumentSet GetDocumentSet(object messageUntyped)
+    private Sungero.BulkExchangeSolution.Structures.Exchange.ExchangeDocumentInfo.DocumentSet GetDocumentSet(IMessage message)
     {
-      var message = messageUntyped as NpoComputer.DCX.Common.IMessage;
       var exchangeDocumentInfo = Sungero.BulkExchangeSolution.ExchangeDocumentInfos.GetAll().Where(e => e.ServiceMessageId == message.ServiceMessageId).FirstOrDefault();
       return exchangeDocumentInfo != null
         ? Sungero.BulkExchangeSolution.Functions.ExchangeDocumentInfo.GetDocumentSet(exchangeDocumentInfo)
