@@ -370,14 +370,10 @@ namespace Sungero.BulkExchangeSolution.Module.Exchange.Server
         var businessUnitBox = queueItem.RootBox;
         
         var organizationId = message.Sender.Organization.OrganizationId;
-        var isIncoming = true;
         
         // Обрабатываем исходящие сообщения для поддержки параллельных действий.
         if (organizationId == businessUnitBox.OrganizationId)
-        {
           organizationId = message.Receiver.Organization.OrganizationId;
-          isIncoming = false;
-        }
         
         var sender = Parties.Counterparties.GetAll(c => c.ExchangeBoxes.Any(e => Equals(e.OrganizationId, organizationId) && Equals(businessUnitBox, e.Box))).SingleOrDefault();
         
