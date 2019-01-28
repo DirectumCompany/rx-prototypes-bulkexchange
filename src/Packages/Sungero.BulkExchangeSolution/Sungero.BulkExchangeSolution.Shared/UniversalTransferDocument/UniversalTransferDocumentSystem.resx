@@ -135,4 +135,19 @@
   <data name="Ribbon_Sign_ae67db64ab394d5b969584ab345030a7" xml:space="preserve">
     <value>Sign</value>
   </data>
+  <data name="Action_SignDocumentSet" xml:space="preserve">
+    <value>TODO</value>
+  </data>
+  <data name="Action_SignDocumentSetDescription" xml:space="preserve">
+    <value>TODO</value>
+  </data>
+  <data name="Action_SignDocumentSetHint" xml:space="preserve">
+    <value>TODO</value>
+  </data>
+  <data name="Action_SignDocumentSetConfirmationMessage" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Action_SignDocumentSetConfirmationDescription" xml:space="preserve">
+    <value />
+  </data>
 </root>

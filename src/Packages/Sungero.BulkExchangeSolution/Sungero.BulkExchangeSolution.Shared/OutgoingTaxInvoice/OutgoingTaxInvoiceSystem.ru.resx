@@ -126,4 +126,13 @@
   <data name="Action_RejectHint" xml:space="preserve">
     <value>Отказать в подписании документа</value>
   </data>
+  <data name="Action_SignDocumentSet" xml:space="preserve">
+    <value>Подписать комплект</value>
+  </data>
+  <data name="Action_SignDocumentSetDescription" xml:space="preserve">
+    <value>Подписание комплекта документов</value>
+  </data>
+  <data name="Action_SignDocumentSetHint" xml:space="preserve">
+    <value>Подписать комплект документов</value>
+  </data>
 </root>

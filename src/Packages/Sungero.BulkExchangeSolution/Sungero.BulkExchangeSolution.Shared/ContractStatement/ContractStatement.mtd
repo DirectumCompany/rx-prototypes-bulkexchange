@@ -12,6 +12,16 @@
       "LargeIconName": "Action_Reject_large_e5e7b61599ef427cbb1518172719b90b.png",
       "NeedRefreshCollectionAfterExecute": true,
       "SmallIconName": "Action_Reject_small_e5e7b61599ef427cbb1518172719b90b.png"
+    },
+    {
+      "NameGuid": "bd4b6a4b-8d2b-4125-b92a-7f0e065bff36",
+      "Name": "SignDocumentSet",
+      "ActionArea": "Collection",
+      "GenerateHandler": true,
+      "IsMultiSelectAction": true,
+      "LargeIconName": "Action_SignDocumentSet_large_bd4b6a4b8d2b4125b92a7f0e065bff36.png",
+      "NeedRefreshCollectionAfterExecute": true,
+      "SmallIconName": "Action_SignDocumentSet_small_bd4b6a4b8d2b4125b92a7f0e065bff36.png"
     }
   ],
   "BaseGuid": "f2f5774d-5ca3-4725-b31d-ac618f6b8850",
@@ -71,7 +81,18 @@
     "NameGuid": "c3ece623-b937-4b3e-a9a5-382e812372a0",
     "Name": "RibbonCollection",
     "Categories": [],
-    "Elements": [],
+    "Elements": [
+      {
+        "$type": "Sungero.Metadata.RibbonActionButtonMetadata, Sungero.Metadata",
+        "NameGuid": "14ca9223-8ceb-45f3-ba65-f571c476fb66",
+        "Name": "SignDocumentSet",
+        "ActionGuid": "bd4b6a4b-8d2b-4125-b92a-7f0e065bff36",
+        "ButtonSize": "Large",
+        "Index": 22,
+        "IsVisible": false,
+        "ParentGuid": "495214c9-a353-4cfa-9440-acb5840fa265"
+      }
+    ],
     "Groups": [],
     "IsAncestorMetadata": true,
     "Pages": []
