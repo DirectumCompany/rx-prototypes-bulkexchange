@@ -6,7 +6,6 @@
       <property name="#LayoutVersion" isnull="true" />
       <property name="$GridControl" iskey="true" value="GridControl">
         <property name="GroupSummary" iskey="true" value="0" />
-        <property name="TotalSummary" iskey="true" value="0" />
         <property name="View" isnull="true" iskey="true">
           <property name="ShowTotalSummary">false</property>
           <property name="ColumnChooserState" isnull="true" iskey="true">
@@ -18,6 +17,8 @@
           <property name="LinesPerRowMode">TwoLinesMode</property>
           <property name="WaitIndicatorType">Panel</property>
         </property>
+        <property name="TotalSummary" iskey="true" value="0" />
+        <property name="GroupCount">0</property>
         <property name="Columns" iskey="true" value="49">
           <property name="Item1" isnull="true" iskey="true">
             <property name="MinWidth">48</property>
@@ -27,7 +28,7 @@
             <property name="Visible">true</property>
             <property name="VisibleIndex">0</property>
             <property name="Width">48</property>
-            <property name="ActualWidth">6*</property>
+            <property name="ActualWidth">5*</property>
           </property>
           <property name="Item2" isnull="true" iskey="true">
             <property name="FieldName">Integer_ID</property>
@@ -47,7 +48,7 @@
             <property name="Name">String_Name</property>
             <property name="ExtendedVisibleIndex">2</property>
             <property name="VisibleIndex">2</property>
-            <property name="ActualWidth">42*</property>
+            <property name="ActualWidth">43*</property>
           </property>
           <property name="Item4" isnull="true" iskey="true">
             <property name="FieldName">Boolean__64_</property>
@@ -377,7 +378,7 @@
             <property name="Name">Navigation_Signed_by_c612fc4144a3428ba97c433c333d78e9</property>
             <property name="ExtendedVisibleIndex">35</property>
             <property name="VisibleIndex">9</property>
-            <property name="ActualWidth">28*</property>
+            <property name="ActualWidth">29*</property>
           </property>
           <property name="Item37" isnull="true" iskey="true">
             <property name="FieldName">Navigation_Department_c612fc4144a3428ba97c433c333d78e9</property>
@@ -467,7 +468,7 @@
             <property name="Name">Navigation_Signed_by_c8daaef9a6794a29ac01b93c1637c72e</property>
             <property name="ExtendedVisibleIndex">44</property>
             <property name="VisibleIndex">9</property>
-            <property name="ActualWidth">28*</property>
+            <property name="ActualWidth">29*</property>
           </property>
           <property name="Item46" isnull="true" iskey="true">
             <property name="FieldName">Navigation_Business_Unit_Box_f91dcce6a9144c04aba10f940475696b</property>
@@ -477,7 +478,7 @@
             <property name="Name">Navigation_Business_Unit_Box_f91dcce6a9144c04aba10f940475696b</property>
             <property name="ExtendedVisibleIndex">45</property>
             <property name="VisibleIndex">9</property>
-            <property name="ActualWidth">31*</property>
+            <property name="ActualWidth">32*</property>
           </property>
           <property name="Item47" isnull="true" iskey="true">
             <property name="FieldName">Boolean_Corrective</property>
@@ -511,11 +512,10 @@
         </property>
         <property name="SortInfo" iskey="true" value="1">
           <property name="Item1" isnull="true" iskey="true">
-            <property name="FieldName">Navigation_Business_unit_c612fc4144a3428ba97c433c333d78e9</property>
-            <property name="SortOrder">Ascending</property>
+            <property name="FieldName">DateTime_Created</property>
+            <property name="SortOrder">Descending</property>
           </property>
         </property>
-        <property name="GroupCount">0</property>
         <property name="GroupSummarySortInfo" iskey="true" value="0" />
       </property>
     </XtraSerializer>
