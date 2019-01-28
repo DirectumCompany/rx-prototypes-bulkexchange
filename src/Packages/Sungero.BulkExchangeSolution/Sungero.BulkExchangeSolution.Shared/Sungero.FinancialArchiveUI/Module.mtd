@@ -55,6 +55,7 @@
     {
       "NameGuid": "254be29d-ab75-4e4d-9439-87a1a5b98c32",
       "Name": "ForSignature",
+      "AdditionalRibbonActionNames": "Reject",
       "DefaultContentType": "96c4f4f3-dc74-497a-b347-e8faf4afe320",
       "DisplayType": "Module",
       "FilterPanel": {
@@ -68,7 +69,16 @@
       "IsShow": false,
       "Kind": "Computable",
       "NeedShowMarkedCount": false,
-      "OpenCardByDefault": true
+      "OpenCardByDefault": true,
+      "SupportedDescendantsTypes": [
+        "a76ed874-c11d-44c7-b0a6-6718c21d6626",
+        "a523a263-bc00-40f9-810d-f582bae2205d",
+        "f2f5774d-5ca3-4725-b31d-ac618f6b8850",
+        "74c9ddd4-4bc4-42b6-8bb0-c91d5e21fb8a",
+        "f50c4d8a-56bc-43ef-bac3-856f57ca70be",
+        "58986e23-2b0a-4082-af37-bd1991bc6f7e",
+        "4e81f9ca-b95a-4fd4-bf76-ea7176c215a7"
+      ]
     }
   ],
   "Version": "3.1.6.1",
