@@ -159,5 +159,11 @@ namespace Sungero.BulkExchangeSolution.Server
     {
       return _obj.PurchaseOrder != null;
     }
+    
+    [Public, Remote(IsPure = true)]
+    public static IExchangeDocumentInfo GetExchangeDocumentInfo(Docflow.IOfficialDocument document)
+    {
+      return ExchangeDocumentInfos.GetAll().Where(i => i.Document == document).FirstOrDefault();
+    }
   }
 }

@@ -172,7 +172,7 @@ namespace Sungero.BulkExchangeSolution.Client
         var addendas = new List<IOfficialDocument>();
         foreach(var item in addendaGroupDocuments)
         {
-          var info = ExchangeDocumentInfos.GetAll().Where(i => i.Document == item).FirstOrDefault();
+          var info = Functions.ExchangeDocumentInfo.Remote.GetExchangeDocumentInfo(item);
           if (info == null ? !IncomingTaxInvoices.Is(item) : info.SignStatus == ExchangeDocumentInfo.SignStatus.Required)
             addendas.Add(item);
         }

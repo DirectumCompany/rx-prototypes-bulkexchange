@@ -152,6 +152,22 @@
       "PreviousPropertyGuid": "8ff226e0-8738-4556-9e59-54357cb620b5"
     }
   ],
+  "PublicFunctions": [
+    {
+      "Name": "GetExchangeDocumentInfo",
+      "IsRemote": true,
+      "Parameters": [
+        {
+          "Name": "document",
+          "ParameterType": "global::Sungero.Docflow.IOfficialDocument",
+          "ParameterTypeFullName": "Sungero.Docflow.IOfficialDocument, Sungero.Domain.Interfaces"
+        }
+      ],
+      "Placement": "Shared",
+      "ReturnType": "global::Sungero.BulkExchangeSolution.IExchangeDocumentInfo",
+      "ReturnTypeFullName": "Sungero.BulkExchangeSolution.IExchangeDocumentInfo, Sungero.Domain.Interfaces"
+    }
+  ],
   "PublicStructures": [],
   "ResourcesKeys": [],
   "RibbonCardMetadata": {
