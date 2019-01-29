@@ -138,4 +138,10 @@
   <data name="Action_SignDocumentSetHint" xml:space="preserve">
     <value>Подписать комплект документов</value>
   </data>
+  <data name="Action_ShowApprovalSigningAssignment" xml:space="preserve">
+    <value>Задания на подписание</value>
+  </data>
+  <data name="Action_ShowApprovalSigningAssignmentHint" xml:space="preserve">
+    <value>Показать задания на подписание для документа</value>
+  </data>
 </root>
