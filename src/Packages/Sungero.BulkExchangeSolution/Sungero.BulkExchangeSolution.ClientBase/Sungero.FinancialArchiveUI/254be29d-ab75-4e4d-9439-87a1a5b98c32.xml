@@ -6,6 +6,7 @@
       <property name="#LayoutVersion" isnull="true" />
       <property name="$GridControl" iskey="true" value="GridControl">
         <property name="GroupSummary" iskey="true" value="0" />
+        <property name="TotalSummary" iskey="true" value="0" />
         <property name="View" isnull="true" iskey="true">
           <property name="ShowTotalSummary">false</property>
           <property name="ColumnChooserState" isnull="true" iskey="true">
@@ -17,8 +18,6 @@
           <property name="LinesPerRowMode">TwoLinesMode</property>
           <property name="WaitIndicatorType">Panel</property>
         </property>
-        <property name="TotalSummary" iskey="true" value="0" />
-        <property name="GroupCount">0</property>
         <property name="Columns" iskey="true" value="49">
           <property name="Item1" isnull="true" iskey="true">
             <property name="MinWidth">48</property>
@@ -516,6 +515,7 @@
             <property name="SortOrder">Descending</property>
           </property>
         </property>
+        <property name="GroupCount">0</property>
         <property name="GroupSummarySortInfo" iskey="true" value="0" />
       </property>
     </XtraSerializer>

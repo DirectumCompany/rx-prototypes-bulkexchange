@@ -23,6 +23,16 @@ namespace Sungero.BulkExchangeSolution.Client
 
   partial class OutgoingTaxInvoiceActions
   {
+    public virtual void ShowSet(Sungero.Domain.Client.ExecuteActionArgs e)
+    {
+      Functions.Module.ShowSet(_obj);
+    }
+
+    public virtual bool CanShowSet(Sungero.Domain.Client.CanExecuteActionArgs e)
+    {
+      return true;
+    }
+
     public virtual void ShowApprovalSigningAssignment(Sungero.Domain.Client.ExecuteActionArgs e)
     {
       Functions.Module.ShowApprovalSigningAssignments(_obj);
@@ -32,7 +42,6 @@ namespace Sungero.BulkExchangeSolution.Client
     {
       return true;
     }
-
 
     public virtual void Reject(Sungero.Domain.Client.ExecuteActionArgs e)
     {

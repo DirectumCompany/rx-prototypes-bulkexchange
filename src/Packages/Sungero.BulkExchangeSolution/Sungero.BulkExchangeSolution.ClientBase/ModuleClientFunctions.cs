@@ -67,10 +67,10 @@ namespace Sungero.BulkExchangeSolution.Client
       dialog.Buttons.Default = DialogButtons.Ok;
       
       dialog.SetOnButtonClick(args =>
-      {
-        if (string.IsNullOrWhiteSpace(abortingReason.Value))
-          args.AddError(Resources.EmptyAbortingReason, abortingReason);
-      });
+                              {
+                                if (string.IsNullOrWhiteSpace(abortingReason.Value))
+                                  args.AddError(Resources.EmptyAbortingReason, abortingReason);
+                              });
       
       if (dialog.Show() == DialogButtons.Ok)
       {
@@ -198,7 +198,25 @@ namespace Sungero.BulkExchangeSolution.Client
       
       if (documentsInMultipleAssignments > 0)
         e.AddWarning("Некоторые докуменнты указаны в нескольких заданиях и не были подписаны.");
+    }
+    
+    public void ShowSet(IAccountingDocumentBase document)
+    {
+      var assignments = Functions.Module.Remote.GetApprovalSigningAssignments(document).ToList();
+      if (assignments.Count() > 1)
+      {
+        Dialogs.ShowMessage(Sungero.BulkExchangeSolution.Resources.FewAssignmentError, MessageType.Error);
+        return;
+      }
       
+      if (assignments.Count() == 1)
+      {
+        var documents = assignments.SelectMany(x => x.AddendaGroup.OfficialDocuments).ToList();
+        documents.AddRange(assignments.SelectMany(x => x.OtherGroup.All).Select(a => OfficialDocuments.As(a)).ToList());
+        documents.Show();
+      }
+      else
+        Dialogs.ShowMessage("Нет заданий по документу.", MessageType.Information);
     }
   }
 }

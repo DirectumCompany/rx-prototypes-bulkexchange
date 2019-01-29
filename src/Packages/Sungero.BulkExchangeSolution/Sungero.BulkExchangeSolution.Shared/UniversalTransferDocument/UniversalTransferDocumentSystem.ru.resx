@@ -144,4 +144,13 @@
   <data name="Action_ShowApprovalSigningAssignmentHint" xml:space="preserve">
     <value>Показать задания на подписание для документа</value>
   </data>
+  <data name="Action_ShowSet" xml:space="preserve">
+    <value>Показать комплект</value>
+  </data>
+  <data name="Action_ShowSetDescription" xml:space="preserve">
+    <value>Показ документов, относящихся к одному комплекту</value>
+  </data>
+  <data name="Action_ShowSetHint" xml:space="preserve">
+    <value>Показать комплект документов</value>
+  </data>
 </root>
