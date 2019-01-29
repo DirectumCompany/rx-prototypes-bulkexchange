@@ -147,4 +147,7 @@
   <data name="Action_SignDocumentSetConfirmationDescription" xml:space="preserve">
     <value />
   </data>
+  <data name="Ribbon_Sign_b9128665dad84d48b0aea2fa00faf02b" xml:space="preserve">
+    <value>Sign</value>
+  </data>
 </root>

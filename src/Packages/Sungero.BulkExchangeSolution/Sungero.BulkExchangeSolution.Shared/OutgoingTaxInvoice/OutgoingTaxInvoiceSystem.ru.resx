@@ -135,4 +135,7 @@
   <data name="Action_SignDocumentSetHint" xml:space="preserve">
     <value>Подписать комплект документов</value>
   </data>
+  <data name="Ribbon_Sign_a6e345e947154552b01036295b4feca6" xml:space="preserve">
+    <value>Подписание</value>
+  </data>
 </root>
