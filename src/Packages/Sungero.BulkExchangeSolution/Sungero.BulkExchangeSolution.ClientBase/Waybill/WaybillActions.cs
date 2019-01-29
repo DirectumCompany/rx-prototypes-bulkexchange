@@ -17,7 +17,7 @@ namespace Sungero.BulkExchangeSolution.Client
 
     public virtual void SignDocumentSet(Sungero.Domain.Client.ExecuteActionArgs e)
     {
-      
+      Functions.Module.SignDocuments(_objs, e);
     }
   }
 
