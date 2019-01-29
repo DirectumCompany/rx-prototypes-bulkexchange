@@ -50,19 +50,19 @@ namespace Sungero.BulkExchangeSolution.Client
       var approvalSigningAssignments = Functions.Module.Remote.GetApprovalSigningAssignments(document);
       if (approvalSigningAssignments.Count() > 1)
       {
-        Dialogs.ShowMessage("Найдено несколько заданий на подписание, в которые вложен документ", MessageType.Error);
+        Dialogs.ShowMessage(Sungero.BulkExchangeSolution.Resources.FewAssignmentError, MessageType.Error);
         return;
       }
 
       var assignment = approvalSigningAssignments.FirstOrDefault();
       if (assignment == null)
       {
-        Dialogs.ShowMessage("Не найдены задания на подписание для документа", MessageType.Error);
+        Dialogs.ShowMessage(Sungero.BulkExchangeSolution.Resources.NoAssignmentError, MessageType.Error);
       }
       
       var task = ApprovalTasks.As(assignment.MainTask);
-      var dialog = Dialogs.CreateInputDialog("Отказ");
-      var abortingReason = dialog.AddMultilineString(task.Info.Properties.AbortingReason.LocalizedName, false);
+      var dialog = Dialogs.CreateInputDialog(Sungero.BulkExchangeSolution.Resources.Reject);
+      var abortingReason = dialog.AddMultilineString(Sungero.BulkExchangeSolution.Resources.RejectReason, false);
       dialog.Buttons.AddOkCancel();
       dialog.Buttons.Default = DialogButtons.Ok;
       

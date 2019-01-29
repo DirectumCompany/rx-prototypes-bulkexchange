@@ -124,6 +124,18 @@
     <value>TODO</value>
   </data>
   <data name="EmptyAbortingReason" xml:space="preserve">
-    <value>Specify the reason for task abortion.</value>
+    <value>TODO</value>
+  </data>
+  <data name="FewAssignmentError" xml:space="preserve">
+    <value>TODO</value>
+  </data>
+  <data name="NoAssignmentError" xml:space="preserve">
+    <value>TODO</value>
+  </data>
+  <data name="RejectReason" xml:space="preserve">
+    <value>TODO</value>
+  </data>
+  <data name="Reject" xml:space="preserve">
+    <value>TODO</value>
   </data>
 </root>
