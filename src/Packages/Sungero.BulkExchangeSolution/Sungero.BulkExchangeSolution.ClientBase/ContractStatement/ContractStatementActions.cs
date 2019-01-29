@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Sungero.BulkExchangeSolution.ContractStatement;
 using Sungero.Core;
 using Sungero.CoreEntities;
-using Sungero.BulkExchangeSolution.ContractStatement;
 
 namespace Sungero.BulkExchangeSolution.Client
 {
@@ -25,8 +25,7 @@ namespace Sungero.BulkExchangeSolution.Client
   {
     public virtual void ShowApprovalSigningAssignment(Sungero.Domain.Client.ExecuteActionArgs e)
     {
-      var assignments = Functions.Module.Remote.GetApprovalSigningAssignments(_obj);
-      assignments.Show();
+      Functions.Module.ShowApprovalSigningAssignments(_obj);
     }
 
     public virtual bool CanShowApprovalSigningAssignment(Sungero.Domain.Client.CanExecuteActionArgs e)

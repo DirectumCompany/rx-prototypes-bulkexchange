@@ -4,12 +4,12 @@ using System.Linq;
 using NpoComputer.DCX.Common;
 using Sungero.BulkExchangeSolution.ExchangeDocumentInfo;
 using Sungero.BulkExchangeSolution.Structures.Exchange.ExchangeDocumentInfo;
-using Sungero.FinancialArchive;
 using Sungero.Commons;
 using Sungero.Core;
 using Sungero.CoreEntities;
 using Sungero.Docflow;
 using Sungero.ExchangeCore;
+using Sungero.FinancialArchive;
 using Sungero.Parties;
 using Sungero.Workflow;
 using SignStatus = Sungero.BulkExchangeSolution.ExchangeDocumentInfo.SignStatus;
@@ -57,6 +57,7 @@ namespace Sungero.BulkExchangeSolution.Module.Exchange.Server
             exchangeDocumentInfo.Save();
         }
       }
+      
       else if (document.FileName.ToLowerInvariant().Contains("акт"))
       {
         var pattern = @"(^|[^А-Яа-я])акт([^А-Яа-я]|$)";

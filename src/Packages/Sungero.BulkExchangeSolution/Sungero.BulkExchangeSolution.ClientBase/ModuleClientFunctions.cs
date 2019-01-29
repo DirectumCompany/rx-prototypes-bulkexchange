@@ -126,5 +126,14 @@ namespace Sungero.BulkExchangeSolution.Client
         }
       }
     }
+    
+    public void ShowApprovalSigningAssignments(IAccountingDocumentBase document)
+    {
+      var assignments = Functions.Module.Remote.GetApprovalSigningAssignments(document);
+      if (assignments.Count() == 1)
+        assignments.FirstOrDefault().Show();
+      else
+        assignments.Show();
+    }
   }
 }

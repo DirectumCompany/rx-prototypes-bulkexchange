@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Sungero.BulkExchangeSolution.UniversalTransferDocument;
 using Sungero.Core;
 using Sungero.CoreEntities;
-using Sungero.BulkExchangeSolution.UniversalTransferDocument;
 
 namespace Sungero.BulkExchangeSolution.Shared
 {
