@@ -5,6 +5,8 @@ using Sungero.BulkExchangeSolution.ExchangeDocumentInfo;
 using Sungero.Core;
 using Sungero.CoreEntities;
 using Sungero.Docflow;
+using Sungero.Domain.Shared;
+using Sungero.Metadata;
 using Status = Sungero.Workflow.AssignmentBase.Status;
 
 namespace Sungero.BulkExchangeSolution.Server
@@ -37,15 +39,13 @@ namespace Sungero.BulkExchangeSolution.Server
     [Remote]
     public IQueryable<IApprovalSigningAssignment> GetApprovalSigningAssignments(IAccountingDocumentBase document)
     {
-      var documents = ApprovalSigningAssignments
-        .GetAll(a => Equals(a.Performer, Users.Current) && a.Status == Status.InProcess)
-        .ToList()
-        .SelectMany(a => a.DocumentGroup.OfficialDocuments)
-        .ToList();
-      
+      var typeGuid = document.GetEntityMetadata().GetOriginal().NameGuid;
+      var groupId = Docflow.PublicConstants.Module.TaskMainGroup.ApprovalTask;
       return ApprovalSigningAssignments
         .GetAll(a => Equals(a.Performer, Users.Current) && a.Status == Status.InProcess)
-        .Where(a => documents.Contains(document));
+        .Where(a => a.AttachmentDetails.Any(d => d.EntityTypeGuid == typeGuid 
+                                            && d.GroupId == groupId 
+                                            && d.AttachmentId == document.Id));
     }
   }
 }
