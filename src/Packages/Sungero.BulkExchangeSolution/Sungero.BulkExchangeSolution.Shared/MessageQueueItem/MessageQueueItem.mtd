@@ -37,7 +37,7 @@
       "NameGuid": "7f160450-92b2-4c8c-8e5c-681354611b3d",
       "Name": "ResponsibleTask",
       "Code": "ResponsibleTas",
-      "EntityGuid": "d795d1f6-45c1-4e5e-9677-b53fb7280c7e",
+      "EntityGuid": "83f2a537-0cf0-4429-ae76-e9a386ca53aa",
       "FlatListInStandaloneLookup": true,
       "ListDataBinderTypeName": "Sungero.Presentation.CommonDataBinders.DropDownEditorToNavigationBinder",
       "PreviousPropertyGuid": "7712cf03-7d5d-4449-8cff-2225a5a2e9df"

@@ -383,7 +383,7 @@ namespace Sungero.BulkExchangeSolution.Module.Exchange.Server
         var code = int.Parse(regexMatch.Groups[1].Value);
         if (code == 1)
         {
-          this.StartSimpleTaskWhenCounterpartyResponsibleNotFound(queueItem, sender, businessUnitBox);
+          this.StartSimpleTaskWhenCounterpartyResponsibleNotFound(queueItems, queueItem, sender, businessUnitBox);
         }
       }
     }
@@ -391,22 +391,37 @@ namespace Sungero.BulkExchangeSolution.Module.Exchange.Server
     /// <summary>
     /// Обработка ситуации, когда не указан ответственный за контрагента.
     /// </summary>
+    /// <param name="queueItems">Все элементы очереди.</param>
     /// <param name="queueItem">Элемент очереди, по которому идёт обработка.</param>
     /// <param name="sender">Контрагент.</param>
     /// <param name="box">Ящик эл. обмена.</param>
-    protected virtual void StartSimpleTaskWhenCounterpartyResponsibleNotFound(IMessageQueueItem queueItem,
+    protected virtual void StartSimpleTaskWhenCounterpartyResponsibleNotFound(List<IMessageQueueItem> queueItems,
+                                                                              IMessageQueueItem queueItem,
                                                                               Parties.ICounterparty sender,
                                                                               ExchangeCore.IBusinessUnitBox box)
     {
       if (queueItem.ResponsibleTask == null || queueItem.ResponsibleTask.Status != Workflow.SimpleTask.Status.InProcess)
       {
-        var task = SimpleTasks.Create(Resources.CounterpartyResponsibleNotFoundSubjectFormat(sender.Name), box.Responsible);
-        task.ActiveText += Resources.CounterpartyResponsibleNotFoundTextFormat(Hyperlinks.Get(sender));
-        task.Attachments.Add(sender);
-        task.Deadline = Calendar.Today.AddWorkingDays(2);
-        task.Save();
-        task.Start();
-        queueItem.ResponsibleTask = task;
+        // Ищем задачи по этому же КА - если они есть, то мы их переиспользуем.
+        var existTask = queueItems
+          .Select(q => q.ResponsibleTask)
+          .Where(t => t != null && t.Status == Workflow.SimpleTask.Status.InProcess)
+          .Distinct()
+          .FirstOrDefault(t => t.Attachments.Contains(sender) && t.RouteSteps.Any(st => Equals(st.Performer, box.Responsible)));
+        queueItem.ResponsibleTask = existTask;
+        
+        // Если задачи нет - создаем новую.
+        if (queueItem.ResponsibleTask == null)
+        {
+          var task = SimpleTasks.Create(Resources.CounterpartyResponsibleNotFoundSubjectFormat(sender.Name), box.Responsible);
+          task.NeedsReview = false;
+          task.ActiveText += Resources.CounterpartyResponsibleNotFoundTextFormat(Hyperlinks.Get(sender));
+          task.Attachments.Add(sender);
+          task.Deadline = Calendar.Today.AddWorkingDays(2);
+          task.Save();
+          task.Start();
+          queueItem.ResponsibleTask = task;
+        }
         queueItem.Save();
       }
     }
