@@ -47,7 +47,7 @@ namespace Sungero.BulkExchangeSolution.Client
     
     public virtual void RejectDocument(IAccountingDocumentBase document)
     {
-      var approvalSigningAssignments = Functions.Module.Remote.GetApprovalSigningAssignments(document);
+      var approvalSigningAssignments = Functions.Module.Remote.GetApprovalSigningAssignments(document).ToList();
       if (approvalSigningAssignments.Count() > 1)
       {
         Dialogs.ShowMessage("много заданий", MessageType.Error);
@@ -59,7 +59,7 @@ namespace Sungero.BulkExchangeSolution.Client
       if (assignment == null)
         return;
       var dialog = Dialogs.CreateInputDialog("Отказ");
-      var abortingReason = dialog.AddMultilineString(task.Info.Properties.AbortingReason.LocalizedName, true);
+      var abortingReason = dialog.AddMultilineString(task.Info.Properties.AbortingReason.LocalizedName, false);
       dialog.Buttons.AddOkCancel();
       dialog.Buttons.Default = DialogButtons.Ok;
       
@@ -72,11 +72,19 @@ namespace Sungero.BulkExchangeSolution.Client
       
       if (dialog.Show() == DialogButtons.Ok)
       {
-        ApprovalTasks.As(assignment.MainTask).AbortingReason = abortingReason.Value;
-        // ???? Functions.ActionItemExecutionTask.DisablePropertiesRequirement(_obj)
+        task.AbortingReason = abortingReason.Value;
         assignment.ActiveText += string.IsNullOrWhiteSpace(assignment.ActiveText)
           ? abortingReason.Value
           : Environment.NewLine + abortingReason.Value;
+        
+        // Подписание согласующей подписью с результатом "не согласовано".
+        Signatures.NotEndorse(document.LastVersion, null, abortingReason.Value, assignment.Performer);
+        var attachments = task.AddendaGroup.OfficialDocuments;
+        foreach (var attachment in attachments)
+        {
+          Signatures.NotEndorse(attachment.LastVersion, null, abortingReason.Value, assignment.Performer);
+        }
+
         assignment.Complete(Sungero.Docflow.ApprovalSigningAssignment.Result.Abort);
       }
     }

@@ -43,9 +43,9 @@ namespace Sungero.BulkExchangeSolution.Server
       var groupId = Docflow.PublicConstants.Module.TaskMainGroup.ApprovalTask;
       return ApprovalSigningAssignments
         .GetAll(a => Equals(a.Performer, Users.Current) && a.Status == Status.InProcess)
-        .Where(a => a.AttachmentDetails.Any(d => d.EntityTypeGuid == typeGuid 
-                                            && d.GroupId == groupId 
-                                            && d.AttachmentId == document.Id));
+        .Where(a => a.MainTask.AttachmentDetails.Any(d => d.EntityTypeGuid == typeGuid &&
+                                                 d.GroupId == groupId &&
+                                                 d.AttachmentId == document.Id));
     }
   }
 }
