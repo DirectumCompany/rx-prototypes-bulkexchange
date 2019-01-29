@@ -77,7 +77,8 @@
   "ResourceInterfaceNamespace": "Sungero.BulkExchangeSolution",
   "ResourcesKeys": [
     "CannotSignDocument",
-    "RejectMessage"
+    "RejectMessage",
+    "EmptyAbortingReason"
   ],
   "ServerAssemblyName": "Sungero.BulkExchangeSolution.Server",
   "ServerNamespace": "Sungero.BulkExchangeSolution.Server",

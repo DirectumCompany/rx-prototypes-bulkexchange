@@ -123,4 +123,7 @@
   <data name="RejectMessage" xml:space="preserve">
     <value>Некорректно сформирован комплект (накладная и счет-фактура)</value>
   </data>
+  <data name="EmptyAbortingReason" xml:space="preserve">
+    <value>Заполните причину прекращения задачи.</value>
+  </data>
 </root>

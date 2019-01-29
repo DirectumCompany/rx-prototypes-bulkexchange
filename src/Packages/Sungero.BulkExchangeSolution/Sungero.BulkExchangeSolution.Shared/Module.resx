@@ -123,4 +123,7 @@
   <data name="RejectMessage" xml:space="preserve">
     <value>TODO</value>
   </data>
+  <data name="EmptyAbortingReason" xml:space="preserve">
+    <value>Specify the reason for task abortion.</value>
+  </data>
 </root>

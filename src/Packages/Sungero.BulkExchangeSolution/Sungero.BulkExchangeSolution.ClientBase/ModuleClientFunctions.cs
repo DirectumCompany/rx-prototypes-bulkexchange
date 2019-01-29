@@ -47,27 +47,29 @@ namespace Sungero.BulkExchangeSolution.Client
     
     public virtual void RejectDocument(IAccountingDocumentBase document)
     {
-      var approvalSigningAssignments = Functions.Module.Remote.GetApprovalSigningAssignments(document).ToList();
+      var approvalSigningAssignments = Functions.Module.Remote.GetApprovalSigningAssignments(document);
       if (approvalSigningAssignments.Count() > 1)
       {
-        Dialogs.ShowMessage("много заданий", MessageType.Error);
+        Dialogs.ShowMessage("Найдено несколько заданий на подписание, в которые вложен документ", MessageType.Error);
         return;
       }
 
       var assignment = approvalSigningAssignments.FirstOrDefault();
-      var task = ApprovalTasks.As(assignment.MainTask);
       if (assignment == null)
-        return;
+      {
+        Dialogs.ShowMessage("Не найдены задания на подписание для документа", MessageType.Error);
+      }
+      
+      var task = ApprovalTasks.As(assignment.MainTask);
       var dialog = Dialogs.CreateInputDialog("Отказ");
       var abortingReason = dialog.AddMultilineString(task.Info.Properties.AbortingReason.LocalizedName, false);
       dialog.Buttons.AddOkCancel();
       dialog.Buttons.Default = DialogButtons.Ok;
       
-      // TODO: сделать свой ресурс.
       dialog.SetOnButtonClick(args =>
       {
         if (string.IsNullOrWhiteSpace(abortingReason.Value))
-          args.AddError(ActionItemExecutionTasks.Resources.EmptyAbortingReason, abortingReason);
+          args.AddError(Resources.EmptyAbortingReason, abortingReason);
       });
       
       if (dialog.Show() == DialogButtons.Ok)
