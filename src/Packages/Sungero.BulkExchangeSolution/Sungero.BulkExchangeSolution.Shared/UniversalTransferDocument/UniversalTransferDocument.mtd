@@ -22,6 +22,14 @@
       "LargeIconName": "Action_SignDocumentSet_large_f2bd51625baf4a51bac99de22f85b84e.png",
       "NeedRefreshCollectionAfterExecute": true,
       "SmallIconName": "Action_SignDocumentSet_small_f2bd51625baf4a51bac99de22f85b84e.png"
+    },
+    {
+      "NameGuid": "48a500a1-6f05-4f15-98e4-5c596d4b6b1d",
+      "Name": "ShowApprovalSigningAssignment",
+      "ActionArea": "Collection",
+      "GenerateHandler": true,
+      "LargeIconName": "Action_ShowApprovalSigningAssignment_large_48a500a16f054f1598e45c596d4b6b1d.png",
+      "SmallIconName": "Action_ShowApprovalSigningAssignment_small_48a500a16f054f1598e45c596d4b6b1d.png"
     }
   ],
   "BaseGuid": "58986e23-2b0a-4082-af37-bd1991bc6f7e",
@@ -101,6 +109,16 @@
         "Index": 22,
         "IsVisible": false,
         "ParentGuid": "495214c9-a353-4cfa-9440-acb5840fa265"
+      },
+      {
+        "$type": "Sungero.Metadata.RibbonActionButtonMetadata, Sungero.Metadata",
+        "NameGuid": "964c1a37-78ff-4362-a45d-68532f3264a2",
+        "Name": "ShowAssignments",
+        "ActionGuid": "48a500a1-6f05-4f15-98e4-5c596d4b6b1d",
+        "ButtonSize": "Large",
+        "Index": 1,
+        "IsVisible": false,
+        "ParentGuid": "ae67db64-ab39-4d5b-9695-84ab345030a7"
       }
     ],
     "Groups": [

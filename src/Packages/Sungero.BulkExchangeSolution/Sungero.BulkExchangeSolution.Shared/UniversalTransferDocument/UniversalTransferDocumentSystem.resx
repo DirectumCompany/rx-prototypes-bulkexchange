@@ -150,4 +150,19 @@
   <data name="Action_SignDocumentSetConfirmationDescription" xml:space="preserve">
     <value />
   </data>
+  <data name="Action_ShowApprovalSigningAssignment" xml:space="preserve">
+    <value>ShowApprovalSigningAssignment</value>
+  </data>
+  <data name="Action_ShowApprovalSigningAssignmentDescription" xml:space="preserve">
+    <value>TODO</value>
+  </data>
+  <data name="Action_ShowApprovalSigningAssignmentHint" xml:space="preserve">
+    <value>TODO</value>
+  </data>
+  <data name="Action_ShowApprovalSigningAssignmentConfirmationMessage" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Action_ShowApprovalSigningAssignmentConfirmationDescription" xml:space="preserve">
+    <value />
+  </data>
 </root>

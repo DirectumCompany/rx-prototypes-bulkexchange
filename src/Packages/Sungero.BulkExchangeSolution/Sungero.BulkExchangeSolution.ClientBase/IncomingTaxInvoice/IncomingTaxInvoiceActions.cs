@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Sungero.Core;
@@ -23,6 +23,16 @@ namespace Sungero.BulkExchangeSolution.Client
 
   partial class IncomingTaxInvoiceActions
   {
+    public virtual void ShowApprovalSigningAssignment(Sungero.Domain.Client.ExecuteActionArgs e)
+    {
+      
+    }
+
+    public virtual bool CanShowApprovalSigningAssignment(Sungero.Domain.Client.CanExecuteActionArgs e)
+    {
+      return true;
+    }
+
 
     public virtual void Reject(Sungero.Domain.Client.ExecuteActionArgs e)
     {

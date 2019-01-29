@@ -23,6 +23,17 @@ namespace Sungero.BulkExchangeSolution.Client
 
   partial class ContractStatementActions
   {
+    public virtual void ShowApprovalSigningAssignment(Sungero.Domain.Client.ExecuteActionArgs e)
+    {
+      var assignments = Functions.Module.Remote.GetApprovalSigningAssignments(_obj);
+      assignments.Show();
+    }
+
+    public virtual bool CanShowApprovalSigningAssignment(Sungero.Domain.Client.CanExecuteActionArgs e)
+    {
+      return true;
+    }
+
 
     public virtual void Reject(Sungero.Domain.Client.ExecuteActionArgs e)
     {

@@ -23,6 +23,16 @@ namespace Sungero.BulkExchangeSolution.Client
 
   partial class UniversalTransferDocumentActions
   {
+    public virtual void ShowApprovalSigningAssignment(Sungero.Domain.Client.ExecuteActionArgs e)
+    {
+      
+    }
+
+    public virtual bool CanShowApprovalSigningAssignment(Sungero.Domain.Client.CanExecuteActionArgs e)
+    {
+      return true;
+    }
+
 
     public virtual void Reject(Sungero.Domain.Client.ExecuteActionArgs e)
     {

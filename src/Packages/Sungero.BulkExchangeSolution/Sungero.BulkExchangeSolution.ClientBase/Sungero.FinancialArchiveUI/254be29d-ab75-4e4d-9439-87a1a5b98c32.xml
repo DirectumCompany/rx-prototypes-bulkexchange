@@ -28,7 +28,7 @@
             <property name="Visible">true</property>
             <property name="VisibleIndex">0</property>
             <property name="Width">48</property>
-            <property name="ActualWidth">5*</property>
+            <property name="ActualWidth">6*</property>
           </property>
           <property name="Item2" isnull="true" iskey="true">
             <property name="FieldName">Integer_ID</property>
