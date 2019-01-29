@@ -47,12 +47,7 @@ namespace Sungero.BulkExchangeSolution.Module.Exchange.Server
           
           var purchaseOrderElement = additionalProperties.FirstOrDefault(i => (string)i.Attribute("Идентиф") == Constants.Module.PurchaseOrder);
           if (purchaseOrderElement != null)
-          {
             exchangeDocumentInfo.PurchaseOrder = purchaseOrderElement.Attribute("Значен").Value;
-            // Выдать права главному бухгалтеру.
-            var chiefAccountant = Roles.GetAll(r => r.Name.Equals(Constants.Module.ChiefAccountantRoleName)).FirstOrDefault();
-            accountingDocument.AccessRights.Grant(chiefAccountant, DefaultAccessRightsTypes.FullAccess);
-          }
 
           var contractStatementElement = additionalProperties.FirstOrDefault(i => (string)i.Attribute("Идентиф") == Constants.Module.ContractNumber);
           if (contractStatementElement != null)
@@ -251,6 +246,13 @@ namespace Sungero.BulkExchangeSolution.Module.Exchange.Server
           accountingDocument.LeadingDocument = contract;
         }
         
+        // Выдать права главному бухгалтеру на товарные документы.
+        if (documentSet.Type == BulkExchangeSolution.Constants.Exchange.ExchangeDocumentInfo.DocumentSetType.Waybill)
+        {      
+          var chiefAccountant = Roles.GetAll(r => r.Name.Equals(Constants.Module.ChiefAccountantRoleName)).FirstOrDefault();
+          accountingDocument.AccessRights.Grant(chiefAccountant, DefaultAccessRightsTypes.FullAccess);
+        }
+
         if (documentSet.IsFullSet == true)
         {
           // Заполнить номенклатуру дела.
