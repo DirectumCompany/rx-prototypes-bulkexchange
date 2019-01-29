@@ -47,8 +47,13 @@ namespace Sungero.BulkExchangeSolution.Module.Exchange.Server
           
           var purchaseOrderElement = additionalProperties.FirstOrDefault(i => (string)i.Attribute("Идентиф") == Constants.Module.PurchaseOrder);
           if (purchaseOrderElement != null)
+          {
             exchangeDocumentInfo.PurchaseOrder = purchaseOrderElement.Attribute("Значен").Value;
-          
+            // Выдать права главному бухгалтеру.
+            var chiefAccountant = Roles.GetAll(r => r.Name.Equals(Constants.Module.ChiefAccountantRoleName)).FirstOrDefault();
+            accountingDocument.AccessRights.Grant(chiefAccountant, DefaultAccessRightsTypes.FullAccess);
+          }
+
           var contractStatementElement = additionalProperties.FirstOrDefault(i => (string)i.Attribute("Идентиф") == Constants.Module.ContractNumber);
           if (contractStatementElement != null)
             exchangeDocumentInfo.ContractNumber = contractStatementElement.Attribute("Значен").Value;
@@ -269,10 +274,6 @@ namespace Sungero.BulkExchangeSolution.Module.Exchange.Server
 
             // Выдать права на документ ответственному за контрагента.
             GrantAccessRightsForResponsible(accountingDocument, responsible);
-            
-            // Выдать права главному бухгалтеру.
-            var chiefAccountant = Roles.GetAll(r => r.Name.Equals(Constants.Module.ChiefAccountantRoleName)).FirstOrDefault();
-            accountingDocument.AccessRights.Grant(chiefAccountant, DefaultAccessRightsTypes.FullAccess);
           }
         }
         
