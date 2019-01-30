@@ -127,7 +127,7 @@
     <value>Not required</value>
   </data>
   <data name="Property_PurchaseOrder" xml:space="preserve">
-    <value>TODO</value>
+    <value>Purchase order number</value>
   </data>
   <data name="Property_VerificationTask" xml:space="preserve">
     <value>Document verification task</value>
