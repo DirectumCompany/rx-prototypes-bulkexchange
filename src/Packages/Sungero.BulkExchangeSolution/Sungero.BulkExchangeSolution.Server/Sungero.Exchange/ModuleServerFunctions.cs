@@ -246,19 +246,19 @@ namespace Sungero.BulkExchangeSolution.Module.Exchange.Server
           var contract = Contracts.ContractBases.GetAll(c => Equals(accountingDocument.Counterparty, c.Counterparty) && c.RegistrationNumber == info.ContractNumber).FirstOrDefault();
           accountingDocument.LeadingDocument = contract;
         }
-        
-        // Выдать права главному бухгалтеру на товарные документы.
-        if (documentSet.Type == BulkExchangeSolution.Constants.Exchange.ExchangeDocumentInfo.DocumentSetType.Waybill)
-        {      
-          var chiefAccountant = Roles.GetAll(r => r.Name.Equals(Constants.Module.ChiefAccountantRoleName)).FirstOrDefault();
-          accountingDocument.AccessRights.Grant(chiefAccountant, DefaultAccessRightsTypes.FullAccess);
-        }
 
         if (documentSet.IsFullSet == true)
         {
           // Заполнить номенклатуру дела.
           if (caseFile != null)
             accountingDocument.CaseFile = caseFile;
+          
+          // Выдать права главному бухгалтеру на товарные документы.
+          if (documentSet.Type == BulkExchangeSolution.Constants.Exchange.ExchangeDocumentInfo.DocumentSetType.Waybill)
+          {      
+            var chiefAccountant = Roles.GetAll(r => r.Name.Equals(Constants.Module.ChiefAccountantRoleName)).FirstOrDefault();
+            accountingDocument.AccessRights.Grant(chiefAccountant, DefaultAccessRightsTypes.FullAccess);
+          }
           
           // Заполнить ответственного и подразделение.
           if (responsible != null)
