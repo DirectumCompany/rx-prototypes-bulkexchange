@@ -23,12 +23,12 @@ namespace Sungero.BulkExchangeSolution.Client
 
   partial class ContractStatementActions
   {
-    public virtual void ShowSet(Sungero.Domain.Client.ExecuteActionArgs e)
+    public virtual void ShowDocumentSet(Sungero.Domain.Client.ExecuteActionArgs e)
     {
-      Functions.Module.ShowSet(_obj);
+      Functions.Module.ShowDocumentSet(_obj);
     }
 
-    public virtual bool CanShowSet(Sungero.Domain.Client.CanExecuteActionArgs e)
+    public virtual bool CanShowDocumentSet(Sungero.Domain.Client.CanExecuteActionArgs e)
     {
       return true;
     }

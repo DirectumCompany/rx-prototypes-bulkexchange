@@ -147,13 +147,13 @@
   <data name="Ribbon_Sign_5c25a20957244110824c39bcf2c9a19c" xml:space="preserve">
     <value>Подписание</value>
   </data>
-  <data name="Action_ShowSet" xml:space="preserve">
+  <data name="Action_ShowDocumentSet" xml:space="preserve">
     <value>Показать комплект</value>
   </data>
-  <data name="Action_ShowSetDescription" xml:space="preserve">
+  <data name="Action_ShowDocumentSetDescription" xml:space="preserve">
     <value>Показ документов, относящихся к одному комплекту</value>
   </data>
-  <data name="Action_ShowSetHint" xml:space="preserve">
+  <data name="Action_ShowDocumentSetHint" xml:space="preserve">
     <value>Показать комплект документов</value>
   </data>
 </root>

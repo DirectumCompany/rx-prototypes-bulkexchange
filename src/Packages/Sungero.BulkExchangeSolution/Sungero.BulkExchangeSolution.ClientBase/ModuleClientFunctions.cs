@@ -208,7 +208,7 @@ namespace Sungero.BulkExchangeSolution.Client
       Dialogs.ShowMessage(string.Join(Environment.NewLine, textList), MessageType.Error);
     }
     
-    public void ShowSet(IAccountingDocumentBase document)
+    public void ShowDocumentSet(IAccountingDocumentBase document)
     {
       var assignments = Functions.Module.Remote.GetApprovalSigningAssignments(document).ToList();
       if (assignments.Count() > 1)

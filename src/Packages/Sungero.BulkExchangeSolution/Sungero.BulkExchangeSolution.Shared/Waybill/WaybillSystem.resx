@@ -165,19 +165,19 @@
   <data name="Ribbon_Sign_b9128665dad84d48b0aea2fa00faf02b" xml:space="preserve">
     <value>Sign</value>
   </data>
-  <data name="Action_ShowSet" xml:space="preserve">
+  <data name="Action_ShowDocumentSet" xml:space="preserve">
     <value>TODO</value>
   </data>
-  <data name="Action_ShowSetDescription" xml:space="preserve">
+  <data name="Action_ShowDocumentSetDescription" xml:space="preserve">
     <value>TODO</value>
   </data>
-  <data name="Action_ShowSetHint" xml:space="preserve">
+  <data name="Action_ShowDocumentSetHint" xml:space="preserve">
     <value>TODO</value>
   </data>
-  <data name="Action_ShowSetConfirmationMessage" xml:space="preserve">
+  <data name="Action_ShowDocumentSetConfirmationMessage" xml:space="preserve">
     <value />
   </data>
-  <data name="Action_ShowSetConfirmationDescription" xml:space="preserve">
+  <data name="Action_ShowDocumentSetConfirmationDescription" xml:space="preserve">
     <value />
   </data>
 </root>

@@ -88,7 +88,7 @@
     {
       "NameGuid": "254be29d-ab75-4e4d-9439-87a1a5b98c32",
       "Name": "ForSignature",
-      "AdditionalRibbonActionNames": "Reject; SignDocumentSet; ShowApprovalSigningAssignment;ShowSet",
+      "AdditionalRibbonActionNames": "Reject; SignDocumentSet; ShowApprovalSigningAssignment;ShowDocumentSet",
       "DefaultContentType": "96c4f4f3-dc74-497a-b347-e8faf4afe320",
       "DisplayType": "Module",
       "FilterPanel": {

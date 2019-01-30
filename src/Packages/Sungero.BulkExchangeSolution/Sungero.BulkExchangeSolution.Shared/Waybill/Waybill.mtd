@@ -33,7 +33,7 @@
     },
     {
       "NameGuid": "57688c37-f8a6-416e-81e6-24d0dcd9d0d1",
-      "Name": "ShowSet",
+      "Name": "ShowDocumentSet",
       "ActionArea": "Collection",
       "GenerateHandler": true,
       "LargeIconName": "Action_ShowSet_large_57688c37f8a6416e81e624d0dcd9d0d1.png",
@@ -131,7 +131,7 @@
       {
         "$type": "Sungero.Metadata.RibbonActionButtonMetadata, Sungero.Metadata",
         "NameGuid": "48117a4f-bb38-4b85-8b32-6569a46b0d0c",
-        "Name": "ShowSet",
+        "Name": "ShowDocumentSet",
         "ActionGuid": "57688c37-f8a6-416e-81e6-24d0dcd9d0d1",
         "ButtonSize": "Large",
         "Index": 2,
