@@ -118,22 +118,22 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="Property_VerificationStatus" xml:space="preserve">
-    <value>TODO</value>
+    <value>Document verification</value>
   </data>
   <data name="Enum_VerificationStatus_Required" xml:space="preserve">
-    <value>TODO</value>
+    <value>Required</value>
   </data>
   <data name="Enum_VerificationStatus_NotRequired" xml:space="preserve">
-    <value>TODO</value>
+    <value>Not required</value>
   </data>
   <data name="Property_PurchaseOrder" xml:space="preserve">
     <value>TODO</value>
   </data>
   <data name="Property_VerificationTask" xml:space="preserve">
-    <value>TODO</value>
+    <value>Document verification task</value>
   </data>
   <data name="Enum_VerificationStatus_Completed" xml:space="preserve">
-    <value>TODO</value>
+    <value>Completed</value>
   </data>
   <data name="Property_SenderSignId" xml:space="preserve">
     <value>Sender signature ID</value>
@@ -145,33 +145,33 @@
     <value>Revocation Task</value>
   </data>
   <data name="Property_SignStatus" xml:space="preserve">
-    <value>TODO</value>
+    <value>Signing status</value>
   </data>
   <data name="Enum_SignStatus_Required" xml:space="preserve">
-    <value>TODO</value>
+    <value>Signature required</value>
   </data>
   <data name="Enum_SignStatus_NotRequired" xml:space="preserve">
-    <value>TODO</value>
+    <value>Signature not required</value>
   </data>
   <data name="Enum_SignStatus_Signed" xml:space="preserve">
-    <value>TODO</value>
+    <value>Signed</value>
   </data>
   <data name="Property_VerificationFailReason" xml:space="preserve">
     <value>CheckFailReaso</value>
   </data>
   <data name="Property_RejectionStatus" xml:space="preserve">
-    <value>TODO</value>
+    <value>Rejection on document</value>
   </data>
   <data name="Enum_RejectionStatus_Required" xml:space="preserve">
-    <value>TODO</value>
+    <value>Required</value>
   </data>
   <data name="Enum_RejectionStatus_NotRequired" xml:space="preserve">
-    <value>TODO</value>
+    <value>Not required</value>
   </data>
   <data name="Enum_RejectionStatus_Sent" xml:space="preserve">
-    <value>TODO</value>
+    <value>Sent</value>
   </data>
   <data name="Property_ContractNumber" xml:space="preserve">
-    <value>TODO</value>
+    <value>Contract number</value>
   </data>
 </root>

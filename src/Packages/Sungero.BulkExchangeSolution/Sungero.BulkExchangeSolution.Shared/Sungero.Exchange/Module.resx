@@ -121,25 +121,25 @@
     <value>TODO</value>
   </data>
   <data name="DocumentsTotalAmountError" xml:space="preserve">
-    <value>TODO</value>
+    <value>Documents amounts must be equal</value>
   </data>
   <data name="TotalAmountIsTooBig" xml:space="preserve">
-    <value>TODO</value>
+    <value>The amount must be less than 100 000 Russian rubles</value>
   </data>
   <data name="RubAlphaCode" xml:space="preserve">
     <value>RUB</value>
   </data>
   <data name="VerificationSuccess" xml:space="preserve">
-    <value>TODO</value>
+    <value>) successfully verified:</value>
   </data>
   <data name="VerificationFail" xml:space="preserve">
-    <value>TODO</value>
+    <value>) not verified:</value>
   </data>
   <data name="DocumentSetWithIDs" xml:space="preserve">
-    <value>TODO</value>
+    <value>Package with documents (ID</value>
   </data>
   <data name="VerificationFailedTaskText" xml:space="preserve">
-    <value>TODO</value>
+    <value>Verification failed:</value>
   </data>
   <data name="CounterpartyResponsibleNotFoundSubject" xml:space="preserve">
     <value>TODO</value>
