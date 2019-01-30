@@ -100,16 +100,6 @@
     "Elements": [
       {
         "$type": "Sungero.Metadata.RibbonActionButtonMetadata, Sungero.Metadata",
-        "NameGuid": "52bde6ed-d736-4c1d-ba78-7ab92354469d",
-        "Name": "SignDocumentSet",
-        "ActionGuid": "415bdabd-0761-4075-b34d-2a940cbf342e",
-        "ButtonSize": "Large",
-        "Index": 22,
-        "IsVisible": false,
-        "ParentGuid": "495214c9-a353-4cfa-9440-acb5840fa265"
-      },
-      {
-        "$type": "Sungero.Metadata.RibbonActionButtonMetadata, Sungero.Metadata",
         "NameGuid": "60489d99-9752-4f5e-8b56-e3da1de64761",
         "Name": "Reject",
         "ActionGuid": "567dcf85-f8b4-4f12-9153-7c1b10813e39",
@@ -135,6 +125,16 @@
         "ActionGuid": "da56d5bc-bd34-4ddc-a2d8-e0e25545117a",
         "ButtonSize": "Large",
         "Index": 2,
+        "IsVisible": false,
+        "ParentGuid": "a6e345e9-4715-4552-b010-36295b4feca6"
+      },
+      {
+        "$type": "Sungero.Metadata.RibbonActionButtonMetadata, Sungero.Metadata",
+        "NameGuid": "d581fa43-206a-4f31-a55a-8649ab6fa0b7",
+        "Name": "SignDocumentSet",
+        "ActionGuid": "415bdabd-0761-4075-b34d-2a940cbf342e",
+        "ButtonSize": "Large",
+        "Index": -1,
         "IsVisible": false,
         "ParentGuid": "a6e345e9-4715-4552-b010-36295b4feca6"
       }

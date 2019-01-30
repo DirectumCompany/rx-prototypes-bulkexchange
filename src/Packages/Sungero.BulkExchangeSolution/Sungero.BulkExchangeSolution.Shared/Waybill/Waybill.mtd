@@ -137,6 +137,16 @@
         "Index": 2,
         "IsVisible": false,
         "ParentGuid": "b9128665-dad8-4d48-b0ae-a2fa00faf02b"
+      },
+      {
+        "$type": "Sungero.Metadata.RibbonActionButtonMetadata, Sungero.Metadata",
+        "NameGuid": "f78bdb49-f297-4479-b4d2-6b73673d8782",
+        "Name": "SignDocumentSet",
+        "ActionGuid": "dfe02439-0006-4040-bff0-563dba6eb953",
+        "ButtonSize": "Large",
+        "Index": -1,
+        "IsVisible": false,
+        "ParentGuid": "b9128665-dad8-4d48-b0ae-a2fa00faf02b"
       }
     ],
     "Groups": [
