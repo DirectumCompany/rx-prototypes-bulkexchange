@@ -139,10 +139,13 @@
     <value>Подписать комплект документов</value>
   </data>
   <data name="Action_ShowApprovalSigningAssignment" xml:space="preserve">
-    <value>Показать задание</value>
+    <value>Открыть задание</value>
+  </data>
+  <data name="Action_ShowApprovalSigningAssignmentDescription" xml:space="preserve">
+    <value>Открытие задания на подписание финансовых документов.</value>
   </data>
   <data name="Action_ShowApprovalSigningAssignmentHint" xml:space="preserve">
-    <value>Показать задания на подписание для документа</value>
+    <value>Открыть задание на подписание</value>
   </data>
   <data name="Action_ShowSet" xml:space="preserve">
     <value>Показать комплект</value>
