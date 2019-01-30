@@ -82,7 +82,9 @@
     "FewAssignmentError",
     "NoAssignmentError",
     "RejectReason",
-    "Reject"
+    "Reject",
+    "MultipleBusinessUnitsError",
+    "CannotSignDocuments"
   ],
   "ServerAssemblyName": "Sungero.BulkExchangeSolution.Server",
   "ServerNamespace": "Sungero.BulkExchangeSolution.Server",

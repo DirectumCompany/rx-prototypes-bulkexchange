@@ -140,24 +140,18 @@ namespace Sungero.BulkExchangeSolution.Client
     {
       if (documents.Select(d => d.BusinessUnitBox).Distinct().Count() > 1)
       {
-        e.AddError("Массовое подписание доступно только для документов одной организации.");
+        ShowResultDialog(new List<string>() { Sungero.BulkExchangeSolution.Resources.MultipleBusinessUnitsError });
         return;
       }
       
-      var employee = Company.Employees.Current;
       var businessUnitBox = documents.Select(d => d.BusinessUnitBox).FirstOrDefault();
-      var certificates = businessUnitBox.HasExchangeServiceCertificates == true
-        ? businessUnitBox.ExchangeServiceCertificates.Where(x => Equals(x.Certificate.Owner, employee) && x.Certificate.Enabled == true).Select(x => x.Certificate)
-        : Certificates.GetAllCached().Where(x => Equals(x.Owner, employee) && x.Enabled == true).AsEnumerable();
+      var currentEmployee = Company.Employees.Current;
+      var certificate = Sungero.Exchange.PublicFunctions.Module.GetUserExchangeCertificate(businessUnitBox, currentEmployee);
       
-      certificates = certificates.GroupBy(x => x.Thumbprint).Select(x => x.First());
-      
-      var certificate = certificates.Count() > 1 ?
-        certificates.ShowSelectCertificate() :
-        certificates.FirstOrDefault();
-      
+      var resultList = new List<string>();
       var documentsInMultipleAssignments = 0;
-      foreach(var document in documents)
+      var notSignedDocuments = 0;
+      foreach (var document in documents)
       {
         var approvalSigningAssignments = Functions.Module.Remote.GetApprovalSigningAssignments(document);
         if (approvalSigningAssignments.Count() > 1)
@@ -170,7 +164,7 @@ namespace Sungero.BulkExchangeSolution.Client
         
         var addendaGroupDocuments = approvalSigningAssignment.AddendaGroup.OfficialDocuments;
         var addendas = new List<IOfficialDocument>();
-        foreach(var item in addendaGroupDocuments)
+        foreach (var item in addendaGroupDocuments)
         {
           var info = Functions.ExchangeDocumentInfo.Remote.GetExchangeDocumentInfo(item);
           if (info == null ? !IncomingTaxInvoices.Is(item) : info.SignStatus == ExchangeDocumentInfo.SignStatus.Required)
@@ -182,22 +176,36 @@ namespace Sungero.BulkExchangeSolution.Client
         try
         {
           if (!Docflow.PublicFunctions.OfficialDocument.ApproveWithAddenda(document, addendas, certificate, activeText, null, false, null))
-            e.AddError(ApprovalTasks.Resources.ToPerformNeedSignDocument);
+            notSignedDocuments++;
+          else
+            approvalSigningAssignment.Complete(Docflow.ApprovalSigningAssignment.Result.Sign);
         }
         catch (CommonLibrary.Exceptions.PlatformException ex)
         {
           if (!ex.IsInternal)
           {
             var message = ex.Message.Trim().EndsWith(".") ? ex.Message : string.Format("{0}.", ex.Message);
-            e.AddError(message);
+            resultList.Add(message);
           }
           else
+          {
             throw;
+          }
         }
       }
+           
+      if (notSignedDocuments > 0)
+        resultList.Insert(0, string.Format(Sungero.BulkExchangeSolution.Resources.CannotSignDocuments, notSignedDocuments));
       
       if (documentsInMultipleAssignments > 0)
-        e.AddWarning("Некоторые документы указаны в нескольких заданиях и не были подписаны.");
+        resultList.Insert(0, Sungero.BulkExchangeSolution.Resources.FewAssignmentError);
+      
+      ShowResultDialog(resultList);
+    }
+    
+    private static void ShowResultDialog(List<string> textList)
+    {
+      Dialogs.ShowMessage(string.Join(Environment.NewLine, textList), MessageType.Error);
     }
     
     public void ShowSet(IAccountingDocumentBase document)
@@ -215,7 +223,7 @@ namespace Sungero.BulkExchangeSolution.Client
         documents.Show();
       }
       else
-        Dialogs.ShowMessage(Resources.NoAssignmentError, MessageType.Information, MessageType.Error);
+        Dialogs.ShowMessage(Resources.NoAssignmentError, MessageType.Error);
     }
   }
 }

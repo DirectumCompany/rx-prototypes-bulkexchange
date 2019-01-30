@@ -138,4 +138,10 @@
   <data name="Reject" xml:space="preserve">
     <value>Отказ</value>
   </data>
+  <data name="MultipleBusinessUnitsError" xml:space="preserve">
+    <value>Массовое подписание доступно только для документов одной организации.</value>
+  </data>
+  <data name="CannotSignDocuments" xml:space="preserve">
+    <value>Не было подписано документов - {0}</value>
+  </data>
 </root>

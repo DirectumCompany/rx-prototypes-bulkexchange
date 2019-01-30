@@ -138,4 +138,10 @@
   <data name="Reject" xml:space="preserve">
     <value>TODO</value>
   </data>
+  <data name="MultipleBusinessUnitsError" xml:space="preserve">
+    <value>TODO</value>
+  </data>
+  <data name="CannotSignDocuments" xml:space="preserve">
+    <value>TODO</value>
+  </data>
 </root>

@@ -57,7 +57,6 @@ namespace Sungero.BulkExchangeSolution.Module.Exchange.Server
             exchangeDocumentInfo.Save();
         }
       }
-      
       else if (document.FileName.ToLowerInvariant().Contains("акт"))
       {
         var pattern = @"(^|[^А-Яа-я])акт([^А-Яа-я]|$)";
@@ -276,7 +275,7 @@ namespace Sungero.BulkExchangeSolution.Module.Exchange.Server
               accountingDocument.ResponsibleEmployee = responsible;
 
             // Выдать права на документ ответственному за контрагента.
-            GrantAccessRightsForResponsible(accountingDocument, responsible);
+            this.GrantAccessRightsForResponsible(accountingDocument, responsible);
           }
         }
         
@@ -499,6 +498,7 @@ namespace Sungero.BulkExchangeSolution.Module.Exchange.Server
     /// </summary>
     /// <param name="documentInfos">Список информаций о документах обмена.</param>
     /// <param name="isFullSet">True если комплект полный.</param>
+    /// <param name="documentSetType">Тип комплекта.</param>
     private void SetStatuses(List<IExchangeDocumentInfo> documentInfos, bool isFullSet, string documentSetType)
     {
       var rejectionStatus = !isFullSet && documentSetType == BulkExchangeSolution.Constants.Exchange.ExchangeDocumentInfo.DocumentSetType.Waybill
