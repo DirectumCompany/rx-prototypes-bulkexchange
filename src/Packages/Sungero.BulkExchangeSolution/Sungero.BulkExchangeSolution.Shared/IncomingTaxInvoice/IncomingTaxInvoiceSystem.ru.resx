@@ -130,7 +130,7 @@
     <value>Подписать комплект</value>
   </data>
   <data name="Action_SignDocumentSetDescription" xml:space="preserve">
-    <value>Подписание комплекта документов</value>
+    <value>Подписание комплекта финансовых документов</value>
   </data>
   <data name="Action_SignDocumentSetHint" xml:space="preserve">
     <value>Подписать комплект документов</value>
