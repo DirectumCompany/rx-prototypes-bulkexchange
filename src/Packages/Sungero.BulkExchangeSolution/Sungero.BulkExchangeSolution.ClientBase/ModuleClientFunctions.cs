@@ -197,7 +197,7 @@ namespace Sungero.BulkExchangeSolution.Client
       }
       
       if (documentsInMultipleAssignments > 0)
-        e.AddWarning("Некоторые докуменнты указаны в нескольких заданиях и не были подписаны.");
+        e.AddWarning("Некоторые документы указаны в нескольких заданиях и не были подписаны.");
     }
     
     public void ShowSet(IAccountingDocumentBase document)
@@ -211,12 +211,11 @@ namespace Sungero.BulkExchangeSolution.Client
       
       if (assignments.Count() == 1)
       {
-        var documents = assignments.SelectMany(x => x.AddendaGroup.OfficialDocuments).ToList();
-        documents.AddRange(assignments.SelectMany(x => x.OtherGroup.All).Select(a => OfficialDocuments.As(a)).ToList());
+        var documents = assignments.SelectMany(x => x.AllAttachments).Select(a => OfficialDocuments.As(a)).ToList();
         documents.Show();
       }
       else
-        Dialogs.ShowMessage("Нет заданий по документу.", MessageType.Information);
+        Dialogs.ShowMessage(Resources.NoAssignmentError, MessageType.Information, MessageType.Error);
     }
   }
 }
