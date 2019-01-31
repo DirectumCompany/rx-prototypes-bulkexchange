@@ -130,13 +130,13 @@
     <value>Подписание</value>
   </data>
   <data name="Action_SignDocumentSet" xml:space="preserve">
-    <value>Подписать комплект</value>
+    <value>Подписать комплекты</value>
   </data>
   <data name="Action_SignDocumentSetDescription" xml:space="preserve">
-    <value>Подписание комплекта финансовых документов</value>
+    <value>Подписание комплектов финансовых документов</value>
   </data>
   <data name="Action_SignDocumentSetHint" xml:space="preserve">
-    <value>Подписать комплект документов</value>
+    <value>Подписать комплекты документов</value>
   </data>
   <data name="Action_ShowApprovalSigningAssignment" xml:space="preserve">
     <value>Открыть задание</value>
