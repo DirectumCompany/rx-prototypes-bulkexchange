@@ -136,7 +136,7 @@
     <value>) не прошел проверку: </value>
   </data>
   <data name="DocumentSetWithIDs" xml:space="preserve">
-    <value>Комплект с документами (id </value>
+    <value>Комплект с документами (ИД</value>
   </data>
   <data name="VerificationFailedTaskText" xml:space="preserve">
     <value>Не пройдена проверка: </value>

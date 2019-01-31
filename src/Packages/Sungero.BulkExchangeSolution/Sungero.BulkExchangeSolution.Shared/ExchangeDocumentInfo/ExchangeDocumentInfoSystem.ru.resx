@@ -130,7 +130,7 @@
     <value>Номер заказа</value>
   </data>
   <data name="Property_VerificationTask" xml:space="preserve">
-    <value>Задача на проверку докмуента.</value>
+    <value>Задача на проверку документа</value>
   </data>
   <data name="Enum_VerificationStatus_Completed" xml:space="preserve">
     <value>Пройдена</value>
@@ -157,7 +157,7 @@
     <value>Подписано</value>
   </data>
   <data name="Property_RejectionStatus" xml:space="preserve">
-    <value>Отказ документа</value>
+    <value>Отказ по документу</value>
   </data>
   <data name="Enum_RejectionStatus_Required" xml:space="preserve">
     <value>Требуется</value>
