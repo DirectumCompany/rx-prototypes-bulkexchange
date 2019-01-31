@@ -29,6 +29,7 @@
       "ActionArea": "Collection",
       "GenerateHandler": true,
       "LargeIconName": "Action_ShowApprovalSigningAssignment_large_8229d25fd5ad4221a5f9449bb89361aa.png",
+      "NeedRefreshCollectionAfterExecute": true,
       "SmallIconName": "Action_ShowApprovalSigningAssignment_small_8229d25fd5ad4221a5f9449bb89361aa.png"
     },
     {

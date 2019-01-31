@@ -144,9 +144,9 @@ namespace Sungero.BulkExchangeSolution.Client
     {
       var assignments = Functions.Module.Remote.GetApprovalSigningAssignments(document);
       if (assignments.Count() == 1)
-        assignments.FirstOrDefault().Show();
+        assignments.FirstOrDefault().ShowModal();
       else
-        assignments.Show();
+        assignments.ShowModal();
     }
     
     public virtual void SignDocuments(System.Collections.Generic.IEnumerable<IAccountingDocumentBase> documents, Sungero.Domain.Client.ExecuteActionArgs e)
