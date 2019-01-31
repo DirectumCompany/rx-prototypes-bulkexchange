@@ -161,12 +161,22 @@ namespace Sungero.BulkExchangeSolution.Client
       var currentEmployee = Company.Employees.Current;
       var certificate = Sungero.Exchange.PublicFunctions.Module.GetUserExchangeCertificate(businessUnitBox, currentEmployee);
       
+      if (certificate == null)
+      {
+        ShowResultDialog(new List<string>() { Exchange.Resources.CertificateNotFound });
+        return;
+      }
+      
       var resultList = new List<string>();
       var documentsInMultipleAssignments = 0;
       var notSignedDocuments = 0;
       foreach (var document in documents)
       {
         var approvalSigningAssignments = Functions.Module.Remote.GetApprovalSigningAssignments(document);
+        
+        if (!approvalSigningAssignments.Any())
+          continue;
+        
         if (approvalSigningAssignments.Count() > 1)
         {
           documentsInMultipleAssignments++;
@@ -213,7 +223,8 @@ namespace Sungero.BulkExchangeSolution.Client
       if (documentsInMultipleAssignments > 0)
         resultList.Insert(0, Sungero.BulkExchangeSolution.Resources.FewAssignmentError);
       
-      ShowResultDialog(resultList);
+      if (resultList.Any())
+        ShowResultDialog(resultList);
     }
     
     private static void ShowResultDialog(List<string> textList)
