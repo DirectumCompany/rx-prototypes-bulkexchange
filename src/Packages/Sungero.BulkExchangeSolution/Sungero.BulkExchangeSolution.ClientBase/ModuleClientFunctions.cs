@@ -62,15 +62,15 @@ namespace Sungero.BulkExchangeSolution.Client
       
       var task = ApprovalTasks.As(assignment.MainTask);
       var dialog = Dialogs.CreateInputDialog(Sungero.BulkExchangeSolution.Resources.Reject);
-      var abortingReason = dialog.AddMultilineString(Sungero.BulkExchangeSolution.Resources.RejectReason, false);
+      var abortingReason = dialog.AddMultilineString(Sungero.BulkExchangeSolution.Resources.RejectReason, true);
       dialog.Buttons.AddOkCancel();
       dialog.Buttons.Default = DialogButtons.Ok;
       
       dialog.SetOnButtonClick(args =>
-                              {
-                                if (string.IsNullOrWhiteSpace(abortingReason.Value))
-                                  args.AddError(Resources.EmptyAbortingReason, abortingReason);
-                              });
+      {
+        if (!string.IsNullOrEmpty(abortingReason.Value) && string.IsNullOrWhiteSpace(abortingReason.Value))
+          args.AddError(Resources.EmptyAbortingReason, abortingReason);
+      });
       
       if (dialog.Show() == DialogButtons.Ok)
       {
@@ -78,16 +78,29 @@ namespace Sungero.BulkExchangeSolution.Client
         assignment.ActiveText += string.IsNullOrWhiteSpace(assignment.ActiveText)
           ? abortingReason.Value
           : Environment.NewLine + abortingReason.Value;
-        
-        // Подписание согласующей подписью с результатом "не согласовано".
-        Signatures.NotEndorse(document.LastVersion, null, abortingReason.Value, assignment.Performer);
-        var attachments = task.AddendaGroup.OfficialDocuments;
-        foreach (var attachment in attachments)
-        {
-          Signatures.NotEndorse(attachment.LastVersion, null, abortingReason.Value, assignment.Performer);
-        }
 
-        assignment.Complete(Sungero.Docflow.ApprovalSigningAssignment.Result.Abort);
+        try
+        {
+          // Подписание согласующей подписью с результатом "не согласовано".
+          var isSigned = Signatures.NotEndorse(document.LastVersion, null, abortingReason.Value, assignment.Performer);
+          foreach (var attachment in task.AddendaGroup.OfficialDocuments)
+          {
+            isSigned &= Signatures.NotEndorse(attachment.LastVersion, null, abortingReason.Value, assignment.Performer);
+          }
+
+          if (isSigned)
+            assignment.Complete(Sungero.Docflow.ApprovalSigningAssignment.Result.Abort);
+        }
+        catch (CommonLibrary.Exceptions.PlatformException ex)
+        {
+          if (!ex.IsInternal)
+          {
+            var message = ex.Message.EndsWith(".") ? ex.Message : string.Format("{0}.", ex.Message);
+            Dialogs.ShowMessage(message, MessageType.Error);
+          }
+          else
+            throw;
+        }
       }
     }
     
@@ -104,8 +117,8 @@ namespace Sungero.BulkExchangeSolution.Client
         {
           {
             var result = Sungero.Exchange.PublicFunctions.Module.SendAmendmentRequest(new List<IOfficialDocument> { documentInfo.Document },
-                                                                                      documentInfo.Counterparty, Sungero.BulkExchangeSolution.Resources.RejectMessage, true,
-                                                                                      documentInfo.RootBox, certificate, false);
+              documentInfo.Counterparty, Sungero.BulkExchangeSolution.Resources.RejectMessage, true,
+              documentInfo.RootBox, certificate, false);
             if (result == string.Empty)
             {
               documentInfo.RejectionStatus = RejectionStatus.Sent;
