@@ -233,7 +233,7 @@ namespace Sungero.BulkExchangeSolution.Client
       if (assignments.Count() == 1)
       {
         var documents = assignments.SelectMany(x => x.AllAttachments).Select(a => OfficialDocuments.As(a)).ToList();
-        documents.Show();
+        documents.ShowModal();
       }
       else
         Dialogs.ShowMessage(Resources.NoAssignmentError, MessageType.Error);
