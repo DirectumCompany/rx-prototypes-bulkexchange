@@ -150,4 +150,7 @@
   <data name="DoumentsSignError" xml:space="preserve">
     <value>TODO</value>
   </data>
+  <data name="SomeDocumentsNotSigned" xml:space="preserve">
+    <value>TODO</value>
+  </data>
 </root>

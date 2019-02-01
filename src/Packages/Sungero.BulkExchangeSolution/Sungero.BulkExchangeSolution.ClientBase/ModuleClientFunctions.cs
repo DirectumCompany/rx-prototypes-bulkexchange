@@ -173,7 +173,8 @@ namespace Sungero.BulkExchangeSolution.Client
         return;
       }
       
-      var resultList = new List<string>();
+      var errortList = new List<string>();
+      var exceptionDictionary = new Dictionary<string, int>();
       var documentsInMultipleAssignments = 0;
       var notSignedDocuments = 0;
       foreach (var document in documents)
@@ -213,8 +214,11 @@ namespace Sungero.BulkExchangeSolution.Client
         {
           if (!ex.IsInternal)
           {
-            var message = ex.Message.Trim().EndsWith(".") ? ex.Message : string.Format("{0}.", ex.Message);
-            resultList.Add(message);
+            var message = ex.Message.ToLower().TrimEnd('.');
+            if (exceptionDictionary.ContainsKey(message))
+              exceptionDictionary[message]++;
+            else
+              exceptionDictionary.Add(message, 1);
           }
           else
           {
@@ -222,20 +226,27 @@ namespace Sungero.BulkExchangeSolution.Client
           }
         }
       }
-           
+      
+      if (exceptionDictionary.Any())
+        foreach (var exception in exceptionDictionary)
+          errortList.Add(string.Format("  - {0} - {1}", exception.Key, exception.Value));
+      
       if (notSignedDocuments > 0)
-        resultList.Insert(0, Sungero.BulkExchangeSolution.Resources.CannotSignDocumentsFormat(notSignedDocuments));
+        errortList.Insert(0, Sungero.BulkExchangeSolution.Resources.CannotSignDocumentsFormat(notSignedDocuments));
       
       if (documentsInMultipleAssignments > 0)
-        resultList.Insert(0, Sungero.BulkExchangeSolution.Resources.FewAssignmentError);
+        errortList.Insert(0, string.Format("  - {0} - {1}", Sungero.BulkExchangeSolution.Resources.FewAssignmentError.ToString().ToLower(), documentsInMultipleAssignments));
       
-      if (resultList.Any())
-        ShowResultDialog(resultList);
+      if (errortList.Any())
+      {
+        errortList.Insert(0, Resources.SomeDocumentsNotSigned);
+        ShowResultDialog(errortList);
+      }
     }
     
     private static void ShowResultDialog(List<string> textList)
     {
-      var text = string.Join("." + Environment.NewLine, textList) + ".";
+      var text = string.Join(Environment.NewLine, textList);
       Dialogs.ShowMessage(Resources.DoumentsSignError, text, MessageType.Error);
     }
     

@@ -127,7 +127,7 @@
     <value>Заполните причину отказа.</value>
   </data>
   <data name="FewAssignmentError" xml:space="preserve">
-    <value>Найдено несколько заданий на подписание, в которые вложен документ</value>
+    <value>Документ вложен в несколько заданий на подписание</value>
   </data>
   <data name="NoAssignmentError" xml:space="preserve">
     <value>Не найдены задания на подписание для документа</value>
@@ -142,12 +142,15 @@
     <value>Массовое подписание доступно только для документов нашей организации.</value>
   </data>
   <data name="CannotSignDocuments" xml:space="preserve">
-    <value>Не было подписано документов - {0}</value>
+    <value>  - ошибка подписания - {0}</value>
   </data>
   <data name="SignDocumentSetsConfirmationMessage" xml:space="preserve">
     <value>Вы действительно хотите подписать выбранные комплекты документов?</value>
   </data>
   <data name="DoumentsSignError" xml:space="preserve">
     <value>При подписании документов произошли ошибки</value>
+  </data>
+  <data name="SomeDocumentsNotSigned" xml:space="preserve">
+    <value>Некоторые документы не были подписаны:</value>
   </data>
 </root>
