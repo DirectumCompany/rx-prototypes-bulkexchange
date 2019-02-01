@@ -84,7 +84,9 @@
     "RejectReason",
     "Reject",
     "MultipleBusinessUnitsError",
-    "CannotSignDocuments"
+    "CannotSignDocuments",
+    "SignDocumentSetsConfirmationMessage",
+    "DoumentsSignError"
   ],
   "ServerAssemblyName": "Sungero.BulkExchangeSolution.Server",
   "ServerNamespace": "Sungero.BulkExchangeSolution.Server",

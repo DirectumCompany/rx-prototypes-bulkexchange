@@ -139,9 +139,15 @@
     <value>Отказ</value>
   </data>
   <data name="MultipleBusinessUnitsError" xml:space="preserve">
-    <value>Массовое подписание доступно только для документов одной организации.</value>
+    <value>Массовое подписание доступно только для документов нашей организации.</value>
   </data>
   <data name="CannotSignDocuments" xml:space="preserve">
     <value>Не было подписано документов - {0}</value>
+  </data>
+  <data name="SignDocumentSetsConfirmationMessage" xml:space="preserve">
+    <value>Вы действительно хотите подписать выбранные комплекты документов?</value>
+  </data>
+  <data name="DoumentsSignError" xml:space="preserve">
+    <value>При подписании документов произошли ошибки</value>
   </data>
 </root>

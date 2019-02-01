@@ -149,13 +149,19 @@ namespace Sungero.BulkExchangeSolution.Client
         assignments.ShowModal();
     }
     
-    public virtual void SignDocuments(System.Collections.Generic.IEnumerable<IAccountingDocumentBase> documents, Sungero.Domain.Client.ExecuteActionArgs e)
+    public virtual void SignDocumentSets(System.Collections.Generic.IEnumerable<IAccountingDocumentBase> documents, Sungero.Domain.Client.ExecuteActionArgs e)
     {
       if (documents.Select(d => d.BusinessUnitBox).Distinct().Count() > 1)
       {
         ShowResultDialog(new List<string>() { Sungero.BulkExchangeSolution.Resources.MultipleBusinessUnitsError });
         return;
       }
+      
+      var dialog = Dialogs.CreateTaskDialog(Resources.SignDocumentSetsConfirmationMessage, MessageType.Question);
+      dialog.Buttons.AddYesNo();
+      dialog.Buttons.Default = DialogButtons.Yes;
+      if (dialog.Show() != DialogButtons.Yes)
+        return;
       
       var businessUnitBox = documents.Select(d => d.BusinessUnitBox).FirstOrDefault();
       var currentEmployee = Company.Employees.Current;
@@ -218,7 +224,7 @@ namespace Sungero.BulkExchangeSolution.Client
       }
            
       if (notSignedDocuments > 0)
-        resultList.Insert(0, string.Format(Sungero.BulkExchangeSolution.Resources.CannotSignDocuments, notSignedDocuments));
+        resultList.Insert(0, Sungero.BulkExchangeSolution.Resources.CannotSignDocumentsFormat(notSignedDocuments));
       
       if (documentsInMultipleAssignments > 0)
         resultList.Insert(0, Sungero.BulkExchangeSolution.Resources.FewAssignmentError);
@@ -229,7 +235,8 @@ namespace Sungero.BulkExchangeSolution.Client
     
     private static void ShowResultDialog(List<string> textList)
     {
-      Dialogs.ShowMessage(string.Join(Environment.NewLine, textList), MessageType.Error);
+      var text = string.Join("." + Environment.NewLine, textList) + ".";
+      Dialogs.ShowMessage(Resources.DoumentsSignError, text, MessageType.Error);
     }
     
     public void ShowDocumentSet(IAccountingDocumentBase document)
