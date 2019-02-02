@@ -94,6 +94,74 @@
     "IsVisible",
     "Libraries"
   ],
+  "PublicFunctions": [
+    {
+      "Name": "AddRelationsForDocuments",
+      "IsRemote": true,
+      "Parameters": [
+        {
+          "Name": "documents",
+          "ParameterType": "global::System.Collections.Generic.List<global::Sungero.Docflow.IOfficialDocument>",
+          "ParameterTypeFullName": "System.Collections.Generic.List"
+        }
+      ],
+      "Placement": "Shared",
+      "ReturnType": "void",
+      "ReturnTypeFullName": "System.Void"
+    },
+    {
+      "Name": "GetAdditionalProperties",
+      "Parameters": [
+        {
+          "Name": "xml",
+          "ParameterType": "System.Byte[]"
+        }
+      ],
+      "ReturnType": "global::System.Collections.Generic.List<System.Xml.Linq.XElement>",
+      "ReturnTypeFullName": "System.Collections.Generic.List"
+    },
+    {
+      "Name": "GetContractNumber",
+      "Parameters": [
+        {
+          "Name": "xmlElements",
+          "ParameterType": "global::System.Collections.Generic.List<System.Xml.Linq.XElement>",
+          "ParameterTypeFullName": "System.Collections.Generic.List"
+        }
+      ],
+      "ReturnType": "global::System.String",
+      "ReturnTypeFullName": "System.String"
+    },
+    {
+      "Name": "GetPurchaseOrderNumber",
+      "Parameters": [
+        {
+          "Name": "xmlElements",
+          "ParameterType": "global::System.Collections.Generic.List<System.Xml.Linq.XElement>",
+          "ParameterTypeFullName": "System.Collections.Generic.List"
+        }
+      ],
+      "ReturnType": "global::System.String",
+      "ReturnTypeFullName": "System.String"
+    },
+    {
+      "Name": "SetDocumentResponsible",
+      "Parameters": [
+        {
+          "Name": "accountingDocument",
+          "ParameterType": "global::Sungero.Docflow.IAccountingDocumentBase",
+          "ParameterTypeFullName": "Sungero.Docflow.IAccountingDocumentBase, Sungero.Domain.Interfaces"
+        },
+        {
+          "Name": "responsible",
+          "ParameterType": "global::Sungero.Company.IEmployee",
+          "ParameterTypeFullName": "Sungero.Company.IEmployee, Sungero.Domain.Interfaces"
+        }
+      ],
+      "ReturnType": "void",
+      "ReturnTypeFullName": "System.Void"
+    }
+  ],
   "PublicStructures": [],
   "ResourceInterfaceAssemblyName": "Sungero.Domain.Interfaces",
   "ResourceInterfaceNamespace": "Sungero.BulkExchangeSolution.Module.Exchange",

@@ -27,33 +27,21 @@ namespace Sungero.BulkExchangeSolution.Module.Exchange.Server
       if (accountingDocument != null && accountingDocument.IsFormalized == true && (UniversalTransferDocuments.Is(createdDocument) ||
                                                                                     IncomingTaxInvoices.Is(createdDocument) || Waybills.Is(createdDocument) || ContractStatements.Is(createdDocument)))
       {
-        var xdoc = System.Xml.Linq.XDocument.Load(new System.IO.MemoryStream(document.Content));
-        RemoveNamespaces(xdoc);
-        var additionalProperties = xdoc.Descendants("ТекстИнф").ToList();
-        
-        // В ДПРР это может быть другой xml элемент.
-        var contractStatementAdditionalProperties = xdoc.Descendants("ИнфПолФХЖ2").ToList();
-        if (contractStatementAdditionalProperties.Any())
-          additionalProperties.AddRange(contractStatementAdditionalProperties);
-        
-        // В ДПТ это может быть другой xml элемент.
-        var waybillAdditionalProperties = xdoc.Descendants("ИнфПолФХЖ3").ToList();
-        if (waybillAdditionalProperties.Any())
-          additionalProperties.AddRange(waybillAdditionalProperties);
+        var additionalProperties = GetAdditionalProperties(document.Content);
         
         if (additionalProperties.Any())
         {
           var exchangeDocumentInfo = ExchangeDocumentInfos.As(Sungero.Exchange.PublicFunctions.ExchangeDocumentInfo.GetExDocumentInfoByExternalId(box, document.ServiceEntityId));
           
-          var purchaseOrderElement = additionalProperties.FirstOrDefault(i => (string)i.Attribute("Идентиф") == Constants.Module.PurchaseOrder);
-          if (purchaseOrderElement != null)
-            exchangeDocumentInfo.PurchaseOrder = purchaseOrderElement.Attribute("Значен").Value;
+          var purchaseOrderNumber = GetPurchaseOrderNumber(additionalProperties);
+          if (!string.IsNullOrEmpty(purchaseOrderNumber))
+            exchangeDocumentInfo.PurchaseOrder = purchaseOrderNumber;
 
-          var contractStatementElement = additionalProperties.FirstOrDefault(i => (string)i.Attribute("Идентиф") == Constants.Module.ContractNumber);
-          if (contractStatementElement != null)
-            exchangeDocumentInfo.ContractNumber = contractStatementElement.Attribute("Значен").Value;
+          var contractStatementNumber = GetContractNumber(additionalProperties);
+          if (!string.IsNullOrEmpty(contractStatementNumber))
+            exchangeDocumentInfo.ContractNumber = contractStatementNumber;
           
-          if (purchaseOrderElement != null || contractStatementElement != null)
+          if (!string.IsNullOrEmpty(purchaseOrderNumber) || !string.IsNullOrEmpty(contractStatementNumber))
             exchangeDocumentInfo.Save();
         }
       }
@@ -78,6 +66,61 @@ namespace Sungero.BulkExchangeSolution.Module.Exchange.Server
         }
       }
       return createdDocument;
+    }
+    
+    /// <summary>
+    /// Получить дополнительные элементы из xml формализованного документа.
+    /// </summary>
+    /// <param name="xml">Содержимое документа.</param>
+    /// <returns>Дополнительные элементы.</returns>
+    [Public]
+    public virtual List<System.Xml.Linq.XElement> GetAdditionalProperties(byte[] xml)
+    {
+      var xdoc = System.Xml.Linq.XDocument.Load(new System.IO.MemoryStream(xml));
+      RemoveNamespaces(xdoc);
+      var additionalProperties = xdoc.Descendants("ТекстИнф").ToList();
+      
+      // В ДПРР это может быть другой xml элемент.
+      var contractStatementAdditionalProperties = xdoc.Descendants("ИнфПолФХЖ2").ToList();
+      if (contractStatementAdditionalProperties.Any())
+        additionalProperties.AddRange(contractStatementAdditionalProperties);
+      
+      // В ДПТ это может быть другой xml элемент.
+      var waybillAdditionalProperties = xdoc.Descendants("ИнфПолФХЖ3").ToList();
+      if (waybillAdditionalProperties.Any())
+        additionalProperties.AddRange(waybillAdditionalProperties);
+      
+      return additionalProperties;
+    }
+    
+    /// <summary>
+    /// Получить номер заказа из элементов xml формализованного документа.
+    /// </summary>
+    /// <param name="xmlElements">Xml элементы формализованного документа.</param>
+    /// <returns>Номер заказа.</returns>
+    [Public]
+    public virtual string GetPurchaseOrderNumber(List<System.Xml.Linq.XElement> xmlElements)
+    {
+      var purchaseOrderElement = xmlElements.FirstOrDefault(i => (string)i.Attribute("Идентиф") == Constants.Module.PurchaseOrder);
+      if (purchaseOrderElement != null)
+        return purchaseOrderElement.Attribute("Значен").Value;
+      
+      return string.Empty;
+    }
+    
+    /// <summary>
+    /// Получить номер договора из элементов xml формализованного документа.
+    /// </summary>
+    /// <param name="xmlElements">Xml элементы формализованного документа.</param>
+    /// <returns>Номер договора.</returns>
+    [Public]
+    public virtual string GetContractNumber(List<System.Xml.Linq.XElement> xmlElements)
+    {
+      var contractStatementElement = xmlElements.FirstOrDefault(i => (string)i.Attribute("Идентиф") == Constants.Module.ContractNumber);
+      if (contractStatementElement != null)
+        return contractStatementElement.Attribute("Значен").Value;
+      
+      return string.Empty;
     }
     
     public virtual List<Sungero.BulkExchangeSolution.Structures.Exchange.ExchangeDocumentInfo.DocumentSet> GetSignedAndNotSendedDocumentSets()
@@ -254,29 +297,14 @@ namespace Sungero.BulkExchangeSolution.Module.Exchange.Server
           
           // Выдать права главному бухгалтеру на товарные документы.
           if (documentSet.Type == BulkExchangeSolution.Constants.Exchange.ExchangeDocumentInfo.DocumentSetType.Waybill)
-          {      
+          {
             var chiefAccountant = Roles.GetAll(r => r.Name.Equals(Constants.Module.ChiefAccountantRoleName)).FirstOrDefault();
             accountingDocument.AccessRights.Grant(chiefAccountant, DefaultAccessRightsTypes.FullAccess);
           }
           
           // Заполнить ответственного и подразделение.
           if (responsible != null)
-          {
-            if (accountingDocument.Department == null)
-            {
-              // Подразделение зарегистрированного документа можно менять только на смене рег.данных.
-              var entityParams = (accountingDocument as Domain.Shared.IExtendedEntity).Params;
-              entityParams[Constants.Module.RepeatRegister] = true;
-              accountingDocument.Department = responsible.Department;
-            }
-            
-            // Не у всех типов доступен ответственный на карточке.
-            if (accountingDocument.ResponsibleEmployee == null && accountingDocument.State.Properties.ResponsibleEmployee.IsVisible)
-              accountingDocument.ResponsibleEmployee = responsible;
-
-            // Выдать права на документ ответственному за контрагента.
-            this.GrantAccessRightsForResponsible(accountingDocument, responsible);
-          }
+            this.SetDocumentResponsible(accountingDocument, responsible);
         }
         
         // Сохранить документ, если были изменения.
@@ -285,6 +313,30 @@ namespace Sungero.BulkExchangeSolution.Module.Exchange.Server
       }
       if (documentSet.IsFullSet == true && documentSet.ExchangeDocumentInfos.Count == 2)
         this.AddRelationsForDocumentSet(documentSet);
+    }
+    
+    /// <summary>
+    /// Заполнить ответственного, подразделение ответственного и выдать ему права на документ.
+    /// </summary>
+    /// <param name="accountingDocument">Документ.</param>
+    /// <param name="responsible">Ответственный.</param>
+    [Public]
+    public void SetDocumentResponsible(IAccountingDocumentBase accountingDocument, Sungero.Company.IEmployee responsible)
+    {
+      if (accountingDocument.Department == null)
+      {
+        // Подразделение зарегистрированного документа можно менять только на смене рег.данных.
+        var entityParams = (accountingDocument as Domain.Shared.IExtendedEntity).Params;
+        entityParams[Constants.Module.RepeatRegister] = true;
+        accountingDocument.Department = responsible.Department;
+      }
+      
+      // Не у всех типов доступен ответственный на карточке.
+      if (accountingDocument.ResponsibleEmployee == null && accountingDocument.State.Properties.ResponsibleEmployee.IsVisible)
+        accountingDocument.ResponsibleEmployee = responsible;
+
+      // Выдать права на документ ответственному за контрагента.
+      this.GrantAccessRightsForResponsible(accountingDocument, responsible);
     }
 
     /// <summary>
@@ -320,8 +372,18 @@ namespace Sungero.BulkExchangeSolution.Module.Exchange.Server
     private void AddRelationsForDocumentSet(Sungero.BulkExchangeSolution.Structures.Exchange.ExchangeDocumentInfo.DocumentSet documentSet)
     {
       var exchangeDocuments = documentSet.ExchangeDocumentInfos.Select(e => e.Document).ToList();
-      var firstDocument = OfficialDocuments.As(exchangeDocuments[0]);
-      var secondDocument = OfficialDocuments.As(exchangeDocuments[1]);
+      this.AddRelationsForDocuments(exchangeDocuments);
+    }
+    
+    /// <summary>
+    /// Создать связь документов комплекта.
+    /// </summary>
+    /// <param name="documentSet">Комплект.</param>
+    [Public, Remote]
+    public void AddRelationsForDocuments(List<IOfficialDocument> documents)
+    {
+      var firstDocument = OfficialDocuments.As(documents[0]);
+      var secondDocument = OfficialDocuments.As(documents[1]);
       
       var accountingDocument = AccountingDocumentBases.As(firstDocument);
       if (accountingDocument != null && accountingDocument.FormalizedFunction == Docflow.AccountingDocumentBase.FormalizedFunction.Schf)

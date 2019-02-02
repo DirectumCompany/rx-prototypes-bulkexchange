@@ -9,11 +9,72 @@ using Sungero.ExchangeCore;
 using Sungero.RecordManagement;
 using MessageType = Sungero.Core.MessageType;
 using Status = Sungero.Workflow.Assignment.Status;
+using System.IO;
 
 namespace Sungero.BulkExchangeSolution.Client
 {
   public class ModuleFunctions
   {
+    public virtual void ImportDocumentSets(string path)
+    {
+      var allDirectories = Directory.GetDirectories(path, "*.*", System.IO.SearchOption.AllDirectories);
+      var chiefAccountant = Functions.Module.Remote.GetImportedDocumentsResponsible();
+      var caseFile = Functions.Module.Remote.GetImportedDocumentsDefaultCaseFile();
+      foreach (var directory in allDirectories)
+      {
+        Logger.DebugFormat("Start import documents from folder {0}.", directory);
+        var filesPaths = Directory.GetFiles(directory);
+        var files = new List<byte[]>();
+        var purchaseNumbers = new List<string>();
+        
+        foreach (var filesPath in filesPaths)
+          files.Add(File.ReadAllBytes(filesPath));
+        
+        // Извлечение номера заказа из xml файлов.
+        if (files.Count == 1 || files.Count == 2)
+        {
+          foreach (var file in files)
+          {
+            var byteArray = Docflow.Structures.Module.ByteArray.Create(file);
+            var purchaseOrderNumber = Functions.Module.Remote.GetPurchaseNumber(byteArray);
+            if (!string.IsNullOrEmpty(purchaseOrderNumber))
+              purchaseNumbers.Add(purchaseOrderNumber);
+          }
+        }
+        
+        if (purchaseNumbers.Any(n => string.IsNullOrEmpty(n)) || purchaseNumbers.Distinct().Count() > 1)
+          continue;
+        
+        // Импорт и дозаполнение документов.
+        var documents = new List<IOfficialDocument>();
+        foreach (var filesPath in filesPaths)
+        {
+          Logger.DebugFormat("Start import document from path {0}.", filesPath);
+          var document = FinancialArchive.PublicFunctions.Module.ImportFormalizedDocument(filesPath, false);
+          document.Save();
+          Logger.DebugFormat("Start process document with Id {0}.", document.Id);
+          Functions.Module.Remote.ProcessImportedDocument(document, chiefAccountant, caseFile);
+          documents.Add(document);
+        }
+        if (documents.Count == 2)
+          BulkExchangeSolution.Module.Exchange.PublicFunctions.Module.Remote.AddRelationsForDocuments(documents);
+        
+        // Подписание и отправка в сервис обмена.
+        var mainDocument = Docflow.AccountingDocumentBases.As(documents.FirstOrDefault(x => Docflow.AccountingDocumentBases.As(x).FormalizedFunction == Docflow.AccountingDocumentBase.FormalizedFunction.Dop ||
+                                                                                       Docflow.AccountingDocumentBases.As(x).FormalizedFunction == Docflow.AccountingDocumentBase.FormalizedFunction.SchfDop));
+        var addenda = documents.Where(x => !Equals(x, mainDocument)).ToList();
+        var box = Functions.Module.Remote.GetDefaultBox(mainDocument.BusinessUnit);
+        var certificate = box.ExchangeServiceCertificates.Where(x => Equals(x.Certificate.Owner, Users.Current) && x.Certificate.Enabled == true).Select(x => x.Certificate).FirstOrDefault();
+        
+        Logger.DebugFormat("Start sign document with Id {0}.", mainDocument.Id);
+        Docflow.PublicFunctions.OfficialDocument.ApproveWithAddenda(mainDocument, addenda, certificate, string.Empty, null, false, null);
+        
+        Logger.DebugFormat("Start send to counterparty document with Id {0}.", mainDocument.Id);
+        Exchange.PublicFunctions.Module.Remote.SendDocuments(box, mainDocument, addenda, true,
+                                                             string.Empty, mainDocument.Counterparty, certificate);
+      }
+    }
+    
     public virtual void SignVerifiedDocuments()
     {
       var verifiedSets = Sungero.BulkExchangeSolution.Functions.Module.Remote.GetVerifiedSets();
@@ -67,10 +128,10 @@ namespace Sungero.BulkExchangeSolution.Client
       dialog.Buttons.Default = DialogButtons.Ok;
       
       dialog.SetOnButtonClick(args =>
-      {
-        if (!string.IsNullOrEmpty(abortingReason.Value) && string.IsNullOrWhiteSpace(abortingReason.Value))
-          args.AddError(Resources.EmptyAbortingReason, abortingReason);
-      });
+                              {
+                                if (!string.IsNullOrEmpty(abortingReason.Value) && string.IsNullOrWhiteSpace(abortingReason.Value))
+                                  args.AddError(Resources.EmptyAbortingReason, abortingReason);
+                              });
       
       if (dialog.Show() == DialogButtons.Ok)
       {
@@ -117,8 +178,8 @@ namespace Sungero.BulkExchangeSolution.Client
         {
           {
             var result = Sungero.Exchange.PublicFunctions.Module.SendAmendmentRequest(new List<IOfficialDocument> { documentInfo.Document },
-              documentInfo.Counterparty, Sungero.BulkExchangeSolution.Resources.RejectMessage, true,
-              documentInfo.RootBox, certificate, false);
+                                                                                      documentInfo.Counterparty, Sungero.BulkExchangeSolution.Resources.RejectMessage, true,
+                                                                                      documentInfo.RootBox, certificate, false);
             if (result == string.Empty)
             {
               documentInfo.RejectionStatus = RejectionStatus.Sent;
