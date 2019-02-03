@@ -10,7 +10,7 @@
         <property name="View" isnull="true" iskey="true">
           <property name="ShowTotalSummary">false</property>
           <property name="ColumnChooserState" isnull="true" iskey="true">
-            <property name="Location">716,-176</property>
+            <property name="Location">645,-325</property>
             <property name="Size">220,250</property>
           </property>
           <property name="AutoWidth">true</property>

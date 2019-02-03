@@ -34,8 +34,10 @@ namespace Sungero.BulkExchangeSolution.Module.FinancialArchiveUI.Server
         }
         
         // Права на папку "На подписание".
-        FinancialArchiveUI.SpecialFolders.ForSignature.AccessRights.Grant(role, DefaultAccessRightsTypes.Read);
-        FinancialArchiveUI.SpecialFolders.ForSignature.AccessRights.Save();
+        FinancialArchiveUI.SpecialFolders.IncomingDocumentsForSignature.AccessRights.Grant(role, DefaultAccessRightsTypes.Read);
+        FinancialArchiveUI.SpecialFolders.IncomingDocumentsForSignature.AccessRights.Save();
+        FinancialArchiveUI.SpecialFolders.OutgoingDocumentsForSignature.AccessRights.Grant(role, DefaultAccessRightsTypes.Read);
+        FinancialArchiveUI.SpecialFolders.OutgoingDocumentsForSignature.AccessRights.Save();
       }
       finally
       {

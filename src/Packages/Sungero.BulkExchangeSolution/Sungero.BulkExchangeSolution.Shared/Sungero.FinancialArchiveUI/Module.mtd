@@ -13,6 +13,13 @@
     "Actions": [
       {
         "$type": "Sungero.Metadata.CoverComputableFolderActionMetadata, Sungero.Metadata",
+        "NameGuid": "3386f7d2-f79a-4c57-b9e2-1bd148f1c3f1",
+        "Name": "OutgoingDocumentForSignature",
+        "ComputableFolderId": "72776663-15ee-413f-99bd-8554f398e9f9",
+        "GroupId": "72ec4d3b-8932-4cc1-b70c-81778b065a8b"
+      },
+      {
+        "$type": "Sungero.Metadata.CoverComputableFolderActionMetadata, Sungero.Metadata",
         "NameGuid": "7bbadbf1-b40c-4daa-9e5b-fb055d5c9279",
         "Name": "ForSignature",
         "ComputableFolderId": "254be29d-ab75-4e4d-9439-87a1a5b98c32",
@@ -21,11 +28,22 @@
     ],
     "Groups": [
       {
+        "NameGuid": "4d0b742f-8fc3-466f-a657-746f4a0bcb50",
+        "Name": "Exchange",
+        "BackgroundPosition": "Stretch",
+        "IconName": "GroupIconExchange_4d0b742f8fc3466fa657746f4a0bcb50.png",
+        "IsAncestorMetadata": true,
+        "Overridden": [
+          "PreviousItemGuid"
+        ],
+        "PreviousItemGuid": "71b4e7f7-9afd-44f6-b908-212f50f84379"
+      },
+      {
         "NameGuid": "ccc97d8c-88e4-4da9-a58d-7308320824f8",
         "Name": "IncomingDocuments",
         "BackgroundPosition": "Stretch",
         "IconName": "GroupIconIncomingDocuments_ccc97d8c88e44da9a58d7308320824f8.png",
-        "PreviousItemGuid": "c3cb3ce1-14dc-48b6-9d08-a97f30292f8d"
+        "PreviousItemGuid": "4d0b742f-8fc3-466f-a657-746f4a0bcb50"
       },
       {
         "NameGuid": "8437ba16-aa6b-4e23-ba27-03c915a24ee7",
@@ -39,15 +57,22 @@
         "PreviousItemGuid": "ccc97d8c-88e4-4da9-a58d-7308320824f8"
       },
       {
-        "NameGuid": "4d0b742f-8fc3-466f-a657-746f4a0bcb50",
-        "Name": "Exchange",
+        "NameGuid": "72ec4d3b-8932-4cc1-b70c-81778b065a8b",
+        "Name": "OutgoingDocuments",
         "BackgroundPosition": "Stretch",
-        "IconName": "GroupIconExchange_4d0b742f8fc3466fa657746f4a0bcb50.png",
+        "IconName": "GroupIconOutgoingDocuments_72ec4d3b89324cc1b70c81778b065a8b.png",
+        "PreviousItemGuid": "8437ba16-aa6b-4e23-ba27-03c915a24ee7"
+      },
+      {
+        "NameGuid": "c3cb3ce1-14dc-48b6-9d08-a97f30292f8d",
+        "Name": "LinkedInformation",
+        "BackgroundPosition": "Stretch",
+        "IconName": "GroupIconLinkedInformation_c3cb3ce114dc48b69d08a97f30292f8d.png",
         "IsAncestorMetadata": true,
         "Overridden": [
           "PreviousItemGuid"
         ],
-        "PreviousItemGuid": "8437ba16-aa6b-4e23-ba27-03c915a24ee7"
+        "PreviousItemGuid": "72ec4d3b-8932-4cc1-b70c-81778b065a8b"
       },
       {
         "NameGuid": "7f8ba0a3-7b13-474b-bc99-86a21a6f7b6a",
@@ -58,7 +83,7 @@
         "Overridden": [
           "PreviousItemGuid"
         ],
-        "PreviousItemGuid": "4d0b742f-8fc3-466f-a657-746f4a0bcb50"
+        "PreviousItemGuid": "c3cb3ce1-14dc-48b6-9d08-a97f30292f8d"
       }
     ],
     "IsAncestorMetadata": true,
@@ -71,6 +96,10 @@
     {
       "ItemId": "254be29d-ab75-4e4d-9439-87a1a5b98c32",
       "PreviousItemId": "0e79392a-07bb-42e8-85fa-3be38d8a4cc5"
+    },
+    {
+      "ItemId": "72776663-15ee-413f-99bd-8554f398e9f9",
+      "PreviousItemId": "254be29d-ab75-4e4d-9439-87a1a5b98c32"
     }
   ],
   "HandledEvents": [
@@ -87,7 +116,7 @@
   "SpecialFolders": [
     {
       "NameGuid": "254be29d-ab75-4e4d-9439-87a1a5b98c32",
-      "Name": "ForSignature",
+      "Name": "IncomingDocumentsForSignature",
       "AdditionalRibbonActionNames": "Reject; SignDocumentSet; ShowApprovalSigningAssignment;ShowDocumentSet",
       "DefaultContentType": "96c4f4f3-dc74-497a-b347-e8faf4afe320",
       "DisplayType": "Module",
@@ -108,9 +137,32 @@
         "a523a263-bc00-40f9-810d-f582bae2205d",
         "f2f5774d-5ca3-4725-b31d-ac618f6b8850",
         "74c9ddd4-4bc4-42b6-8bb0-c91d5e21fb8a",
-        "f50c4d8a-56bc-43ef-bac3-856f57ca70be",
         "58986e23-2b0a-4082-af37-bd1991bc6f7e",
         "4e81f9ca-b95a-4fd4-bf76-ea7176c215a7"
+      ]
+    },
+    {
+      "NameGuid": "72776663-15ee-413f-99bd-8554f398e9f9",
+      "Name": "OutgoingDocumentsForSignature",
+      "AdditionalRibbonActionNames": "Reject; SignDocumentSet; ShowApprovalSigningAssignment;ShowDocumentSet",
+      "DefaultContentType": "96c4f4f3-dc74-497a-b347-e8faf4afe320",
+      "DisplayType": "Module",
+      "FilterPanel": {
+        "NameGuid": "b94afa74-f6f8-4f9b-ab46-a9069ac8fa3b",
+        "Name": "FilterPanel",
+        "Controls": []
+      },
+      "HandledEvents": [
+        "DataQueryServer"
+      ],
+      "IsShow": true,
+      "Kind": "Computable",
+      "NeedShowMarkedCount": false,
+      "SupportedDescendantsTypes": [
+        "7ac574ac-8a4f-4893-ab81-c25edfa7a90c",
+        "76a56ed3-5c94-4570-bade-806451a6e130",
+        "a76ed874-c11d-44c7-b0a6-6718c21d6626",
+        "e0e85323-ef1e-4c7c-8eeb-f1cb2d6dfe14"
       ]
     }
   ],
