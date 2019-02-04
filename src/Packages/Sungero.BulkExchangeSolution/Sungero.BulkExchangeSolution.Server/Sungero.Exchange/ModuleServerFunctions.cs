@@ -601,7 +601,10 @@ namespace Sungero.BulkExchangeSolution.Module.Exchange.Server
       
       var accountDocument = AccountingDocumentBases.As(document);
       if (accountDocument.ExchangeState == Docflow.OfficialDocument.ExchangeState.SignRequired && accountDocument.BuyerTitleId == null)
+      {
+        document.AccessRights.Grant(document.BusinessUnit.CEO, DefaultAccessRightsTypes.Change);
         Docflow.PublicFunctions.AccountingDocumentBase.Remote.GenerateDefaultAnswer(accountDocument, document.BusinessUnit.CEO, true);
+      }
     }
     
     /// <summary>

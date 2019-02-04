@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using Sungero.BulkExchangeSolution.ExchangeDocumentInfo;
@@ -62,8 +62,12 @@ namespace Sungero.BulkExchangeSolution.Module.Exchange.Server
       var documentSets = BulkExchangeSolution.Functions.ExchangeDocumentInfo.GetDocumentSets(infos.ToList()).Where(s => s.IsFullSet).ToList();
       foreach (var documentSet in documentSets)
       {
-        Functions.Module.VerifyDocumentSet(documentSet);
-      }
+        Transactions.Execute(
+          () =>
+          {
+            Functions.Module.VerifyDocumentSet(documentSet);
+          });
+        }
     }
   }
 }
