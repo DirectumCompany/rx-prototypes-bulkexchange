@@ -22,56 +22,74 @@ namespace Sungero.BulkExchangeSolution.Client
       var caseFile = Functions.Module.Remote.GetImportedDocumentsDefaultCaseFile();
       foreach (var directory in allDirectories)
       {
-        Logger.DebugFormat("Start import documents from folder {0}.", directory);
-        var filesPaths = Directory.GetFiles(directory);
-        var files = new List<byte[]>();
-        var purchaseNumbers = new List<string>();
-        
-        foreach (var filesPath in filesPaths)
-          files.Add(File.ReadAllBytes(filesPath));
-        
-        // Извлечение номера заказа из xml файлов.
-        if (files.Count == 1 || files.Count == 2)
+        try
         {
-          foreach (var file in files)
+          Logger.DebugFormat("Start import documents from folder {0}.", directory);
+          var filesPaths = Directory.GetFiles(directory);
+          var files = new List<byte[]>();
+          var purchaseNumbers = new List<string>();
+          
+          foreach (var filesPath in filesPaths)
+            files.Add(File.ReadAllBytes(filesPath));
+          
+          // Извлечение номера заказа из xml файлов.
+          if (files.Count == 1 || files.Count == 2)
           {
-            var byteArray = Docflow.Structures.Module.ByteArray.Create(file);
-            var purchaseOrderNumber = Functions.Module.Remote.GetPurchaseNumber(byteArray);
-            if (!string.IsNullOrEmpty(purchaseOrderNumber))
-              purchaseNumbers.Add(purchaseOrderNumber);
+            foreach (var file in files)
+            {
+              var byteArray = Docflow.Structures.Module.ByteArray.Create(file);
+              var purchaseOrderNumber = Functions.Module.Remote.GetPurchaseNumber(byteArray);
+              if (!string.IsNullOrEmpty(purchaseOrderNumber))
+                purchaseNumbers.Add(purchaseOrderNumber);
+            }
           }
+          
+          if (purchaseNumbers.Any(n => string.IsNullOrEmpty(n)) || purchaseNumbers.Distinct().Count() > 1)
+            continue;
+          
+          // Импорт и дозаполнение документов.
+          var documents = new List<IOfficialDocument>();
+          foreach (var filesPath in filesPaths)
+          {
+            Logger.DebugFormat("Import document from path {0}.", filesPath);
+            var document = FinancialArchive.PublicFunctions.Module.ImportFormalizedDocument(filesPath, false);
+            document.Save();
+            Logger.DebugFormat("Document imported with Id {0}.", document.Id);
+            Logger.DebugFormat("Process document with Id {0}.", document.Id);
+            Functions.Module.Remote.ProcessImportedDocument(document, chiefAccountant, caseFile);
+            documents.Add(document);
+          }
+          if (documents.Count == 2)
+            BulkExchangeSolution.Module.Exchange.PublicFunctions.Module.Remote.AddRelationsForDocuments(documents);
+          
+          // Подписание и отправка в сервис обмена.
+          var mainDocument = Docflow.AccountingDocumentBases.As(documents.FirstOrDefault(x => Docflow.AccountingDocumentBases.As(x).FormalizedFunction == Docflow.AccountingDocumentBase.FormalizedFunction.Dop ||
+                                                                                         Docflow.AccountingDocumentBases.As(x).FormalizedFunction == Docflow.AccountingDocumentBase.FormalizedFunction.SchfDop));
+          var addenda = documents.Where(x => !Equals(x, mainDocument)).ToList();
+          var box = mainDocument.BusinessUnitBox;
+          var certificate = box.ExchangeServiceCertificates.Where(x => Equals(x.Certificate.Owner, Users.Current) && x.Certificate.Enabled == true).Select(x => x.Certificate).FirstOrDefault();
+          
+          Logger.DebugFormat("Sign document with Id {0}.", mainDocument.Id);
+          Docflow.PublicFunctions.OfficialDocument.ApproveWithAddenda(mainDocument, addenda, certificate, string.Empty, null, false, null);
+          
+          Logger.DebugFormat("Send to counterparty document with Id {0}.", mainDocument.Id);
+          Exchange.PublicFunctions.Module.Remote.SendDocuments(box, mainDocument, addenda, true,
+                                                               string.Empty, mainDocument.Counterparty, certificate);
+          
+          foreach (var document in documents)
+          {
+            Logger.DebugFormat("Update exchange document info for document with Id {0}.", document.Id);
+            var info = BulkExchangeSolution.ExchangeDocumentInfos.As(Exchange.PublicFunctions.ExchangeDocumentInfo.Remote.GetLastDocumentInfo(mainDocument));
+            info.PurchaseOrder = purchaseNumbers.FirstOrDefault();
+            info.Save();
+          }
+          
+          Logger.DebugFormat("Completed import documents from folder {0}.", directory);
         }
-        
-        if (purchaseNumbers.Any(n => string.IsNullOrEmpty(n)) || purchaseNumbers.Distinct().Count() > 1)
-          continue;
-        
-        // Импорт и дозаполнение документов.
-        var documents = new List<IOfficialDocument>();
-        foreach (var filesPath in filesPaths)
+        catch (Exception ex)
         {
-          Logger.DebugFormat("Start import document from path {0}.", filesPath);
-          var document = FinancialArchive.PublicFunctions.Module.ImportFormalizedDocument(filesPath, false);
-          document.Save();
-          Logger.DebugFormat("Start process document with Id {0}.", document.Id);
-          Functions.Module.Remote.ProcessImportedDocument(document, chiefAccountant, caseFile);
-          documents.Add(document);
+          Logger.Error(Sungero.BulkExchangeSolution.Resources.CannotImportDocument, ex);
         }
-        if (documents.Count == 2)
-          BulkExchangeSolution.Module.Exchange.PublicFunctions.Module.Remote.AddRelationsForDocuments(documents);
-        
-        // Подписание и отправка в сервис обмена.
-        var mainDocument = Docflow.AccountingDocumentBases.As(documents.FirstOrDefault(x => Docflow.AccountingDocumentBases.As(x).FormalizedFunction == Docflow.AccountingDocumentBase.FormalizedFunction.Dop ||
-                                                                                       Docflow.AccountingDocumentBases.As(x).FormalizedFunction == Docflow.AccountingDocumentBase.FormalizedFunction.SchfDop));
-        var addenda = documents.Where(x => !Equals(x, mainDocument)).ToList();
-        var box = Functions.Module.Remote.GetDefaultBox(mainDocument.BusinessUnit);
-        var certificate = box.ExchangeServiceCertificates.Where(x => Equals(x.Certificate.Owner, Users.Current) && x.Certificate.Enabled == true).Select(x => x.Certificate).FirstOrDefault();
-        
-        Logger.DebugFormat("Start sign document with Id {0}.", mainDocument.Id);
-        Docflow.PublicFunctions.OfficialDocument.ApproveWithAddenda(mainDocument, addenda, certificate, string.Empty, null, false, null);
-        
-        Logger.DebugFormat("Start send to counterparty document with Id {0}.", mainDocument.Id);
-        Exchange.PublicFunctions.Module.Remote.SendDocuments(box, mainDocument, addenda, true,
-                                                             string.Empty, mainDocument.Counterparty, certificate);
       }
     }
     

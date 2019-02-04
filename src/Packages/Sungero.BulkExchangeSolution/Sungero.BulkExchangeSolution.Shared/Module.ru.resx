@@ -153,4 +153,7 @@
   <data name="SomeDocumentsNotSigned" xml:space="preserve">
     <value>Некоторые документы не были подписаны:</value>
   </data>
+  <data name="CannotImportDocument" xml:space="preserve">
+    <value>Не удалось импортировать документ</value>
+  </data>
 </root>

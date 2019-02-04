@@ -27,6 +27,7 @@ namespace Sungero.BulkExchangeSolution.Server
       BulkExchangeSolution.Module.Exchange.PublicFunctions.Module.SetDocumentResponsible(document, responsible);
       if (caseFile != null)
         document.CaseFile = caseFile;
+      document.Save();
     }
     
     /// <summary>
@@ -65,19 +66,7 @@ namespace Sungero.BulkExchangeSolution.Server
     {
       return Docflow.CaseFiles.GetAll(c => c.Status == Docflow.CaseFile.Status.Active).FirstOrDefault();
     }
-    
-    /// <summary>
-    /// Получить ящик по умолчанию для нашей организации.
-    /// </summary>
-    /// <param name="businessUnit">Наша организация.</param>
-    /// <returns>Ящик НОР.</returns>
-    [Remote]
-    public ExchangeCore.IBusinessUnitBox GetDefaultBox(Company.IBusinessUnit businessUnit)
-    {
-      var defaultService = ExchangeCore.ExchangeServices.GetAll(x => x.ExchangeProvider == ExchangeCore.ExchangeService.ExchangeProvider.Synerdocs).FirstOrDefault();
-      return ExchangeCore.BusinessUnitBoxes.GetAll(x => Equals(x.BusinessUnit, businessUnit) && Equals(x.ExchangeService, defaultService)).FirstOrDefault();
-    }
-    
+        
     [Remote(IsPure = true)]
     public IQueryable<IExchangeDocumentInfo> GetRejectedDocumentInfos()
     {

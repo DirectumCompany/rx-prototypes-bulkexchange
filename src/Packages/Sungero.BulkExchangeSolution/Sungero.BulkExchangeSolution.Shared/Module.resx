@@ -153,4 +153,7 @@
   <data name="SomeDocumentsNotSigned" xml:space="preserve">
     <value>TODO</value>
   </data>
+  <data name="CannotImportDocument" xml:space="preserve">
+    <value>Cannot import document</value>
+  </data>
 </root>

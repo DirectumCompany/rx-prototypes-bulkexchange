@@ -87,7 +87,8 @@
     "CannotSignDocuments",
     "SignDocumentSetsConfirmationMessage",
     "DoumentsSignError",
-    "SomeDocumentsNotSigned"
+    "SomeDocumentsNotSigned",
+    "CannotImportDocument"
   ],
   "ServerAssemblyName": "Sungero.BulkExchangeSolution.Server",
   "ServerNamespace": "Sungero.BulkExchangeSolution.Server",
