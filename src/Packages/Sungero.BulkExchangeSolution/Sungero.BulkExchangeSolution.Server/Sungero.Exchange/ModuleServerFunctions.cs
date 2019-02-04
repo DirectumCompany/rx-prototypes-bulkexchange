@@ -495,8 +495,9 @@ namespace Sungero.BulkExchangeSolution.Module.Exchange.Server
                                                          Sungero.FinancialArchive.UniversalTransferDocuments.Is(x.Document) || Waybills.Is(x.Document));
       var createTime = documentSet.ExchangeDocumentInfos.Select(x => x.Document.Created).Max();
       
-      if ((documentInfo.VerificationTask == null || documentInfo.VerificationTask.Status != Workflow.Task.Status.InProcess) &&
-          Calendar.Now - createTime > TimeSpan.FromHours(Constants.Module.DocumentVerificationDeadlineInHours) && !verificationResult)
+      if (documentInfo.VerificationTask == null &&
+          Calendar.Now - createTime > TimeSpan.FromHours(Constants.Module.DocumentVerificationDeadlineInHours) &&
+          !verificationResult)
       {
         var client =
           ExchangeCore.PublicFunctions.BusinessUnitBox.GetPublicClient(documentInfo.RootBox) as
@@ -511,6 +512,16 @@ namespace Sungero.BulkExchangeSolution.Module.Exchange.Server
         processingTask.Start();
         documentInfo.VerificationTask = processingTask;
         documentInfo.Save();
+      }
+      
+      // Если задачу уже прекратили или завершили, а сверка повторяется - сверка неактуальна.
+      if (documentInfo.VerificationTask != null && documentInfo.VerificationTask.Status == Workflow.Task.Status.Completed)
+      {
+        foreach (var info in documentSet.ExchangeDocumentInfos)
+        {
+          info.VerificationStatus = VerificationStatus.NotRequired;
+          info.Save();
+        }
       }
     }
     
