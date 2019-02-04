@@ -15,7 +15,7 @@ namespace Sungero.BulkExchangeSolution.Client
 {
   public class ModuleFunctions
   {
-    public virtual void ImportDocumentSets(string path)
+    public virtual void ImportDocumentsFromFolder(string path)
     {
       var allDirectories = Directory.GetDirectories(path, "*.*", System.IO.SearchOption.AllDirectories);
       var chiefAccountant = Functions.Module.Remote.GetImportedDocumentsResponsible();
@@ -62,33 +62,68 @@ namespace Sungero.BulkExchangeSolution.Client
           if (documents.Count == 2)
             BulkExchangeSolution.Module.Exchange.PublicFunctions.Module.Remote.AddRelationsForDocuments(documents);
           
-          // Подписание и отправка в сервис обмена.
-          var mainDocument = Docflow.AccountingDocumentBases.As(documents.FirstOrDefault(x => Docflow.AccountingDocumentBases.As(x).FormalizedFunction == Docflow.AccountingDocumentBase.FormalizedFunction.Dop ||
-                                                                                         Docflow.AccountingDocumentBases.As(x).FormalizedFunction == Docflow.AccountingDocumentBase.FormalizedFunction.SchfDop));
-          var addenda = documents.Where(x => !Equals(x, mainDocument)).ToList();
-          var box = mainDocument.BusinessUnitBox;
-          var certificate = box.ExchangeServiceCertificates.Where(x => Equals(x.Certificate.Owner, Users.Current) && x.Certificate.Enabled == true).Select(x => x.Certificate).FirstOrDefault();
-          
-          Logger.DebugFormat("Sign document with Id {0}.", mainDocument.Id);
-          Docflow.PublicFunctions.OfficialDocument.ApproveWithAddenda(mainDocument, addenda, certificate, string.Empty, null, false, null);
-          
-          Logger.DebugFormat("Send to counterparty document with Id {0}.", mainDocument.Id);
-          Exchange.PublicFunctions.Module.Remote.SendDocuments(box, mainDocument, addenda, true,
-                                                               string.Empty, mainDocument.Counterparty, certificate);
-          
-          foreach (var document in documents)
-          {
-            Logger.DebugFormat("Update exchange document info for document with Id {0}.", document.Id);
-            var info = BulkExchangeSolution.ExchangeDocumentInfos.As(Exchange.PublicFunctions.ExchangeDocumentInfo.Remote.GetLastDocumentInfo(mainDocument));
-            info.PurchaseOrder = purchaseNumbers.FirstOrDefault();
-            info.Save();
-          }
-          
           Logger.DebugFormat("Completed import documents from folder {0}.", directory);
         }
         catch (Exception ex)
         {
           Logger.Error(Sungero.BulkExchangeSolution.Resources.CannotImportDocument, ex);
+        }
+      }
+    }
+    
+    public virtual void SignImportedDocuments()
+    {
+      var documents = Functions.Module.Remote.GetImportedDocuments().Where(d => d.LastVersionApproved != true);
+      foreach (var document in documents)
+      {
+        try
+        {
+          var addenda = document.Relations.GetRelated().Select(d => OfficialDocuments.As(d)).ToList();
+          var certificate = document.BusinessUnitBox.ExchangeServiceCertificates.Where(x => Equals(x.Certificate.Owner, Users.Current) &&
+                                                                                       x.Certificate.Enabled == true).Select(x => x.Certificate).FirstOrDefault();
+          
+          Logger.DebugFormat("Start sign document with Id {0}.", document.Id);
+          if (Docflow.PublicFunctions.OfficialDocument.ApproveWithAddenda(document, addenda, certificate, string.Empty, null, false, null))
+            Logger.DebugFormat("Document with Id {0} signed.", document.Id);
+          else
+            Logger.DebugFormat("Document with Id {0} not signed.", document.Id);
+        }
+        catch (Exception ex)
+        {
+          Logger.Error(Sungero.BulkExchangeSolution.Resources.CannotSignDocument, ex);
+        }
+      }
+    }
+    
+    public virtual void SendDocumentsToCounterparties()
+    {
+      var documents = Functions.Module.Remote.GetImportedDocuments().Where(d => d.LastVersionApproved == true);
+      foreach (var document in documents)
+      {
+        try
+        {
+          var addenda = document.Relations.GetRelated().Select(d => OfficialDocuments.As(d)).ToList();
+          var certificate = document.BusinessUnitBox.ExchangeServiceCertificates.Where(x => Equals(x.Certificate.Owner, Users.Current) &&
+                                                                                       x.Certificate.Enabled == true).Select(x => x.Certificate).FirstOrDefault();
+          
+          Logger.DebugFormat("Send to counterparty document with Id {0}.", document.Id);
+          Exchange.PublicFunctions.Module.Remote.SendDocuments(document.BusinessUnitBox, document, addenda, true,
+                                                               string.Empty, document.Counterparty, certificate);
+          Logger.DebugFormat("Document with Id {0} sent to counterparty.", document.Id);
+          
+          var allDocuments = new List<IOfficialDocument>() { document };
+          allDocuments.AddRange(addenda);
+          foreach (var sendedDocument in allDocuments)
+          {
+            Logger.DebugFormat("Update exchange document info for document with Id {0}.", sendedDocument.Id);
+            var info = BulkExchangeSolution.ExchangeDocumentInfos.As(Exchange.PublicFunctions.ExchangeDocumentInfo.Remote.GetLastDocumentInfo(sendedDocument));
+            info.PurchaseOrder = "1";
+            info.Save();
+          }
+        }
+        catch (Exception ex)
+        {
+          Logger.Error(Sungero.BulkExchangeSolution.Resources.CannotSendDocument, ex);
         }
       }
     }

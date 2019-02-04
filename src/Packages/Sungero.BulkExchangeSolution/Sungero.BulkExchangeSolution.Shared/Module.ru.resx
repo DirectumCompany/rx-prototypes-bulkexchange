@@ -156,4 +156,7 @@
   <data name="CannotImportDocument" xml:space="preserve">
     <value>Не удалось импортировать документ</value>
   </data>
+  <data name="CannotSendDocument" xml:space="preserve">
+    <value>Не удалось отправить документ контрагенту</value>
+  </data>
 </root>

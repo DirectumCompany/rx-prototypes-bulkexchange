@@ -15,6 +15,19 @@ namespace Sungero.BulkExchangeSolution.Server
   public class ModuleFunctions
   {
     /// <summary>
+    /// Получить импортированные документы.
+    /// </summary>
+    /// <returns>Список импортированных документов.</returns>
+    [Remote]
+    public virtual IQueryable<IAccountingDocumentBase> GetImportedDocuments()
+    {
+      return Docflow.AccountingDocumentBases.GetAll(d => d.BusinessUnitBox != null &&
+                                                    d.ExchangeState == null &&
+                                                    (d.FormalizedFunction == Docflow.AccountingDocumentBase.FormalizedFunction.Dop ||
+                                                     d.FormalizedFunction == Docflow.AccountingDocumentBase.FormalizedFunction.SchfDop));
+    }
+    
+    /// <summary>
     /// Обработать импортированный документ.
     /// </summary>
     /// <param name="document">Документ.</param>
@@ -66,7 +79,7 @@ namespace Sungero.BulkExchangeSolution.Server
     {
       return Docflow.CaseFiles.GetAll(c => c.Status == Docflow.CaseFile.Status.Active).FirstOrDefault();
     }
-        
+    
     [Remote(IsPure = true)]
     public IQueryable<IExchangeDocumentInfo> GetRejectedDocumentInfos()
     {

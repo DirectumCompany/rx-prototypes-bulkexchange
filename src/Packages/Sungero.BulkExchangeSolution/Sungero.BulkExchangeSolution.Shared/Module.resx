@@ -156,4 +156,7 @@
   <data name="CannotImportDocument" xml:space="preserve">
     <value>Cannot import document</value>
   </data>
+  <data name="CannotSendDocument" xml:space="preserve">
+    <value>Cannot send document to counterparty</value>
+  </data>
 </root>
