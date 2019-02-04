@@ -517,7 +517,7 @@ namespace Sungero.BulkExchangeSolution.Module.Exchange.Server
       // Если задачу уже прекратили или завершили, а сверка повторяется - сверка неактуальна.
       if (documentInfo.VerificationTask != null && documentInfo.VerificationTask.Status == Workflow.Task.Status.Completed)
       {
-        foreach (var info in documentSet.ExchangeDocumentInfos)
+        foreach (var info in documentSet.ExchangeDocumentInfos.Where(i => i.VerificationStatus == VerificationStatus.Required))
         {
           info.VerificationStatus = VerificationStatus.NotRequired;
           info.Save();
