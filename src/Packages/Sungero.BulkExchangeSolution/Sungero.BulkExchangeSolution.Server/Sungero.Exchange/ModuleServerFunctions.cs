@@ -602,7 +602,11 @@ namespace Sungero.BulkExchangeSolution.Module.Exchange.Server
       var accountDocument = AccountingDocumentBases.As(document);
       if (accountDocument.ExchangeState == Docflow.OfficialDocument.ExchangeState.SignRequired && accountDocument.BuyerTitleId == null)
       {
-        document.AccessRights.Grant(document.BusinessUnit.CEO, DefaultAccessRightsTypes.Change);
+        if (!document.AccessRights.IsGranted(DefaultAccessRightsTypes.Change, document.BusinessUnit.CEO))
+        {
+          document.AccessRights.Grant(document.BusinessUnit.CEO, DefaultAccessRightsTypes.Change);
+          document.AccessRights.Save();
+        }
         Docflow.PublicFunctions.AccountingDocumentBase.Remote.GenerateDefaultAnswer(accountDocument, document.BusinessUnit.CEO, true);
       }
     }
