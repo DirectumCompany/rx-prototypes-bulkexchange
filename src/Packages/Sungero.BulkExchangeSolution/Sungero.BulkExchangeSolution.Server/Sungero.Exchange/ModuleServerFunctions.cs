@@ -630,5 +630,29 @@ namespace Sungero.BulkExchangeSolution.Module.Exchange.Server
       
       task.Start();
     }
+    
+    /// <summary>
+    /// Отправить уведомление ответственному о поступлении ответа от контрагента о подписании документа.
+    /// </summary>
+    /// <param name="box">Абонентский ящик.</param>
+    /// <param name="info">Информация о документе обмена.</param>
+    /// <param name="trackingString">Строка выдачи.</param>
+    /// <param name="signatoryInfo">Иформация о контрагенте.</param>
+    /// <param name="versionNumber">Версия документа.</param>
+    /// <param name="serviceName">Наименование сервиса обмена.</param>
+    /// <param name="versionIsChanged">Признак того, что версия была изменена.</param>
+    public override void SendSignedDocumentReplyNotice(ExchangeCore.IBoxBase box, Sungero.Exchange.IExchangeDocumentInfo info, Sungero.Docflow.IOfficialDocumentTracking trackingString,
+                                                       string signatoryInfo, int? versionNumber,
+                                                       string serviceName, bool versionIsChanged)
+    {
+      var documentInfo = ExchangeDocumentInfos.As(info);
+      var documentSet = documentInfo != null
+        ? Sungero.BulkExchangeSolution.Functions.ExchangeDocumentInfo.GetDocumentSet(documentInfo)
+        : null;
+      if (documentSet == null ||
+          documentSet.Type != BulkExchangeSolution.Constants.Exchange.ExchangeDocumentInfo.DocumentSetType.Waybill ||
+          documentInfo.MessageType == ExchangeDocumentInfo.MessageType.Incoming)
+        base.SendSignedDocumentReplyNotice(box, info, trackingString, signatoryInfo, versionNumber, serviceName, versionIsChanged);
+    }
   }
 }
