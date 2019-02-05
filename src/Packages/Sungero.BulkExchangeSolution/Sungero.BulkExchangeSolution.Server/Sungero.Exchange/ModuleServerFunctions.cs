@@ -641,18 +641,24 @@ namespace Sungero.BulkExchangeSolution.Module.Exchange.Server
     /// <param name="versionNumber">Версия документа.</param>
     /// <param name="serviceName">Наименование сервиса обмена.</param>
     /// <param name="versionIsChanged">Признак того, что версия была изменена.</param>
-    public override void SendSignedDocumentReplyNotice(ExchangeCore.IBoxBase box, Sungero.Exchange.IExchangeDocumentInfo info, Sungero.Docflow.IOfficialDocumentTracking trackingString,
-                                                       string signatoryInfo, int? versionNumber,
-                                                       string serviceName, bool versionIsChanged)
+    public override void SendDocumentReplyNotice(ExchangeCore.IBoxBase box, Sungero.Docflow.IOfficialDocumentTracking trackingString, bool signed,
+                                                 string signatoryInfo, bool isInvoiceAmendmentRequest, string comment, int? versionNumber,
+                                                 string serviceName, bool versionIsChanged)
     {
-      var documentInfo = ExchangeDocumentInfos.As(info);
-      var documentSet = documentInfo != null
-        ? Sungero.BulkExchangeSolution.Functions.ExchangeDocumentInfo.GetDocumentSet(documentInfo)
-        : null;
-      if (documentSet == null ||
-          documentSet.Type != BulkExchangeSolution.Constants.Exchange.ExchangeDocumentInfo.DocumentSetType.Waybill ||
-          documentInfo.MessageType == ExchangeDocumentInfo.MessageType.Incoming)
-        base.SendSignedDocumentReplyNotice(box, info, trackingString, signatoryInfo, versionNumber, serviceName, versionIsChanged);
+      if (signed && !isInvoiceAmendmentRequest)
+      {
+        var info = Sungero.Exchange.PublicFunctions.ExchangeDocumentInfo.Remote.GetLastDocumentInfo(trackingString.OfficialDocument);
+        var documentInfo = ExchangeDocumentInfos.As(info);
+        var documentSet = documentInfo != null
+          ? Sungero.BulkExchangeSolution.Functions.ExchangeDocumentInfo.GetDocumentSet(documentInfo)
+          : null;
+        if (documentSet != null &&
+            documentSet.Type == BulkExchangeSolution.Constants.Exchange.ExchangeDocumentInfo.DocumentSetType.Waybill &&
+            documentInfo.MessageType == ExchangeDocumentInfo.MessageType.Outgoing)
+          return;
+      }
+      
+      base.SendDocumentReplyNotice(box,trackingString, signed, signatoryInfo, isInvoiceAmendmentRequest, comment, versionNumber, serviceName, versionIsChanged);
     }
   }
 }
