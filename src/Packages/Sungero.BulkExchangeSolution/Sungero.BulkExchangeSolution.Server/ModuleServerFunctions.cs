@@ -14,6 +14,26 @@ namespace Sungero.BulkExchangeSolution.Server
 {
   public class ModuleFunctions
   {
+    
+    /// <summary>
+    /// Получить номер заказа из документа.
+    /// </summary>
+    /// <param name="document">Документ.</param>
+    /// <returns>Номер заказа.</returns>
+    [Remote]
+    public virtual string GetPurchaseNumber(IOfficialDocument document)
+    {
+      byte[] content;
+      using (var memory = new System.IO.MemoryStream())
+      {
+        using (var sourceStream = document.LastVersion.Body.Read())
+          sourceStream.CopyTo(memory);
+        content = memory.ToArray();
+      }
+      var byteArray = Docflow.Structures.Module.ByteArray.Create(content);
+      return Functions.Module.GetPurchaseNumber(byteArray);
+    }
+    
     /// <summary>
     /// Получить импортированные документы.
     /// </summary>

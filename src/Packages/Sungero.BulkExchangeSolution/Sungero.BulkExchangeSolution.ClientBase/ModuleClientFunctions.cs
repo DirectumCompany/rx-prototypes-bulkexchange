@@ -117,7 +117,7 @@ namespace Sungero.BulkExchangeSolution.Client
           {
             Logger.DebugFormat("Update exchange document info for document with Id {0}.", sendedDocument.Id);
             var info = BulkExchangeSolution.ExchangeDocumentInfos.As(Exchange.PublicFunctions.ExchangeDocumentInfo.Remote.GetLastDocumentInfo(sendedDocument));
-            info.PurchaseOrder = "1";
+            info.PurchaseOrder = Functions.Module.Remote.GetPurchaseNumber(sendedDocument);
             info.Save();
           }
         }
