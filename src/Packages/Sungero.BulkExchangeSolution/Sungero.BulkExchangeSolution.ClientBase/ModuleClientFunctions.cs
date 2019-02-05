@@ -188,7 +188,6 @@ namespace Sungero.BulkExchangeSolution.Client
       
       if (dialog.Show() == DialogButtons.Ok)
       {
-        task.AbortingReason = abortingReason.Value;
         assignment.ActiveText += string.IsNullOrWhiteSpace(assignment.ActiveText)
           ? abortingReason.Value
           : Environment.NewLine + abortingReason.Value;

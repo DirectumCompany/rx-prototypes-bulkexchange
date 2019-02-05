@@ -28,10 +28,10 @@
     ],
     "Groups": [
       {
-        "NameGuid": "4d0b742f-8fc3-466f-a657-746f4a0bcb50",
-        "Name": "Exchange",
+        "NameGuid": "7f8ba0a3-7b13-474b-bc99-86a21a6f7b6a",
+        "Name": "Search",
         "BackgroundPosition": "Stretch",
-        "IconName": "GroupIconExchange_4d0b742f8fc3466fa657746f4a0bcb50.png",
+        "IconName": "GroupIconSearch_7f8ba0a37b13474bbc9986a21a6f7b6a.png",
         "IsAncestorMetadata": true,
         "Overridden": [
           "PreviousItemGuid"
@@ -43,7 +43,7 @@
         "Name": "IncomingDocuments",
         "BackgroundPosition": "Stretch",
         "IconName": "GroupIconIncomingDocuments_ccc97d8c88e44da9a58d7308320824f8.png",
-        "PreviousItemGuid": "4d0b742f-8fc3-466f-a657-746f4a0bcb50"
+        "PreviousItemGuid": "7f8ba0a3-7b13-474b-bc99-86a21a6f7b6a"
       },
       {
         "NameGuid": "8437ba16-aa6b-4e23-ba27-03c915a24ee7",
@@ -75,10 +75,10 @@
         "PreviousItemGuid": "72ec4d3b-8932-4cc1-b70c-81778b065a8b"
       },
       {
-        "NameGuid": "7f8ba0a3-7b13-474b-bc99-86a21a6f7b6a",
-        "Name": "Search",
+        "NameGuid": "4d0b742f-8fc3-466f-a657-746f4a0bcb50",
+        "Name": "Exchange",
         "BackgroundPosition": "Stretch",
-        "IconName": "GroupIconSearch_7f8ba0a37b13474bbc9986a21a6f7b6a.png",
+        "IconName": "GroupIconExchange_4d0b742f8fc3466fa657746f4a0bcb50.png",
         "IsAncestorMetadata": true,
         "Overridden": [
           "PreviousItemGuid"
