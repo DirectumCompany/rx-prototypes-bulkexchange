@@ -6,7 +6,6 @@
       <property name="#LayoutVersion" isnull="true" />
       <property name="$GridControl" iskey="true" value="GridControl">
         <property name="GroupSummary" iskey="true" value="0" />
-        <property name="TotalSummary" iskey="true" value="0" />
         <property name="View" isnull="true" iskey="true">
           <property name="ShowTotalSummary">false</property>
           <property name="ColumnChooserState" isnull="true" iskey="true">
@@ -18,6 +17,8 @@
           <property name="LinesPerRowMode">TwoLinesMode</property>
           <property name="WaitIndicatorType">Panel</property>
         </property>
+        <property name="TotalSummary" iskey="true" value="0" />
+        <property name="GroupCount">0</property>
         <property name="Columns" iskey="true" value="48">
           <property name="Item1" isnull="true" iskey="true">
             <property name="MinWidth">48</property>
@@ -25,10 +26,9 @@
             <property name="SortMode">Custom</property>
             <property name="FixedWidth">true</property>
             <property name="Visible">true</property>
-            <property name="ExtendedVisibleIndex">0</property>
             <property name="VisibleIndex">0</property>
             <property name="Width">48</property>
-            <property name="ActualWidth">6*</property>
+            <property name="ActualWidth">5*</property>
           </property>
           <property name="Item2" isnull="true" iskey="true">
             <property name="FieldName">String_Name</property>
@@ -38,7 +38,7 @@
             <property name="Name">String_Name</property>
             <property name="ExtendedVisibleIndex">2</property>
             <property name="VisibleIndex">2</property>
-            <property name="ActualWidth">30*</property>
+            <property name="ActualWidth">32*</property>
           </property>
           <property name="Item3" isnull="true" iskey="true">
             <property name="FieldName">Navigation_Project_da8d959bcd0c4fab8ff2053d7c2a826b</property>
@@ -128,7 +128,7 @@
             <property name="Name">Navigation_Signed_by_c8daaef9a6794a29ac01b93c1637c72e</property>
             <property name="ExtendedVisibleIndex">10</property>
             <property name="VisibleIndex">2</property>
-            <property name="ActualWidth">32*</property>
+            <property name="ActualWidth">34*</property>
           </property>
           <property name="Item12" isnull="true" iskey="true">
             <property name="FieldName">Navigation_Business_Unit_Box_f91dcce6a9144c04aba10f940475696b</property>
@@ -138,7 +138,7 @@
             <property name="Name">Navigation_Business_Unit_Box_f91dcce6a9144c04aba10f940475696b</property>
             <property name="ExtendedVisibleIndex">11</property>
             <property name="VisibleIndex">2</property>
-            <property name="ActualWidth">36*</property>
+            <property name="ActualWidth">38*</property>
           </property>
           <property name="Item13" isnull="true" iskey="true">
             <property name="FieldName">Navigation_Contract_030d8d679b944f0dbcc6691016eb70f3</property>
@@ -308,7 +308,7 @@
             <property name="Name">Boolean_Return_from_counterparty_required</property>
             <property name="ExtendedVisibleIndex">28</property>
             <property name="VisibleIndex">7</property>
-            <property name="ActualWidth">31*</property>
+            <property name="ActualWidth">33*</property>
           </property>
           <property name="Item30" isnull="true" iskey="true">
             <property name="FieldName">Navigation_Delivered_to_c612fc4144a3428ba97c433c333d78e9</property>
@@ -428,7 +428,7 @@
             <property name="Name">DateTime_Scheduled_return_date_from_counterparty</property>
             <property name="ExtendedVisibleIndex">40</property>
             <property name="VisibleIndex">8</property>
-            <property name="ActualWidth">28*</property>
+            <property name="ActualWidth">30*</property>
           </property>
           <property name="Item42" isnull="true" iskey="true">
             <property name="FieldName">Navigation_Document_kind_14a5962389a24ea8b6e92ad4365f358c</property>
@@ -478,7 +478,7 @@
             <property name="Name">Navigation_Signed_by_c612fc4144a3428ba97c433c333d78e9</property>
             <property name="ExtendedVisibleIndex">45</property>
             <property name="VisibleIndex">12</property>
-            <property name="ActualWidth">32*</property>
+            <property name="ActualWidth">34*</property>
           </property>
           <property name="Item47" isnull="true" iskey="true">
             <property name="FieldName">Boolean_Corrective</property>
@@ -507,7 +507,6 @@
             <property name="SortOrder">Descending</property>
           </property>
         </property>
-        <property name="GroupCount">0</property>
         <property name="GroupSummarySortInfo" iskey="true" value="0" />
       </property>
     </XtraSerializer>

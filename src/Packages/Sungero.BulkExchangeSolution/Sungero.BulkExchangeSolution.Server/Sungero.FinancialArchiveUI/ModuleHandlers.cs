@@ -17,9 +17,9 @@ namespace Sungero.BulkExchangeSolution.Module.FinancialArchiveUI.Server
         .SelectMany(d => d.DocumentGroup.OfficialDocuments)
         .Distinct()
         .ToList();
-      var outgoingExchangeDocuments = Sungero.Exchange.ExchangeDocumentInfos.GetAll(i => assignmentsDocuments.Contains(i.Document)).Select(d => d.Document).ToList();
+      var exchangeDocuments = Sungero.Exchange.ExchangeDocumentInfos.GetAll(i => assignmentsDocuments.Contains(i.Document)).Select(d => d.Document).ToList();
  
-      return query = query.Where(x => assignmentsDocuments.Contains(x) && !outgoingExchangeDocuments.Contains(x));
+      return query = query.Where(x => assignmentsDocuments.Contains(x) && !exchangeDocuments.Contains(x));
     }
   }
 
