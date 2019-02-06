@@ -155,9 +155,10 @@
       "HandledEvents": [
         "DataQueryServer"
       ],
-      "IsShow": true,
+      "IsShow": false,
       "Kind": "Computable",
       "NeedShowMarkedCount": false,
+      "OpenCardByDefault": true,
       "SupportedDescendantsTypes": [
         "7ac574ac-8a4f-4893-ab81-c25edfa7a90c",
         "76a56ed3-5c94-4570-bade-806451a6e130",
