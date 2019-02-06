@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using Sungero.BulkExchangeSolution.BusinessUnitBox;
+using Sungero.Company;
 using Sungero.Core;
 using Sungero.CoreEntities;
+using Sungero.Exchange.ExchangeDocumentInfo;
 
 namespace Sungero.BulkExchangeSolution.Server
 {
@@ -32,6 +34,18 @@ namespace Sungero.BulkExchangeSolution.Server
               .FirstOrDefault();
             if (contract != null && contract.ResponsibleEmployee != null)
               return contract.ResponsibleEmployee;
+          }
+
+          if (documentSet.ExchangeDocumentInfos.FirstOrDefault().MessageType == MessageType.Outgoing &&
+              documentSet.Type == Constants.Exchange.ExchangeDocumentInfo.DocumentSetType.Waybill)
+          {
+            var chiefAccountant = Roles.GetAll(x => Equals(x.Name, Module.Exchange.Constants.Module.ChiefAccountantRoleName)).FirstOrDefault();
+            if (chiefAccountant != null)
+            {
+              var employee = Employees.As(chiefAccountant.RecipientLinks.FirstOrDefault().Member);
+
+              return employee ?? box.Responsible;
+            }
           }
         }
       }
