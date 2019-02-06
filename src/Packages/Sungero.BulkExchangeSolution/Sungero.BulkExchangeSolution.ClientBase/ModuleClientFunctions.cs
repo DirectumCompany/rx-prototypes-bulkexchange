@@ -98,12 +98,13 @@ namespace Sungero.BulkExchangeSolution.Client
     public virtual void SendDocumentsToCounterparties()
     {
       var documents = Functions.Module.Remote.GetImportedDocuments().Where(d => d.LastVersionApproved == true);
+      var chiefAccountant = Functions.Module.Remote.GetImportedDocumentsResponsible();
       foreach (var document in documents)
       {
         try
         {
           var addenda = document.Relations.GetRelated().Select(d => OfficialDocuments.As(d)).ToList();
-          var certificate = document.BusinessUnitBox.ExchangeServiceCertificates.Where(x => Equals(x.Certificate.Owner, Users.Current) &&
+          var certificate = document.BusinessUnitBox.ExchangeServiceCertificates.Where(x => Equals(x.Certificate.Owner, chiefAccountant) &&
                                                                                        x.Certificate.Enabled == true).Select(x => x.Certificate).FirstOrDefault();
           
           Logger.DebugFormat("Send to counterparty document with Id {0}.", document.Id);
