@@ -620,11 +620,16 @@ namespace Sungero.BulkExchangeSolution.Module.Exchange.Server
       if (documentSet.Type != BulkExchangeSolution.Constants.Exchange.ExchangeDocumentInfo.DocumentSetType.ContractStatement)
         return;
       
-      var contractStatement = documentSet.ExchangeDocumentInfos.Select(i => i.Document).First(d => FinancialArchive.ContractStatements.Is(d) ||
-                                                                                              FinancialArchive.UniversalTransferDocuments.Is(d));
+      var contractStatement = documentSet.ExchangeDocumentInfos.Select(i => Docflow.AccountingDocumentBases.As(i.Document)).First(d => FinancialArchive.ContractStatements.Is(d) ||
+                                                                                                                                  FinancialArchive.UniversalTransferDocuments.Is(d));
       var task = Docflow.PublicFunctions.Module.Remote.CreateApprovalTask(contractStatement);
-      var counterparty = Docflow.AccountingDocumentBases.As(contractStatement).Counterparty;
-      var responsible = CompanyBases.Is(counterparty) ? CompanyBases.As(counterparty).Responsible : null;
+      var counterparty = contractStatement.Counterparty;
+      // Отправить задачу от Ответственного за договор или ответсвенного за КА.
+      Company.IEmployee responsible = null;
+      if (contractStatement.LeadingDocument != null && Contracts.ContractualDocuments.Is(contractStatement.LeadingDocument))
+        responsible = Contracts.ContractualDocuments.As(contractStatement.LeadingDocument).ResponsibleEmployee;
+      if (responsible == null)
+        responsible = CompanyBases.Is(counterparty) ? CompanyBases.As(counterparty).Responsible : null;      
       if (responsible != null)
         task.Author = responsible;
       
