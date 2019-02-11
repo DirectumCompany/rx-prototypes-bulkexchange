@@ -53,8 +53,8 @@ namespace Sungero.BulkExchangeSolution.Server
       var company = Parties.CompanyBases.As(counterparty);
       if (company != null && company.Responsible != null)
         return company.Responsible;
-      else
-        throw AppliedCodeException.Create(string.Format("#1: Не указан ответственный за контрагента {0}", counterparty.Name));
+      Logger.Debug(string.Format("Не указан ответственный за контрагента {0}", counterparty.Name));
+      return null;
     }
   }
 }
