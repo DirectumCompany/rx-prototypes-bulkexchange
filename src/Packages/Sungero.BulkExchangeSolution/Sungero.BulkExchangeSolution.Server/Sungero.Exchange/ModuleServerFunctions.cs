@@ -9,6 +9,7 @@ using Sungero.Core;
 using Sungero.CoreEntities;
 using Sungero.Docflow;
 using Sungero.ExchangeCore;
+using Sungero.ExchangeCore.PublicFunctions;
 using Sungero.FinancialArchive;
 using Sungero.Parties;
 using Sungero.Workflow;
@@ -216,18 +217,18 @@ namespace Sungero.BulkExchangeSolution.Module.Exchange.Server
       this.SendDocumentProcessingTask(documentSet, result);
     }
     
-    public override void StartExchangeTask(IBoxBase box, NpoComputer.DCX.Common.IMessage message, ICounterparty sender, bool isIncoming,
+    public override bool StartExchangeTask(IBoxBase box, NpoComputer.DCX.Common.IMessage message, ICounterparty sender, bool isIncoming,
                                            string exchangeTaskActiveTextBoundedDocuments, List<Sungero.Exchange.IExchangeDocumentInfo> infos)
     {
       var exchangeDocumentInfos = Sungero.BulkExchangeSolution.ExchangeDocumentInfos.GetAll().Where(e => e.ServiceMessageId == message.ServiceMessageId).ToList();
       if (exchangeDocumentInfos.Any(i => i.VerificationStatus == VerificationStatus.Required))
-        return;
+        return true;
       
       var documentSets = Sungero.BulkExchangeSolution.Functions.ExchangeDocumentInfo.GetDocumentSets(exchangeDocumentInfos);
       if (documentSets.Any(s => s.IsFullSet && s.Type == BulkExchangeSolution.Constants.Exchange.ExchangeDocumentInfo.DocumentSetType.ContractStatement))
-        return;
+        return true;
       
-      base.StartExchangeTask(box, message, sender, isIncoming, exchangeTaskActiveTextBoundedDocuments, infos);
+      return base.StartExchangeTask(box, message, sender, isIncoming, exchangeTaskActiveTextBoundedDocuments, infos);
     }
     
     private bool IsDocumentVerificationCompleted(IExchangeDocumentInfo document)
@@ -237,7 +238,7 @@ namespace Sungero.BulkExchangeSolution.Module.Exchange.Server
                                   document.Document.Note.IndexOf(Resources.Incurred, StringComparison.InvariantCultureIgnoreCase) >= 0);
     }
     
-    protected override void ProcessDocumentsFromNewIncomingMessage(List<Sungero.Exchange.IExchangeDocumentInfo> infos,
+    protected override bool ProcessDocumentsFromNewIncomingMessage(List<Sungero.Exchange.IExchangeDocumentInfo> infos,
                                                                    IMessage message,
                                                                    IBoxBase box,
                                                                    ICounterparty sender,
@@ -258,7 +259,12 @@ namespace Sungero.BulkExchangeSolution.Module.Exchange.Server
           this.SendContractStatementForApproval(documentSet);
         }
       }
-      base.ProcessDocumentsFromNewIncomingMessage(infos, message, box, sender, queueItem, isIncoming, processingDocuments);
+      
+      var queueItems = MessageQueueItems.GetAll(q => Equals(q.RootBox, queueItem.RootBox)).ToList();
+      var responsible = BoxBase.GetExchangeDocumentResponsible(box, sender, infos);
+      if (responsible == null)
+        this.StartSimpleTaskWhenCounterpartyResponsibleNotFound(queueItems, MessageQueueItems.As(queueItem), sender, queueItem.RootBox);
+      return base.ProcessDocumentsFromNewIncomingMessage(infos, message, box, sender, queueItem, isIncoming, processingDocuments);
     }
     
     /// <summary>
@@ -421,35 +427,6 @@ namespace Sungero.BulkExchangeSolution.Module.Exchange.Server
       {
         document.AccessRights.Grant(responsible, DefaultAccessRightsTypes.FullAccess);
         document.AccessRights.Save();
-      }
-    }
-    
-    protected override void ProcessMessageError(NpoComputer.DCX.ClientApi.Client client, List<int> queueItemsIds, IMessage message, string exception)
-    {
-      base.ProcessMessageError(client, queueItemsIds, message, exception);
-      
-      var regexMatch = System.Text.RegularExpressions.Regex.Match(exception, "^#([0-9])+:", System.Text.RegularExpressions.RegexOptions.Compiled);
-      if (regexMatch.Success)
-      {
-        var queueItems = MessageQueueItems.GetAll(q => queueItemsIds.Contains(q.Id)).ToList();
-        var queueItem = queueItems.Single(x => x.ExternalId == message.ServiceMessageId);
-        
-        var box = queueItem.Box;
-        var businessUnitBox = queueItem.RootBox;
-        
-        var organizationId = message.Sender.Organization.OrganizationId;
-        
-        // Обрабатываем исходящие сообщения для поддержки параллельных действий.
-        if (organizationId == businessUnitBox.OrganizationId)
-          organizationId = message.Receiver.Organization.OrganizationId;
-        
-        var sender = Parties.Counterparties.GetAll(c => c.ExchangeBoxes.Any(e => Equals(e.OrganizationId, organizationId) && Equals(businessUnitBox, e.Box))).SingleOrDefault();
-        
-        var code = int.Parse(regexMatch.Groups[1].Value);
-        if (code == 1)
-        {
-          this.StartSimpleTaskWhenCounterpartyResponsibleNotFound(queueItems, queueItem, sender, businessUnitBox);
-        }
       }
     }
     
