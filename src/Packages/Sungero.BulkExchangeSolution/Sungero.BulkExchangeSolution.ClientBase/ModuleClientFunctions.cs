@@ -28,39 +28,82 @@ namespace Sungero.BulkExchangeSolution.Client
           var filesPaths = Directory.GetFiles(directory);
           var files = new List<byte[]>();
           var purchaseNumbers = new List<string>();
-          
-          foreach (var filesPath in filesPaths)
-            files.Add(File.ReadAllBytes(filesPath));
-          
-          // Извлечение номера заказа из xml файлов.
-          if (files.Count == 1 || files.Count == 2)
+          var contractNumbers = new List<string>();
+
+          if (filesPaths.Count() == 1 || filesPaths.Count() == 2)
           {
-            foreach (var file in files)
+            foreach (var filesPath in filesPaths)
             {
+              var file = File.ReadAllBytes(filesPath);
               var byteArray = Docflow.Structures.Module.ByteArray.Create(file);
               var purchaseOrderNumber = Functions.Module.Remote.GetPurchaseNumber(byteArray);
+              purchaseNumbers.Add(purchaseOrderNumber);
               if (!string.IsNullOrEmpty(purchaseOrderNumber))
-                purchaseNumbers.Add(purchaseOrderNumber);
+                continue;
+              
+              var contractNumber = Functions.Module.Remote.GetContractNumber(byteArray);
+              if (string.IsNullOrEmpty(contractNumber))
+                contractNumber = Sungero.BulkExchangeSolution.Module.Exchange.PublicFunctions.Module.GetContractNumberFromDocumentName(filesPath);
+              contractNumbers.Add(contractNumber);
             }
           }
           
-          if (purchaseNumbers.Any(n => string.IsNullOrEmpty(n)) || purchaseNumbers.Distinct().Count() > 1)
+          var uniquePurchaseNumbers = purchaseNumbers.Distinct();
+          var uniqueContractNumbers = contractNumbers.Distinct();
+          
+          if (uniquePurchaseNumbers.Count() > 1 || uniqueContractNumbers.Count() > 1 ||
+              !(uniquePurchaseNumbers.All(x => string.IsNullOrEmpty(x)) ^ uniqueContractNumbers.All(x => string.IsNullOrEmpty(x))))
             continue;
           
           // Импорт и дозаполнение документов.
           var documents = new List<IOfficialDocument>();
+          var counterparty = Parties.Counterparties.Null;
           foreach (var filesPath in filesPaths)
           {
-            Logger.DebugFormat("Import document from path {0}.", filesPath);
-            var document = FinancialArchive.PublicFunctions.Module.ImportFormalizedDocument(filesPath, false);
-            document.Save();
+            var document = Docflow.AccountingDocumentBases.Null;
+            var isFormalized = IsFormalized(filesPath);
+            if (isFormalized)
+            {
+              Logger.DebugFormat("Import formalized document from path {0}.", filesPath);
+              document = FinancialArchive.PublicFunctions.Module.ImportFormalizedDocument(filesPath, false);
+              document.Save();
+              if (counterparty == null)
+                counterparty = document.Counterparty;
+            }
+            else
+            {
+              Logger.DebugFormat("Import nonformalized document from path {0}.", filesPath);
+              document = ImportNonormalizedDocument(filesPath);
+              if (document != null)
+                document.Save();
+              else
+              {
+                Logger.DebugFormat("Import nonformalized document from path {0} failed.", filesPath);
+                continue;
+              }
+            }
             Logger.DebugFormat("Document imported with Id {0}.", document.Id);
             Logger.DebugFormat("Process document with Id {0}.", document.Id);
-            Functions.Module.Remote.ProcessImportedDocument(document, chiefAccountant, caseFile);
+            
+            if (isFormalized)
+              Functions.Module.Remote.ProcessImportedDocument(document, chiefAccountant, caseFile);
+            else
+            {
+              //TODO Reshetnikov ProcessImportedNonormalizedDocument
+            }
+            
             documents.Add(document);
           }
           if (documents.Count == 2)
             BulkExchangeSolution.Module.Exchange.PublicFunctions.Module.Remote.AddRelationsForDocuments(documents);
+          
+          var nonformalizedDocument = documents.Where(d => AccountingDocumentBases.As(d).Counterparty == null).FirstOrDefault();
+          if (nonformalizedDocument != null && counterparty != null)
+          {
+            var nonformalizedAccountingDocument = AccountingDocumentBases.As(nonformalizedDocument);
+            nonformalizedAccountingDocument.Counterparty = counterparty;
+            nonformalizedAccountingDocument.Save();
+          }
           
           Logger.DebugFormat("Completed import documents from folder {0}.", directory);
         }
@@ -68,6 +111,8 @@ namespace Sungero.BulkExchangeSolution.Client
         {
           Logger.Error(Sungero.BulkExchangeSolution.Resources.CannotImportDocument, ex);
         }
+        
+        //TODO Reshetnikov если нетоварный то отправить на согласование по регламенту.
       }
     }
     
@@ -380,6 +425,49 @@ namespace Sungero.BulkExchangeSolution.Client
       }
       else
         Dialogs.ShowMessage(Resources.NoAssignmentError, MessageType.Error);
+    }
+    
+    /// <summary>
+    /// Импортировать неформализованный документ.
+    /// </summary>
+    /// <param name="file">Путь к файлу.</param>
+    /// <returns>Документ.</returns>
+    /// <remarks>Работает с локальными путями клиента, не для веб-клиента.</remarks>
+    public virtual Docflow.IAccountingDocumentBase ImportNonormalizedDocument(string file)
+    {
+      var content = System.IO.File.ReadAllBytes(file);
+      var array = Docflow.Structures.Module.ByteArray.Create(content);
+      var contractStatement = FinancialArchive.ContractStatements.Null;
+      using (var memory = new System.IO.MemoryStream(array.Bytes))
+      {
+        // Создать версию. Сохранить в версию.
+        var fileInfo = new FileInfo(file);
+        var fileName = fileInfo.Name;
+        if (fileName.ToLowerInvariant().Contains("акт"))
+        {
+          contractStatement = Functions.Module.Remote.CreateContractStatement();
+          contractStatement.CreateVersion();
+          var version = contractStatement.LastVersion;
+          version.AssociatedApplication = Sungero.Exchange.PublicFunctions.Module.Remote.GetOrCreateAssociatedApplicationByDocumentName(fileName);
+          version.Body.Write(memory);
+          contractStatement.State.Properties.Counterparty.IsRequired = false;
+          contractStatement.Save();
+        }
+      }
+      
+      return contractStatement;
+    }
+    
+    /// <summary>
+    /// Определить что документ формализованный по расширению имени файла.
+    /// </summary>
+    /// <param name="filesPath">Путь к файлу.</param>
+    /// <returns>True если расширение файла xml.</returns>
+    private bool IsFormalized(string filesPath)
+    {
+      var fileInfo = new FileInfo(filesPath);
+      var fileExtestion = fileInfo.Extension;
+      return Equals(fileExtestion, ".xml");
     }
   }
 }

@@ -133,6 +133,19 @@
       "ReturnTypeFullName": "System.String"
     },
     {
+      "Name": "GetContractNumberFromDocumentName",
+      "Parameters": [
+        {
+          "Name": "documentName",
+          "ParameterType": "global::System.String",
+          "ParameterTypeFullName": "System.String"
+        }
+      ],
+      "Placement": "Shared",
+      "ReturnType": "global::System.String",
+      "ReturnTypeFullName": "System.String"
+    },
+    {
       "Name": "GetPurchaseOrderNumber",
       "Parameters": [
         {

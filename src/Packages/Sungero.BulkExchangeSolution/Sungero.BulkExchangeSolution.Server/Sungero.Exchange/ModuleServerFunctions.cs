@@ -45,24 +45,18 @@ namespace Sungero.BulkExchangeSolution.Module.Exchange.Server
             exchangeDocumentInfo.Save();
         }
       }
-      else if (document.FileName.ToLowerInvariant().Contains("акт"))
+      else
       {
-        var pattern = @"(^|[^А-Яа-я])акт([^А-Яа-я]|$)";
-        if (System.Text.RegularExpressions.Regex.IsMatch(createdDocument.Name.ToLower(), pattern))
+        var contractNumber = Functions.Module.GetContractNumberFromDocumentName(document.FileName);
+        
+        if (!string.IsNullOrEmpty(contractNumber))
         {
-          var noteArray  = createdDocument.Note.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
-          var index = Array.IndexOf(noteArray, Constants.Module.ContractNumber);
-          var contractNumber = noteArray.ElementAtOrDefault(index + 1);
-          
-          if (!string.IsNullOrEmpty(contractNumber))
-          {
-            var exchangeDocumentInfo = ExchangeDocumentInfos.As(Sungero.Exchange.PublicFunctions.ExchangeDocumentInfo.GetExDocumentInfoByExternalId(box, document.ServiceEntityId));
-            exchangeDocumentInfo.ContractNumber = contractNumber;
-            createdDocument.Subject = "Выполнение услуг";
-            createdDocument.Note = document.Comment;
-            createdDocument.Save();
-            exchangeDocumentInfo.Save();
-          }
+          var exchangeDocumentInfo = ExchangeDocumentInfos.As(Sungero.Exchange.PublicFunctions.ExchangeDocumentInfo.GetExDocumentInfoByExternalId(box, document.ServiceEntityId));
+          exchangeDocumentInfo.ContractNumber = contractNumber;
+          createdDocument.Subject = "Выполнение услуг";
+          createdDocument.Note = document.Comment;
+          createdDocument.Save();
+          exchangeDocumentInfo.Save();
         }
       }
       return createdDocument;
@@ -76,7 +70,16 @@ namespace Sungero.BulkExchangeSolution.Module.Exchange.Server
     [Public]
     public virtual List<System.Xml.Linq.XElement> GetAdditionalProperties(byte[] xml)
     {
-      var xdoc = System.Xml.Linq.XDocument.Load(new System.IO.MemoryStream(xml));
+      System.Xml.Linq.XDocument xdoc;
+      try
+      {
+        xdoc = System.Xml.Linq.XDocument.Load(new System.IO.MemoryStream(xml));
+      }
+      catch (System.Xml.XmlException)
+      {
+        return new List<System.Xml.Linq.XElement>();
+      }
+      
       RemoveNamespaces(xdoc);
       var additionalProperties = xdoc.Descendants("ТекстИнф").ToList();
       

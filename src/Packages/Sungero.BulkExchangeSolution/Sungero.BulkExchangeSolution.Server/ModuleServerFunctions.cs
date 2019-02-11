@@ -79,6 +79,21 @@ namespace Sungero.BulkExchangeSolution.Server
     }
     
     /// <summary>
+    /// Получить номер догвора из xml файла формализованного документа.
+    /// </summary>
+    /// <param name="file">Xml файл</param>
+    [Remote]
+    public virtual string GetContractNumber(Docflow.Structures.Module.IByteArray file)
+    {
+      var additionalProperties = BulkExchangeSolution.Module.Exchange.PublicFunctions.Module.GetAdditionalProperties(file.Bytes);
+      
+      if (additionalProperties.Any())
+        return BulkExchangeSolution.Module.Exchange.PublicFunctions.Module.GetContractNumber(additionalProperties);
+
+      return string.Empty;
+    }
+    
+    /// <summary>
     /// Получить ответственного для импортируемых документов.
     /// </summary>
     /// <returns>Ответственный.</returns>
@@ -133,6 +148,22 @@ namespace Sungero.BulkExchangeSolution.Server
         .Where(a => a.MainTask.AttachmentDetails.Any(d => d.EntityTypeGuid == typeGuid &&
                                                      d.GroupId == groupId &&
                                                      d.AttachmentId == document.Id));
+    }
+    
+    /// <summary>
+    /// Создать акт к договорному документу.
+    /// </summary>
+    /// <returns>Созданный акт.</returns>
+    [Remote]
+    public Sungero.FinancialArchive.IContractStatement CreateContractStatement()
+    {
+      return Sungero.FinancialArchive.ContractStatements.Create();
+    }
+    
+    [Remote]
+    public Sungero.Parties.ICounterparty GetRandomCounterParty()
+    {
+      return Sungero.Parties.Counterparties.GetAll().FirstOrDefault();
     }
   }
 }
