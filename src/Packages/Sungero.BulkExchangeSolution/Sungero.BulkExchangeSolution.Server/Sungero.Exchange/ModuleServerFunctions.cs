@@ -46,18 +46,24 @@ namespace Sungero.BulkExchangeSolution.Module.Exchange.Server
             exchangeDocumentInfo.Save();
         }
       }
-      else
+      else if (document.FileName.ToLowerInvariant().Contains("акт"))
       {
-        var contractNumber = Functions.Module.GetContractNumberFromDocumentName(document.FileName);
-        
-        if (!string.IsNullOrEmpty(contractNumber))
+        var pattern = @"(^|[^А-Яа-я])акт([^А-Яа-я]|$)";
+        if (System.Text.RegularExpressions.Regex.IsMatch(createdDocument.Name.ToLower(), pattern))
         {
-          var exchangeDocumentInfo = ExchangeDocumentInfos.As(Sungero.Exchange.PublicFunctions.ExchangeDocumentInfo.GetExDocumentInfoByExternalId(box, document.ServiceEntityId));
-          exchangeDocumentInfo.ContractNumber = contractNumber;
-          createdDocument.Subject = "Выполнение услуг";
-          createdDocument.Note = document.Comment;
-          createdDocument.Save();
-          exchangeDocumentInfo.Save();
+          var noteArray  = createdDocument.Note.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+          var index = Array.IndexOf(noteArray, Constants.Module.ContractNumber);
+          var contractNumber = noteArray.ElementAtOrDefault(index + 1);
+          
+          if (!string.IsNullOrEmpty(contractNumber))
+          {
+            var exchangeDocumentInfo = ExchangeDocumentInfos.As(Sungero.Exchange.PublicFunctions.ExchangeDocumentInfo.GetExDocumentInfoByExternalId(box, document.ServiceEntityId));
+            exchangeDocumentInfo.ContractNumber = contractNumber;
+            createdDocument.Subject = "Выполнение услуг";
+            createdDocument.Note = document.Comment;
+            createdDocument.Save();
+            exchangeDocumentInfo.Save();
+          }
         }
       }
       return createdDocument;

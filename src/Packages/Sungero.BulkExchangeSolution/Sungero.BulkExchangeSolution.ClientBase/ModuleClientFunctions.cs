@@ -420,7 +420,7 @@ namespace Sungero.BulkExchangeSolution.Client
     /// </summary>
     /// <param name="filesPath">Путь к файлу.</param>
     /// <returns>True если расширение файла xml.</returns>
-    private bool IsFormalized(string filesPath)
+    public virtual bool IsFormalized(string filesPath)
     {
       var fileInfo = new FileInfo(filesPath);
       var fileExtestion = fileInfo.Extension;
@@ -436,14 +436,11 @@ namespace Sungero.BulkExchangeSolution.Client
         var accountingDocument = Docflow.AccountingDocumentBases.As(document);
         var isFormalized = accountingDocument.Counterparty != null;
         
-        //if (isContractStatement)
         if (FinancialArchive.ContractStatements.Is(document))
         {
           var documentWithCounterparty = documents.Where(d => AccountingDocumentBases.As(d).Counterparty != null).FirstOrDefault();
           var counterparty = AccountingDocumentBases.As(documentWithCounterparty).Counterparty;
           accountingDocument.Counterparty = counterparty;
-//          accountingDocument.BusinessUnit = department.BusinessUnit;
-//          accountingDocument.Department = department;
           accountingDocument.Save();
         }
         Functions.Module.Remote.ProcessImportedDocument(accountingDocument, responsible, isFormalized);
@@ -476,9 +473,8 @@ namespace Sungero.BulkExchangeSolution.Client
         return;
       
       var contractNumber = Functions.Module.Remote.GetContractNumber(byteArray);
-      if (string.IsNullOrEmpty(contractNumber))
-        contractNumber = Sungero.BulkExchangeSolution.Module.Exchange.PublicFunctions.Module.GetContractNumberFromDocumentName(filesPath);
-      contractNumbers.Add(contractNumber);
+      if (this.IsFormalized(filesPath))
+        contractNumbers.Add(contractNumber);
     }
     
     public virtual bool ValidatePurchaseAndContractNumbers(List<string> purchaseNumbers, List<string> contractNumbers)
@@ -495,7 +491,7 @@ namespace Sungero.BulkExchangeSolution.Client
     public virtual IAccountingDocumentBase ImportDocument(string filesPath)
     {
       var document = Docflow.AccountingDocumentBases.Null;
-      var isFormalized = IsFormalized(filesPath);
+      var isFormalized = this.IsFormalized(filesPath);
       if (isFormalized)
       {
         Logger.DebugFormat("Import formalized document from path {0}.", filesPath);
