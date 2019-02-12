@@ -518,7 +518,7 @@ namespace Sungero.BulkExchangeSolution.Module.Exchange.Server
         if (result)
         {
           info.VerificationStatus = VerificationStatus.Completed;
-          if (info.Document.Note.IndexOf(Resources.Incurred, StringComparison.InvariantCultureIgnoreCase) < 0)
+          if (info.Document.Note == null || info.Document.Note.IndexOf(Resources.Incurred, StringComparison.InvariantCultureIgnoreCase) < 0)
           {
             var incurredNote = "*" + Resources.Incurred.ToString().ToUpper() + "*";
             if (string.IsNullOrWhiteSpace(info.Document.Note))
