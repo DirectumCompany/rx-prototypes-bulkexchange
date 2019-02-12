@@ -513,7 +513,7 @@ namespace Sungero.BulkExchangeSolution.Client
     {
       var uniquePurchaseNumbers = purchaseNumbers.Distinct();
       var uniqueContractNumbers = contractNumbers.Distinct();
-      var isValid = uniquePurchaseNumbers.Count() == 1 ^ uniqueContractNumbers.Count() == 1;
+      var isValid = uniquePurchaseNumbers.Count(x => !string.IsNullOrEmpty(x)) == 1 ^ uniqueContractNumbers.Count(x => !string.IsNullOrEmpty(x)) == 1;
       return isValid;
     }
     
