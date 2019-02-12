@@ -252,6 +252,14 @@ namespace Sungero.BulkExchangeSolution.Module.Exchange.Server
                                                                    bool isIncoming,
                                                                    List<IDocument> processingDocuments)
     {
+      var queueItems = MessageQueueItems.GetAll(q => Equals(q.RootBox, queueItem.RootBox)).ToList();
+      var responsible = BoxBase.GetExchangeDocumentResponsible(box, sender, infos);
+      if (responsible == null)
+      {
+        this.StartSimpleTaskWhenCounterpartyResponsibleNotFound(queueItems, MessageQueueItems.As(queueItem), sender, queueItem.RootBox);
+        return false;
+      }
+      
       var documentSet = this.GetDocumentSet(message);
       if (documentSet != null)
       {
@@ -266,10 +274,6 @@ namespace Sungero.BulkExchangeSolution.Module.Exchange.Server
         }
       }
       
-      var queueItems = MessageQueueItems.GetAll(q => Equals(q.RootBox, queueItem.RootBox)).ToList();
-      var responsible = BoxBase.GetExchangeDocumentResponsible(box, sender, infos);
-      if (responsible == null)
-        this.StartSimpleTaskWhenCounterpartyResponsibleNotFound(queueItems, MessageQueueItems.As(queueItem), sender, queueItem.RootBox);
       return base.ProcessDocumentsFromNewIncomingMessage(infos, message, box, sender, queueItem, isIncoming, processingDocuments);
     }
     
