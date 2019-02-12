@@ -52,7 +52,7 @@ namespace Sungero.BulkExchangeSolution.Server
     /// </summary>
     /// <param name="document">Документ.</param>
     /// <param name="responsible">Ответственный.</param>
-    /// <param name="caseFile">Дело.</param>
+    /// <param name="isFormalized">Признак что документ формализованный.</param>
     [Remote]
     public virtual void ProcessImportedDocument(IAccountingDocumentBase document, IEmployee responsible, bool isFormalized)
     {
@@ -69,7 +69,8 @@ namespace Sungero.BulkExchangeSolution.Server
     /// <summary>
     /// Получить номер заказа из xml файла формализованного документа.
     /// </summary>
-    /// <param name="file">Xml файл</param>
+    /// <param name="file">Xml файл.</param>
+    /// <returns>Номер заказа.</returns>
     [Remote]
     public virtual string GetPurchaseNumber(Docflow.Structures.Module.IByteArray file)
     {
@@ -82,9 +83,10 @@ namespace Sungero.BulkExchangeSolution.Server
     }
     
     /// <summary>
-    /// Получить номер догвора из xml файла формализованного документа.
+    /// Получить номер договора из xml файла формализованного документа.
     /// </summary>
-    /// <param name="file">Xml файл</param>
+    /// <param name="file">Xml файл.</param>
+    /// <returns>Номер договора.</returns>
     [Remote]
     public virtual string GetContractNumber(Docflow.Structures.Module.IByteArray file)
     {
@@ -124,7 +126,7 @@ namespace Sungero.BulkExchangeSolution.Server
     /// Получить подразделение по НОР и названию подразделения.
     /// </summary>
     /// <param name="businessUnit">Наша организация.</param>
-    /// <param name="department">Подразделение.</param>
+    /// <param name="department">Наименование подразделения.</param>
     /// <returns>Подразделение.</returns>
     [Remote]
     public IDepartment GetDepartmentByName(IBusinessUnit businessUnit, string department)

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using Sungero.BulkExchangeSolution.ExchangeDocumentInfo;
 using Sungero.Core;
@@ -10,7 +11,6 @@ using Sungero.FinancialArchive;
 using Sungero.RecordManagement;
 using MessageType = Sungero.Core.MessageType;
 using Status = Sungero.Workflow.Assignment.Status;
-using System.IO;
 
 namespace Sungero.BulkExchangeSolution.Client
 {
@@ -59,7 +59,8 @@ namespace Sungero.BulkExchangeSolution.Client
           
           this.ProcessImportedDocuments(documents, responsible);
           
-          if (contractNumbers.Any())
+          var isContractStatementDocumentSet = contractNumbers.Any();
+          if (isContractStatementDocumentSet)
           {
             this.ProcessContractStatementDocuments(contractNumbers, documents, chief);
 
@@ -395,7 +396,7 @@ namespace Sungero.BulkExchangeSolution.Client
     /// <param name="file">Путь к файлу.</param>
     /// <returns>Документ.</returns>
     /// <remarks>Работает с локальными путями клиента, не для веб-клиента.</remarks>
-    public virtual Docflow.IAccountingDocumentBase ImportNonormalizedDocument(string file)
+    public virtual Docflow.IAccountingDocumentBase ImportNonformalizedDocument(string file)
     {
       var content = System.IO.File.ReadAllBytes(file);
       var array = Docflow.Structures.Module.ByteArray.Create(content);
@@ -465,7 +466,7 @@ namespace Sungero.BulkExchangeSolution.Client
     {
       var documentsWithBusinessUnit = documents.Where(d => AccountingDocumentBases.As(d).BusinessUnit != null).FirstOrDefault();
       return documentsWithBusinessUnit == null ?
-      null:
+      null :
       AccountingDocumentBases.As(documentsWithBusinessUnit).BusinessUnit;
     }
     
@@ -478,7 +479,7 @@ namespace Sungero.BulkExchangeSolution.Client
     {
       var documentsWithBusinessUnit = documents.Where(d => AccountingDocumentBases.As(d).BusinessUnit != null).FirstOrDefault();
       return documentsWithBusinessUnit == null ?
-      null:
+      null :
       AccountingDocumentBases.As(documentsWithBusinessUnit).BusinessUnit.CEO;
     }
     
@@ -534,7 +535,7 @@ namespace Sungero.BulkExchangeSolution.Client
       else
       {
         Logger.DebugFormat("Import nonformalized document from path {0}.", filesPath);
-        document = ImportNonormalizedDocument(filesPath);
+        document = this.ImportNonformalizedDocument(filesPath);
         if (document != null)
           document.Save();
         else
@@ -587,7 +588,7 @@ namespace Sungero.BulkExchangeSolution.Client
       var contractNumber = contractNumbers.FirstOrDefault();
       var contract = Functions.Module.Remote.GetContractByNumber(contractNumber);
       
-      foreach(var doc in documents)
+      foreach (var doc in documents)
       {
         var accountingDocument = Docflow.AccountingDocumentBases.As(doc);
         if (contract != null)

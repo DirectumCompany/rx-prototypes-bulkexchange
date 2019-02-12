@@ -28,17 +28,17 @@ namespace Sungero.BulkExchangeSolution.Module.Exchange.Server
       if (accountingDocument != null && accountingDocument.IsFormalized == true && (UniversalTransferDocuments.Is(createdDocument) ||
                                                                                     IncomingTaxInvoices.Is(createdDocument) || Waybills.Is(createdDocument) || ContractStatements.Is(createdDocument)))
       {
-        var additionalProperties = GetAdditionalProperties(document.Content);
+        var additionalProperties = this.GetAdditionalProperties(document.Content);
         
         if (additionalProperties.Any())
         {
           var exchangeDocumentInfo = ExchangeDocumentInfos.As(Sungero.Exchange.PublicFunctions.ExchangeDocumentInfo.GetExDocumentInfoByExternalId(box, document.ServiceEntityId));
           
-          var purchaseOrderNumber = GetPurchaseOrderNumber(additionalProperties);
+          var purchaseOrderNumber = this.GetPurchaseOrderNumber(additionalProperties);
           if (!string.IsNullOrEmpty(purchaseOrderNumber))
             exchangeDocumentInfo.PurchaseOrder = purchaseOrderNumber;
 
-          var contractStatementNumber = GetContractNumber(additionalProperties);
+          var contractStatementNumber = this.GetContractNumber(additionalProperties);
           if (!string.IsNullOrEmpty(contractStatementNumber))
             exchangeDocumentInfo.ContractNumber = contractStatementNumber;
           
@@ -393,7 +393,7 @@ namespace Sungero.BulkExchangeSolution.Module.Exchange.Server
     /// <summary>
     /// Создать связь документов комплекта.
     /// </summary>
-    /// <param name="documentSet">Комплект.</param>
+    /// <param name="documents">Документы комплекта.</param>
     [Public, Remote]
     public void AddRelationsForDocuments(List<IOfficialDocument> documents)
     {
@@ -626,9 +626,11 @@ namespace Sungero.BulkExchangeSolution.Module.Exchange.Server
     /// Отправить уведомление ответственному о поступлении ответа от контрагента о подписании документа.
     /// </summary>
     /// <param name="box">Абонентский ящик.</param>
-    /// <param name="info">Информация о документе обмена.</param>
     /// <param name="trackingString">Строка выдачи.</param>
+    /// <param name="signed">Признак подписания. True - если документ подписан контрагентом, иначе - false.</param>
     /// <param name="signatoryInfo">Иформация о контрагенте.</param>
+    /// <param name="isInvoiceAmendmentRequest">Отправлено уточнение по СФ или УПД.</param>
+    /// <param name="comment">Комментарий.</param>
     /// <param name="versionNumber">Версия документа.</param>
     /// <param name="serviceName">Наименование сервиса обмена.</param>
     /// <param name="versionIsChanged">Признак того, что версия была изменена.</param>
@@ -649,7 +651,7 @@ namespace Sungero.BulkExchangeSolution.Module.Exchange.Server
           return;
       }
       
-      base.SendDocumentReplyNotice(box,trackingString, signed, signatoryInfo, isInvoiceAmendmentRequest, comment, versionNumber, serviceName, versionIsChanged);
+      base.SendDocumentReplyNotice(box, trackingString, signed, signatoryInfo, isInvoiceAmendmentRequest, comment, versionNumber, serviceName, versionIsChanged);
     }
   }
 }
