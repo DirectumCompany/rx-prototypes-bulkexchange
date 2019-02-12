@@ -131,7 +131,18 @@ namespace Sungero.BulkExchangeSolution.Server
     {
       return Sungero.Company.Departments.GetAll(d => d.BusinessUnit == businessUnit).Where(d => Equals(d.Name, department)).FirstOrDefault();
     }
-        
+    
+    /// <summary>
+    /// Получить договор по регистрационному номеру.
+    /// </summary>
+    /// <param name="contractNumber">Номер договора.</param>
+    /// <returns>Договор.</returns>
+    [Remote]
+    public Contracts.IContract GetContractByNumber(string contractNumber)
+    {
+      return Sungero.Contracts.Contracts.GetAll(c => Equals(c.RegistrationNumber, contractNumber)).FirstOrDefault();
+    }
+    
     /// <summary>
     /// Получить дело по умолчанию для импортируемых документов.
     /// </summary>

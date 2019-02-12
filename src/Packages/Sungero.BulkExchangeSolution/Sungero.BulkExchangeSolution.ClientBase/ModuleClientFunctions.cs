@@ -55,16 +55,21 @@ namespace Sungero.BulkExchangeSolution.Client
           var businesUnit = this.GetBusinessUnit(documents);
           var department = Functions.Module.Remote.GetDepartmentByName(businesUnit, "Отдел продаж");
           var salesManager = Functions.Module.Remote.GetEmployeeByJobTitle(department, "Менеджер по продажам");
+          var responsible = contractNumbers.Any() ? salesManager : chiefAccountant;
           
-          this.ProcessImportedDocuments(documents, chiefAccountant, salesManager, department);
+          this.ProcessImportedDocuments(documents, responsible);
           
-          var contractStatement = documents.FirstOrDefault(d => AccountingDocumentBases.As(d).FormalizedFunction != Docflow.AccountingDocumentBase.FormalizedFunction.Schf);
-          if (contractStatement != null)
+          if (contractNumbers.Any())
           {
-            this.CreateAndStartApprovalTask(contractStatement, salesManager, chief);
-            Logger.DebugFormat("Completed start approval task from document with Id {0}.", contractStatement.Id);
+            this.ProcessContractStatementDocuments(contractNumbers, documents, chief);
+
+            if (this.CreateAndStartApprovalTask(documents, salesManager, chief))
+            {
+              var schf = Docflow.AccountingDocumentBase.FormalizedFunction.Schf;
+              var contractStatement = documents.FirstOrDefault(d => AccountingDocumentBases.As(d).FormalizedFunction != schf);
+              Logger.DebugFormat("Completed start approval task from document with Id {0}.", contractStatement.Id);
+            }
           }
-          
         }
         catch (Exception ex)
         {
@@ -408,6 +413,7 @@ namespace Sungero.BulkExchangeSolution.Client
           version.AssociatedApplication = Sungero.Exchange.PublicFunctions.Module.Remote.GetOrCreateAssociatedApplicationByDocumentName(fileName);
           version.Body.Write(memory);
           contractStatement.State.Properties.Counterparty.IsRequired = false;
+          contractStatement.State.Properties.BusinessUnit.IsRequired = false;
           contractStatement.Save();
         }
       }
@@ -427,16 +433,19 @@ namespace Sungero.BulkExchangeSolution.Client
       return Equals(fileExtestion, ".xml");
     }
     
-    public virtual void ProcessImportedDocuments(List<IOfficialDocument> documents, Company.IEmployee chiefAccountant, Company.IEmployee salesManager, Company.IDepartment department)
+    /// <summary>
+    /// Обработать импортированные документы.
+    /// </summary>
+    /// <param name="documents">Документы.</param>
+    /// <param name="responsible">Ответственный за документ.</param>
+    public virtual void ProcessImportedDocuments(List<IOfficialDocument> documents, Company.IEmployee responsible)
     {
-      var isContractStatement = documents.Any(d => FinancialArchive.ContractStatements.Is(d));
-      var responsible = isContractStatement ? salesManager : chiefAccountant;
       foreach (var document in documents)
       {
         var accountingDocument = Docflow.AccountingDocumentBases.As(document);
         var isFormalized = accountingDocument.Counterparty != null;
         
-        if (FinancialArchive.ContractStatements.Is(document))
+        if (!isFormalized)
         {
           var documentWithCounterparty = documents.Where(d => AccountingDocumentBases.As(d).Counterparty != null).FirstOrDefault();
           var counterparty = AccountingDocumentBases.As(documentWithCounterparty).Counterparty;
@@ -447,6 +456,11 @@ namespace Sungero.BulkExchangeSolution.Client
       }
     }
     
+    /// <summary>
+    /// Получить нашу организацию из документов.
+    /// </summary>
+    /// <param name="documents">Документы.</param>
+    /// <returns>Наша организация.</returns>
     public virtual Company.IBusinessUnit GetBusinessUnit(List<IOfficialDocument> documents)
     {
       var documentsWithBusinessUnit = documents.Where(d => AccountingDocumentBases.As(d).BusinessUnit != null).FirstOrDefault();
@@ -455,6 +469,11 @@ namespace Sungero.BulkExchangeSolution.Client
       AccountingDocumentBases.As(documentsWithBusinessUnit).BusinessUnit;
     }
     
+    /// <summary>
+    /// Получить руководителя организации из документов.
+    /// </summary>
+    /// <param name="documents">Документы.</param>
+    /// <returns>Руководитель организации.</returns>
     public virtual Company.IEmployee GetChiefBusinessUnit(List<IOfficialDocument> documents)
     {
       var documentsWithBusinessUnit = documents.Where(d => AccountingDocumentBases.As(d).BusinessUnit != null).FirstOrDefault();
@@ -463,6 +482,12 @@ namespace Sungero.BulkExchangeSolution.Client
       AccountingDocumentBases.As(documentsWithBusinessUnit).BusinessUnit.CEO;
     }
     
+    /// <summary>
+    /// Добавить полученный из файла номер заказа/договора в коллекцию номеров заказов или коллекцию номеров договоров.
+    /// </summary>
+    /// <param name="filesPath">Путь к файлу.</param>
+    /// <param name="purchaseNumbers">Коллекция номеров заказов.</param>
+    /// <param name="contractNumbers">Коллекция номеров договоров.</param>
     public virtual void CollectPurchaseAndContractNumbers(string filesPath, List<string> purchaseNumbers, List<string> contractNumbers)
     {
       var file = File.ReadAllBytes(filesPath);
@@ -477,17 +502,25 @@ namespace Sungero.BulkExchangeSolution.Client
         contractNumbers.Add(contractNumber);
     }
     
+    /// <summary>
+    /// Проверить полученные номера заказов или номера договоров.
+    /// </summary>
+    /// <param name="purchaseNumbers">Коллекция номеров заказов.</param>
+    /// <param name="contractNumbers">Коллекция номеров договоров.</param>
+    /// <returns>True если 1 уникальный номер заказа или договора, и номера заказа и договора не присутствуют одновременно.</returns>
     public virtual bool ValidatePurchaseAndContractNumbers(List<string> purchaseNumbers, List<string> contractNumbers)
     {
       var uniquePurchaseNumbers = purchaseNumbers.Distinct();
       var uniqueContractNumbers = contractNumbers.Distinct();
-      
-      var isValid = uniquePurchaseNumbers.Count() < 2 && uniqueContractNumbers.Count() < 2 &&
-        (uniquePurchaseNumbers.All(x => string.IsNullOrEmpty(x)) ^ uniqueContractNumbers.All(x => string.IsNullOrEmpty(x)));
-      
+      var isValid = uniquePurchaseNumbers.Count() == 1 ^ uniqueContractNumbers.Count() == 1;
       return isValid;
     }
     
+    /// <summary>
+    /// Импортировать документ.
+    /// </summary>
+    /// <param name="filesPath">Путь к файлу.</param>
+    /// <returns>Документ.</returns>
     public virtual IAccountingDocumentBase ImportDocument(string filesPath)
     {
       var document = Docflow.AccountingDocumentBases.Null;
@@ -516,12 +549,52 @@ namespace Sungero.BulkExchangeSolution.Client
       return document;
     }
     
-    public virtual void CreateAndStartApprovalTask(IOfficialDocument contractStatement, Company.IEmployee author, Company.IEmployee signatory)
+    /// <summary>
+    /// Создать и стартовать задачу на согласование по регламенту.
+    /// </summary>
+    /// <param name="documents">Документы.</param>
+    /// <param name="author">Автор задачи.</param>
+    /// <param name="signatory">Подписант задачи.</param>
+    /// <returns>True, если задача была стартована.</returns>
+    public virtual bool CreateAndStartApprovalTask(List<IOfficialDocument> documents, Company.IEmployee author, Company.IEmployee signatory)
     {
-      var task = Docflow.PublicFunctions.Module.Remote.CreateApprovalTask(contractStatement);
-      task.Author = author;
-      task.Signatory = signatory;
-      task.Start();
+      var schf = Docflow.AccountingDocumentBase.FormalizedFunction.Schf;
+      var contractStatement = documents.FirstOrDefault(d => AccountingDocumentBases.As(d).FormalizedFunction != schf);
+      var totalAmounts = documents.Where(d => AccountingDocumentBases.As(d).TotalAmount != null)
+        .Select(d => AccountingDocumentBases.As(d).TotalAmount)
+        .Distinct()
+        .ToList();
+      if (contractStatement != null && totalAmounts.Count == 1)
+      {
+        var task = Docflow.PublicFunctions.Module.Remote.CreateApprovalTask(contractStatement);
+        task.Author = author;
+        task.Signatory = signatory;
+        task.Start();
+        return true;
+      }
+      
+      return false;
+    }
+    
+    /// <summary>
+    /// Обработать документы нетоварного потока.
+    /// </summary>
+    /// <param name="contractNumbers">Коллекция номеров договоров.</param>
+    /// <param name="documents">Документы.</param>
+    /// <param name="signatory">Полписант.</param>
+    public virtual void ProcessContractStatementDocuments(List<string> contractNumbers, List<IOfficialDocument> documents, Company.IEmployee signatory)
+    {
+      var contractNumber = contractNumbers.FirstOrDefault();
+      var contract = Functions.Module.Remote.GetContractByNumber(contractNumber);
+      
+      foreach(var doc in documents)
+      {
+        var accountingDocument = Docflow.AccountingDocumentBases.As(doc);
+        if (contract != null)
+          accountingDocument.LeadingDocument = contract;
+        accountingDocument.OurSignatory = signatory;
+        accountingDocument.Save();
+      }
     }
   }
 }
