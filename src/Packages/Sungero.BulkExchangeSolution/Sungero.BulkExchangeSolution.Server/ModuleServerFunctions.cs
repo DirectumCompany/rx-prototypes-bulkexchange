@@ -54,10 +54,13 @@ namespace Sungero.BulkExchangeSolution.Server
     /// <param name="responsible">Ответственный.</param>
     /// <param name="caseFile">Дело.</param>
     [Remote]
-    public virtual void ProcessImportedDocument(IAccountingDocumentBase document, IEmployee responsible, ICaseFile caseFile)
+    public virtual void ProcessImportedDocument(IAccountingDocumentBase document, IEmployee responsible, bool isFormalized)
     {
-      Docflow.PublicFunctions.AccountingDocumentBase.Remote.GenerateDefaultSellerTitle(document, responsible);
+      if (isFormalized)
+        Docflow.PublicFunctions.AccountingDocumentBase.Remote.GenerateDefaultSellerTitle(document, responsible);
+
       BulkExchangeSolution.Module.Exchange.PublicFunctions.Module.SetDocumentResponsible(document, responsible);
+      var caseFile = this.GetImportedDocumentsDefaultCaseFile();
       if (caseFile != null)
         document.CaseFile = caseFile;
       document.Save();
@@ -94,17 +97,41 @@ namespace Sungero.BulkExchangeSolution.Server
     }
     
     /// <summary>
-    /// Получить ответственного для импортируемых документов.
+    /// Получить ответственного для импортируемых товарных документов.
     /// </summary>
     /// <returns>Ответственный.</returns>
     [Remote]
-    public IEmployee GetImportedDocumentsResponsible()
+    public IEmployee GetImportedWaybillDocumentsResponsible()
     {
       var accountingChiefRole = Roles.GetAll(r => r.Name.Equals(BulkExchangeSolution.Module.Exchange.Constants.Module.ChiefAccountantRoleName)).FirstOrDefault();
       var chiefAccount = Employees.As(accountingChiefRole.RecipientLinks.FirstOrDefault().Member);
       return chiefAccount;
     }
     
+    /// <summary>
+    /// Получить ответственного по подразделению и названию должности.
+    /// </summary>
+    /// <param name="department">Подразделение.</param>
+    /// <param name="jobTitle">Должность.</param>
+    /// <returns>Ответственный.</returns>
+    [Remote]
+    public IEmployee GetEmployeeByJobTitle(IDepartment department, string jobTitle)
+    {
+      return Employees.GetAll(e => e.Department == department).Where(e => Equals(e.JobTitle.Name, jobTitle)).FirstOrDefault();
+    }
+    
+    /// <summary>
+    /// Получить подразделение по НОР и названию подразделения.
+    /// </summary>
+    /// <param name="businessUnit">Наша организация.</param>
+    /// <param name="department">Подразделение.</param>
+    /// <returns>Подразделение.</returns>
+    [Remote]
+    public IDepartment GetDepartmentByName(IBusinessUnit businessUnit, string department)
+    {
+      return Sungero.Company.Departments.GetAll(d => d.BusinessUnit == businessUnit).Where(d => Equals(d.Name, department)).FirstOrDefault();
+    }
+        
     /// <summary>
     /// Получить дело по умолчанию для импортируемых документов.
     /// </summary>
