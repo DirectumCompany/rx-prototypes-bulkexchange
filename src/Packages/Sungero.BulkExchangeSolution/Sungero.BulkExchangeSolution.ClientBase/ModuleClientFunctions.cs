@@ -51,15 +51,16 @@ namespace Sungero.BulkExchangeSolution.Client
           
           Logger.DebugFormat("Completed import documents from folder {0}.", directory);
           
+          var isContractStatementDocumentSet = contractNumbers.Any();
           var chief = this.GetChiefBusinessUnit(documents);
           var businesUnit = this.GetBusinessUnit(documents);
           var department = Functions.Module.Remote.GetDepartmentByName(businesUnit, "Отдел продаж");
           var salesManager = Functions.Module.Remote.GetEmployeeByJobTitle(department, "Менеджер по продажам");
-          var responsible = contractNumbers.Any() ? salesManager : chiefAccountant;
+          var responsible = isContractStatementDocumentSet ? salesManager : chiefAccountant;
+          var titleSignatory = isContractStatementDocumentSet ? chief : chiefAccountant;
           
-          this.ProcessImportedDocuments(documents, responsible);
+          this.ProcessImportedDocuments(documents, responsible, titleSignatory);
           
-          var isContractStatementDocumentSet = contractNumbers.Any();
           if (isContractStatementDocumentSet)
           {
             this.ProcessContractStatementDocuments(contractNumbers, documents, chief);
@@ -439,7 +440,8 @@ namespace Sungero.BulkExchangeSolution.Client
     /// </summary>
     /// <param name="documents">Документы.</param>
     /// <param name="responsible">Ответственный за документ.</param>
-    public virtual void ProcessImportedDocuments(List<IOfficialDocument> documents, Company.IEmployee responsible)
+    /// <param name="titleSignatory">Подписывающий титул продавца.</param>
+    public virtual void ProcessImportedDocuments(List<IOfficialDocument> documents, Company.IEmployee responsible, Company.IEmployee titleSignatory)
     {
       foreach (var document in documents)
       {
@@ -453,7 +455,8 @@ namespace Sungero.BulkExchangeSolution.Client
           accountingDocument.Counterparty = counterparty;
           accountingDocument.Save();
         }
-        Functions.Module.Remote.ProcessImportedDocument(accountingDocument, responsible, isFormalized);
+        var signatory = isFormalized ? titleSignatory : null;
+        Functions.Module.Remote.ProcessImportedDocument(accountingDocument, responsible, signatory);
       }
     }
     
@@ -513,7 +516,9 @@ namespace Sungero.BulkExchangeSolution.Client
     {
       var uniquePurchaseNumbers = purchaseNumbers.Distinct();
       var uniqueContractNumbers = contractNumbers.Distinct();
-      var isValid = uniquePurchaseNumbers.Count(x => !string.IsNullOrEmpty(x)) == 1 ^ uniqueContractNumbers.Count(x => !string.IsNullOrEmpty(x)) == 1;
+      var isValid = (uniquePurchaseNumbers.Count() == 1 && !string.IsNullOrEmpty(uniquePurchaseNumbers.Single())) ^
+                    (uniqueContractNumbers.Count() == 1 && !string.IsNullOrEmpty(uniqueContractNumbers.Single()));
+      
       return isValid;
     }
     

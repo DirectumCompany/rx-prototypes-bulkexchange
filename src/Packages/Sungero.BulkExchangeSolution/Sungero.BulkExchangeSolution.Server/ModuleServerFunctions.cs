@@ -52,12 +52,12 @@ namespace Sungero.BulkExchangeSolution.Server
     /// </summary>
     /// <param name="document">Документ.</param>
     /// <param name="responsible">Ответственный.</param>
-    /// <param name="isFormalized">Признак что документ формализованный.</param>
+    /// <param name="titleSignatory">Подписывающий титул продавца.</param>
     [Remote]
-    public virtual void ProcessImportedDocument(IAccountingDocumentBase document, IEmployee responsible, bool isFormalized)
+    public virtual void ProcessImportedDocument(IAccountingDocumentBase document, IEmployee responsible, IEmployee titleSignatory)
     {
-      if (isFormalized)
-        Docflow.PublicFunctions.AccountingDocumentBase.Remote.GenerateDefaultSellerTitle(document, responsible);
+      if (titleSignatory != null)
+        Docflow.PublicFunctions.AccountingDocumentBase.Remote.GenerateDefaultSellerTitle(document, titleSignatory);
 
       BulkExchangeSolution.Module.Exchange.PublicFunctions.Module.SetDocumentResponsible(document, responsible);
       var caseFile = this.GetImportedDocumentsDefaultCaseFile();
