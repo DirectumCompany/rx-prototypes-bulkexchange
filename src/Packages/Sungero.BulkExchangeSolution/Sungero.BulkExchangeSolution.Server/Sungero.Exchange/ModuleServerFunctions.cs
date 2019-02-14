@@ -171,7 +171,8 @@ namespace Sungero.BulkExchangeSolution.Module.Exchange.Server
     /// <param name="documentSet">Комплект документов.</param>
     public void VerifyDocumentSet(Sungero.BulkExchangeSolution.Structures.Exchange.ExchangeDocumentInfo.DocumentSet documentSet)
     {
-      if (documentSet.Type != BulkExchangeSolution.Constants.Exchange.ExchangeDocumentInfo.DocumentSetType.Waybill)
+      var isIncomingDocumentSet = documentSet.ExchangeDocumentInfos.FirstOrDefault().MessageType == ExchangeDocumentInfo.MessageType.Incoming;
+      if (!isIncomingDocumentSet || documentSet.Type != BulkExchangeSolution.Constants.Exchange.ExchangeDocumentInfo.DocumentSetType.Waybill)
         return;
       
       var totalAmount = Sungero.Docflow.AccountingDocumentBases.As(documentSet.ExchangeDocumentInfos.FirstOrDefault().Document).TotalAmount;
@@ -241,7 +242,7 @@ namespace Sungero.BulkExchangeSolution.Module.Exchange.Server
     {
       return document != null && (document.ExchangeState == Sungero.Exchange.ExchangeDocumentInfo.ExchangeState.Signed || document.ExchangeState == Sungero.Exchange.ExchangeDocumentInfo.ExchangeState.Obsolete ||
                                   document.ExchangeState == Sungero.Exchange.ExchangeDocumentInfo.ExchangeState.Rejected || document.ExchangeState == Sungero.Exchange.ExchangeDocumentInfo.ExchangeState.Terminated ||
-                                  document.Document.Note.IndexOf(Resources.Incurred, StringComparison.InvariantCultureIgnoreCase) >= 0);
+                                  (document.Document.Note != null && document.Document.Note.IndexOf(Resources.Incurred, StringComparison.InvariantCultureIgnoreCase) >= 0));
     }
     
     protected override bool ProcessDocumentsFromNewIncomingMessage(List<Sungero.Exchange.IExchangeDocumentInfo> infos,
@@ -263,11 +264,10 @@ namespace Sungero.BulkExchangeSolution.Module.Exchange.Server
       var documentSet = this.GetDocumentSet(message);
       if (documentSet != null)
       {
-        var isFullSet = documentSet.IsFullSet;
-        this.SetStatuses(documentSet.ExchangeDocumentInfos, isFullSet, documentSet.Type);
+        this.SetStatuses(documentSet);
         this.ProcessDocumenSetFromNewIncomingMessage(documentSet);
         
-        if (isFullSet)
+        if (documentSet.IsFullSet)
         {
           Functions.Module.VerifyDocumentSet(documentSet);
           this.SendContractStatementForApproval(documentSet);
@@ -564,13 +564,18 @@ namespace Sungero.BulkExchangeSolution.Module.Exchange.Server
     /// <param name="documentInfos">Список информаций о документах обмена.</param>
     /// <param name="isFullSet">True если комплект полный.</param>
     /// <param name="documentSetType">Тип комплекта.</param>
-    private void SetStatuses(List<IExchangeDocumentInfo> documentInfos, bool isFullSet, string documentSetType)
+    private void SetStatuses(Sungero.BulkExchangeSolution.Structures.Exchange.ExchangeDocumentInfo.DocumentSet documentSet)
     {
-      var rejectionStatus = !isFullSet && documentSetType == BulkExchangeSolution.Constants.Exchange.ExchangeDocumentInfo.DocumentSetType.Waybill
+      var documentInfos = documentSet.ExchangeDocumentInfos;
+      var isFullSet = documentSet.IsFullSet;
+      var documentSetType = documentSet.Type;
+      var isIncoming = documentInfos.FirstOrDefault().MessageType == ExchangeDocumentInfo.MessageType.Incoming;
+      
+      var rejectionStatus = isIncoming && !isFullSet && documentSetType == BulkExchangeSolution.Constants.Exchange.ExchangeDocumentInfo.DocumentSetType.Waybill
         ? ExchangeDocumentInfo.RejectionStatus.Required
         : ExchangeDocumentInfo.RejectionStatus.NotRequired;
 
-      var verificationStatus = isFullSet
+      var verificationStatus = isIncoming && isFullSet
         ? ExchangeDocumentInfo.VerificationStatus.Required
         : ExchangeDocumentInfo.VerificationStatus.NotRequired;
       
@@ -615,7 +620,6 @@ namespace Sungero.BulkExchangeSolution.Module.Exchange.Server
       var contractStatement = documentSet.ExchangeDocumentInfos.Select(i => Docflow.AccountingDocumentBases.As(i.Document)).First(d => FinancialArchive.ContractStatements.Is(d) ||
                                                                                                                                   FinancialArchive.UniversalTransferDocuments.Is(d));
       var task = Docflow.PublicFunctions.Module.Remote.CreateApprovalTask(contractStatement);
-      var counterparty = contractStatement.Counterparty; 
       if (contractStatement.ResponsibleEmployee != null)
         task.Author = contractStatement.ResponsibleEmployee;
       
