@@ -23,6 +23,7 @@ namespace Sungero.BulkExchangeSolution.Module.Exchange.Server
       var documentSets = Functions.Module.GetSignedAndNotSendedDocumentSets();
       foreach (var documentSet in documentSets)
       {
+        // Переполучаем инфошки, чтобы транзакция работала корректно и не было дублей сессии.
         var infoIds = documentSet.ExchangeDocumentInfos.Select(e => e.Id).ToList();
         Transactions.Execute(
           () =>
@@ -62,12 +63,15 @@ namespace Sungero.BulkExchangeSolution.Module.Exchange.Server
       var documentSets = BulkExchangeSolution.Functions.ExchangeDocumentInfo.GetDocumentSets(infos.ToList()).Where(s => s.IsFullSet).ToList();
       foreach (var documentSet in documentSets)
       {
+        // Переполучаем инфошки, чтобы транзакция работала корректно и не было дублей сессии.
+        var infoIds = documentSet.ExchangeDocumentInfos.Select(ei => ei.Id).ToList();
         Transactions.Execute(
           () =>
-          {
+          {            
+            documentSet.ExchangeDocumentInfos = ExchangeDocumentInfos.GetAll(i => infoIds.Contains(i.Id)).ToList();
             Functions.Module.VerifyDocumentSet(documentSet);
           });
-        }
+      }
     }
   }
 }
