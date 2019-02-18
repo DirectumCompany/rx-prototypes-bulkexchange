@@ -21,13 +21,13 @@ namespace Sungero.BulkExchangeSolution.Module.Exchange.Server
   {
     #region Перекрытие получения сообщений
 
-    protected override bool ProcessDocumentsFromNewIncomingMessage(List<Sungero.Exchange.IExchangeDocumentInfo> infos,
-                                                                   IMessage message,
-                                                                   IBoxBase box,
-                                                                   ICounterparty sender,
-                                                                   Sungero.ExchangeCore.IMessageQueueItem queueItem,
-                                                                   bool isIncoming,
-                                                                   List<IDocument> processingDocuments)
+    protected override bool ProcessDocumentsFromNewIncomingMessage(IMessage message,
+      ExchangeCore.IMessageQueueItem queueItem,
+      List<Sungero.Exchange.IExchangeDocumentInfo> infos,
+      List<IDocument> processingDocuments,
+      ICounterparty sender,
+      bool isIncoming,
+      IBoxBase box)
     {
       var queueItems = MessageQueueItems.GetAll(q => Equals(q.RootBox, queueItem.RootBox)).ToList();
       var responsible = BoxBase.GetExchangeDocumentResponsible(box, sender, infos);
@@ -50,12 +50,12 @@ namespace Sungero.BulkExchangeSolution.Module.Exchange.Server
         }
       }
       
-      return base.ProcessDocumentsFromNewIncomingMessage(infos, message, box, sender, queueItem, isIncoming, processingDocuments);
+      return base.ProcessDocumentsFromNewIncomingMessage(message, queueItem, infos, processingDocuments, sender, isIncoming, box);
     }
     
-    protected override Sungero.Docflow.IOfficialDocument GetOrCreateNewExchangeDocument(IDocument document, IBoxBase box, ICounterparty sender, bool isIncoming, string serviceCounterpartyId, DateTime messageDate)
+    protected override IOfficialDocument GetOrCreateNewExchangeDocument(IDocument document, ICounterparty sender, string serviceCounterpartyId, bool isIncoming, DateTime messageDate, IBoxBase box)
     {
-      var createdDocument = base.GetOrCreateNewExchangeDocument(document, box, sender, isIncoming, serviceCounterpartyId, messageDate);
+      var createdDocument = base.GetOrCreateNewExchangeDocument(document, sender, serviceCounterpartyId, isIncoming, messageDate, box);
 
       var accountingDocument = AccountingDocumentBases.As(createdDocument);
       
@@ -106,13 +106,13 @@ namespace Sungero.BulkExchangeSolution.Module.Exchange.Server
     /// <summary>
     /// Создать документ обмена.
     /// </summary>
+    /// <param name="info">Информация о документе.</param>
+    /// <param name="counterparty">Контрагент.</param>
+    /// <param name="box">Ящик обмена.</param>
     /// <param name="fileName">Имя файла.</param>
     /// <param name="comment">Комментарий.</param>
-    /// <param name="box">Ящик обмена.</param>
-    /// <param name="counterparty">Контрагент.</param>
-    /// <param name="info">Информация о документе.</param>
     /// <returns>Созданный документ.</returns>
-    public override IOfficialDocument CreateExchangeDocument(string fileName, string comment, IBoxBase box, ICounterparty counterparty, Sungero.Exchange.IExchangeDocumentInfo info)
+    protected override IOfficialDocument CreateExchangeDocument(Sungero.Exchange.IExchangeDocumentInfo info, ICounterparty counterparty, IBoxBase box, string fileName, string comment)
     {
       if (fileName.ToLowerInvariant().Contains("акт") && comment.ToLowerInvariant().Contains("номер_договора"))
       {
@@ -126,11 +126,12 @@ namespace Sungero.BulkExchangeSolution.Module.Exchange.Server
         return contractStatement;
       }
       
-      return base.CreateExchangeDocument(fileName, comment, box, counterparty, info);
+      return base.CreateExchangeDocument(info, counterparty, box, fileName, comment);
     }
     
-    public override bool StartExchangeTask(IBoxBase box, NpoComputer.DCX.Common.IMessage message, ICounterparty sender, bool isIncoming,
-                                           string exchangeTaskActiveTextBoundedDocuments, List<Sungero.Exchange.IExchangeDocumentInfo> infos)
+    protected override bool StartExchangeTask(IMessage message, List<Sungero.Exchange.IExchangeDocumentInfo> infos, ICounterparty sender, bool isIncoming,
+      IBoxBase box,
+      string exchangeTaskActiveTextBoundedDocuments)
     {
       var exchangeDocumentInfos = Sungero.BulkExchangeSolution.ExchangeDocumentInfos.GetAll().Where(e => e.ServiceMessageId == message.ServiceMessageId).ToList();
       if (exchangeDocumentInfos.Any(i => i.VerificationStatus == VerificationStatus.Required))
@@ -140,9 +141,9 @@ namespace Sungero.BulkExchangeSolution.Module.Exchange.Server
       if (documentSets.Any(s => s.IsFullSet && s.Type == BulkExchangeSolution.Constants.Exchange.ExchangeDocumentInfo.DocumentSetType.ContractStatement))
         return true;
       
-      return base.StartExchangeTask(box, message, sender, isIncoming, exchangeTaskActiveTextBoundedDocuments, infos);
+      return base.StartExchangeTask(message, infos, sender, isIncoming, box, exchangeTaskActiveTextBoundedDocuments);
     }
-    
+
     /// <summary>
     /// Отправлять задания/уведомления ответственному.
     /// </summary>
@@ -180,16 +181,17 @@ namespace Sungero.BulkExchangeSolution.Module.Exchange.Server
     /// </summary>
     /// <param name="box">Абонентский ящик.</param>
     /// <param name="trackingString">Строка выдачи.</param>
+    /// <param name="versionNumber">Версия документа.</param>
+    /// <param name="versionIsChanged">Признак того, что версия была изменена.</param>
     /// <param name="signed">Признак подписания. True - если документ подписан контрагентом, иначе - false.</param>
     /// <param name="signatoryInfo">Иформация о контрагенте.</param>
     /// <param name="isInvoiceAmendmentRequest">Отправлено уточнение по СФ или УПД.</param>
-    /// <param name="comment">Комментарий.</param>
-    /// <param name="versionNumber">Версия документа.</param>
     /// <param name="serviceName">Наименование сервиса обмена.</param>
-    /// <param name="versionIsChanged">Признак того, что версия была изменена.</param>
-    public override void SendDocumentReplyNotice(ExchangeCore.IBoxBase box, Sungero.Docflow.IOfficialDocumentTracking trackingString, bool signed,
-                                                 string signatoryInfo, bool isInvoiceAmendmentRequest, string comment, int? versionNumber,
-                                                 string serviceName, bool versionIsChanged)
+    /// <param name="comment">Комментарий.</param>
+    protected override void SendDocumentReplyNotice(IBoxBase box, IOfficialDocumentTracking trackingString, int? versionNumber,
+      bool versionIsChanged, bool signed,
+      string signatoryInfo, bool isInvoiceAmendmentRequest,
+      string serviceName, string comment)
     {
       if (signed && !isInvoiceAmendmentRequest)
       {
@@ -204,7 +206,7 @@ namespace Sungero.BulkExchangeSolution.Module.Exchange.Server
           return;
       }
       
-      base.SendDocumentReplyNotice(box, trackingString, signed, signatoryInfo, isInvoiceAmendmentRequest, comment, versionNumber, serviceName, versionIsChanged);
+      base.SendDocumentReplyNotice(box, trackingString, versionNumber, versionIsChanged, signed, signatoryInfo, isInvoiceAmendmentRequest, serviceName, comment);
     }
     
     /// <summary>
@@ -521,8 +523,8 @@ namespace Sungero.BulkExchangeSolution.Module.Exchange.Server
 
         var taskText = Environment.NewLine + Sungero.BulkExchangeSolution.Module.Exchange.Resources.VerificationFailedTaskText +
           documentInfo.VerificationFailReason;
-        var processingTask = this.CreateExchangeTask(documentInfo.RootBox, message, documentInfo.Counterparty, isIncoming, taskText,
-                                                     documentSet.ExchangeDocumentInfos.Select(x => Sungero.Exchange.ExchangeDocumentInfos.As(x)).ToList());
+        var processingTask = this.CreateExchangeTask(message,
+                                                     documentSet.ExchangeDocumentInfos.Select(x => Sungero.Exchange.ExchangeDocumentInfos.As(x)).ToList(), documentInfo.Counterparty, isIncoming, documentInfo.RootBox, taskText);
         processingTask.Start();
         documentInfo.VerificationTask = processingTask;
         documentInfo.Save();

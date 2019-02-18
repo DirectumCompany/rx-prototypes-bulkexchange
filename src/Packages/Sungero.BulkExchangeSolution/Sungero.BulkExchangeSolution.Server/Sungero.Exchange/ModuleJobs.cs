@@ -47,7 +47,7 @@ namespace Sungero.BulkExchangeSolution.Module.Exchange.Server
 
                 Logger.DebugFormat("Try to send answer to documents {0}. Box {1}, counterparty {2}, certificate {3}.",
                                    string.Join(", ", documents.Select(d => d.Id)), businessUnitBox.Id, counterparty.Id, certificate.Id);
-                Sungero.Exchange.PublicFunctions.Module.Remote.SendAnswers(documents, businessUnitBox, counterparty, certificate, true);
+                Sungero.Exchange.PublicFunctions.Module.Remote.SendAnswers(documents, counterparty, businessUnitBox, certificate, true);
               }
             }
           });
