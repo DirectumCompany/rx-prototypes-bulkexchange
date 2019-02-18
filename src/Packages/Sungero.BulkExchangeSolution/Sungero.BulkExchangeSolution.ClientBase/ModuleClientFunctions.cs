@@ -16,6 +16,8 @@ namespace Sungero.BulkExchangeSolution.Client
 {
   public class ModuleFunctions
   {
+    #region Загрузка документов из папки
+    
     public virtual void ImportDocumentsFromFolder(string path)
     {
       var allDirectories = Directory.GetDirectories(path, "*.*", System.IO.SearchOption.AllDirectories);
@@ -138,6 +140,222 @@ namespace Sungero.BulkExchangeSolution.Client
       }
     }
     
+    /// <summary>
+    /// Импортировать неформализованный документ.
+    /// </summary>
+    /// <param name="file">Путь к файлу.</param>
+    /// <returns>Документ.</returns>
+    /// <remarks>Работает с локальными путями клиента, не для веб-клиента.</remarks>
+    public virtual Docflow.IAccountingDocumentBase ImportNonformalizedDocument(string file)
+    {
+      var content = System.IO.File.ReadAllBytes(file);
+      var array = Docflow.Structures.Module.ByteArray.Create(content);
+      var contractStatement = FinancialArchive.ContractStatements.Null;
+      using (var memory = new System.IO.MemoryStream(array.Bytes))
+      {
+        // Создать версию. Сохранить в версию.
+        var fileInfo = new FileInfo(file);
+        var fileName = fileInfo.Name;
+        if (fileName.ToLowerInvariant().Contains("акт"))
+        {
+          contractStatement = Functions.Module.Remote.CreateContractStatement();
+          contractStatement.CreateVersion();
+          var version = contractStatement.LastVersion;
+          version.AssociatedApplication = Sungero.Exchange.PublicFunctions.Module.Remote.GetOrCreateAssociatedApplicationByDocumentName(fileName);
+          version.Body.Write(memory);
+          contractStatement.State.Properties.Counterparty.IsRequired = false;
+          contractStatement.State.Properties.BusinessUnit.IsRequired = false;
+          contractStatement.Save();
+        }
+      }
+      
+      return contractStatement;
+    }
+    
+    /// <summary>
+    /// Обработать импортированные документы.
+    /// </summary>
+    /// <param name="documents">Документы.</param>
+    /// <param name="responsible">Ответственный за документ.</param>
+    /// <param name="titleSignatory">Подписывающий титул продавца.</param>
+    public virtual void ProcessImportedDocuments(List<IOfficialDocument> documents, Company.IEmployee responsible, Company.IEmployee titleSignatory)
+    {
+      foreach (var document in documents)
+      {
+        var accountingDocument = Docflow.AccountingDocumentBases.As(document);
+        var isFormalized = accountingDocument.Counterparty != null;
+        
+        if (!isFormalized)
+        {
+          var documentWithCounterparty = documents.Where(d => AccountingDocumentBases.As(d).Counterparty != null).FirstOrDefault();
+          var counterparty = AccountingDocumentBases.As(documentWithCounterparty).Counterparty;
+          accountingDocument.Counterparty = counterparty;
+          accountingDocument.Save();
+        }
+        var signatory = isFormalized ? titleSignatory : null;
+        Functions.Module.Remote.ProcessImportedDocument(accountingDocument, responsible, signatory);
+      }
+    }
+    
+    /// <summary>
+    /// Обработать документы нетоварного потока.
+    /// </summary>
+    /// <param name="contractNumbers">Коллекция номеров договоров.</param>
+    /// <param name="documents">Документы.</param>
+    /// <param name="signatory">Полписант.</param>
+    public virtual void ProcessContractStatementDocuments(List<string> contractNumbers, List<IOfficialDocument> documents, Company.IEmployee signatory)
+    {
+      var contractNumber = contractNumbers.FirstOrDefault();
+      var contract = Functions.Module.Remote.GetContractByNumber(contractNumber);
+      
+      foreach (var doc in documents)
+      {
+        var accountingDocument = Docflow.AccountingDocumentBases.As(doc);
+        if (contract != null)
+          accountingDocument.LeadingDocument = contract;
+        accountingDocument.OurSignatory = signatory;
+        accountingDocument.Save();
+      }
+    }
+    
+    /// <summary>
+    /// Определить что документ формализованный по расширению имени файла.
+    /// </summary>
+    /// <param name="filesPath">Путь к файлу.</param>
+    /// <returns>True если расширение файла xml.</returns>
+    public virtual bool IsFormalized(string filesPath)
+    {
+      var fileInfo = new FileInfo(filesPath);
+      var fileExtestion = fileInfo.Extension;
+      return Equals(fileExtestion, ".xml");
+    }
+    
+    /// <summary>
+    /// Получить нашу организацию из документов.
+    /// </summary>
+    /// <param name="documents">Документы.</param>
+    /// <returns>Наша организация.</returns>
+    public virtual Company.IBusinessUnit GetBusinessUnit(List<IOfficialDocument> documents)
+    {
+      var documentsWithBusinessUnit = documents.Where(d => AccountingDocumentBases.As(d).BusinessUnit != null).FirstOrDefault();
+      return documentsWithBusinessUnit == null ?
+        null :
+        AccountingDocumentBases.As(documentsWithBusinessUnit).BusinessUnit;
+    }
+    
+    /// <summary>
+    /// Получить руководителя организации из документов.
+    /// </summary>
+    /// <param name="documents">Документы.</param>
+    /// <returns>Руководитель организации.</returns>
+    public virtual Company.IEmployee GetChiefBusinessUnit(List<IOfficialDocument> documents)
+    {
+      var documentsWithBusinessUnit = documents.Where(d => AccountingDocumentBases.As(d).BusinessUnit != null).FirstOrDefault();
+      return documentsWithBusinessUnit == null ?
+        null :
+        AccountingDocumentBases.As(documentsWithBusinessUnit).BusinessUnit.CEO;
+    }
+    
+    /// <summary>
+    /// Добавить полученный из файла номер заказа/договора в коллекцию номеров заказов или коллекцию номеров договоров.
+    /// </summary>
+    /// <param name="filesPath">Путь к файлу.</param>
+    /// <param name="purchaseNumbers">Коллекция номеров заказов.</param>
+    /// <param name="contractNumbers">Коллекция номеров договоров.</param>
+    public virtual void CollectPurchaseAndContractNumbers(string filesPath, List<string> purchaseNumbers, List<string> contractNumbers)
+    {
+      var file = File.ReadAllBytes(filesPath);
+      var byteArray = Docflow.Structures.Module.ByteArray.Create(file);
+      var purchaseOrderNumber = Functions.Module.Remote.GetPurchaseNumber(byteArray);
+      purchaseNumbers.Add(purchaseOrderNumber);
+      if (!string.IsNullOrEmpty(purchaseOrderNumber))
+        return;
+      
+      var contractNumber = Functions.Module.Remote.GetContractNumber(byteArray);
+      if (this.IsFormalized(filesPath))
+        contractNumbers.Add(contractNumber);
+    }
+    
+    /// <summary>
+    /// Проверить полученные номера заказов или номера договоров.
+    /// </summary>
+    /// <param name="purchaseNumbers">Коллекция номеров заказов.</param>
+    /// <param name="contractNumbers">Коллекция номеров договоров.</param>
+    /// <returns>True если 1 уникальный номер заказа или договора, и номера заказа и договора не присутствуют одновременно.</returns>
+    public virtual bool ValidatePurchaseAndContractNumbers(List<string> purchaseNumbers, List<string> contractNumbers)
+    {
+      var uniquePurchaseNumbers = purchaseNumbers.Distinct();
+      var uniqueContractNumbers = contractNumbers.Distinct();
+      var isValid = (uniquePurchaseNumbers.Count() == 1 && !string.IsNullOrEmpty(uniquePurchaseNumbers.Single())) ^
+        (uniqueContractNumbers.Count() == 1 && !string.IsNullOrEmpty(uniqueContractNumbers.Single()));
+      
+      return isValid;
+    }
+    
+    /// <summary>
+    /// Импортировать документ.
+    /// </summary>
+    /// <param name="filesPath">Путь к файлу.</param>
+    /// <returns>Документ.</returns>
+    public virtual IAccountingDocumentBase ImportDocument(string filesPath)
+    {
+      var document = Docflow.AccountingDocumentBases.Null;
+      var isFormalized = this.IsFormalized(filesPath);
+      if (isFormalized)
+      {
+        Logger.DebugFormat("Import formalized document from path {0}.", filesPath);
+        document = FinancialArchive.PublicFunctions.Module.ImportFormalizedDocument(filesPath, false);
+        document.Save();
+      }
+      else
+      {
+        Logger.DebugFormat("Import nonformalized document from path {0}.", filesPath);
+        document = this.ImportNonformalizedDocument(filesPath);
+        if (document != null)
+          document.Save();
+        else
+        {
+          Logger.DebugFormat("Import nonformalized document from path {0} failed.", filesPath);
+          return document;
+        }
+      }
+      Logger.DebugFormat("Document imported with Id {0}.", document.Id);
+      Logger.DebugFormat("Process document with Id {0}.", document.Id);
+      
+      return document;
+    }
+    
+    /// <summary>
+    /// Создать и стартовать задачу на согласование по регламенту.
+    /// </summary>
+    /// <param name="documents">Документы.</param>
+    /// <param name="author">Автор задачи.</param>
+    /// <param name="signatory">Подписант задачи.</param>
+    /// <returns>True, если задача была стартована.</returns>
+    public virtual bool CreateAndStartApprovalTask(List<IOfficialDocument> documents, Company.IEmployee author, Company.IEmployee signatory)
+    {
+      var schf = Docflow.AccountingDocumentBase.FormalizedFunction.Schf;
+      var contractStatement = documents.FirstOrDefault(d => AccountingDocumentBases.As(d).FormalizedFunction != schf);
+      var totalAmounts = documents.Where(d => AccountingDocumentBases.As(d).TotalAmount != null)
+        .Select(d => AccountingDocumentBases.As(d).TotalAmount)
+        .Distinct()
+        .ToList();
+      if (contractStatement != null && totalAmounts.Count == 1)
+      {
+        var task = Docflow.PublicFunctions.Module.Remote.CreateApprovalTask(contractStatement);
+        task.Author = author;
+        task.Signatory = signatory;
+        task.Start();
+        return true;
+      }
+      
+      return false;
+    }
+
+    #endregion
+
+    #region Подписание и отказ по товарным комплектам
+
     public virtual void SignVerifiedDocuments()
     {
       var verifiedSets = Sungero.BulkExchangeSolution.Functions.Module.Remote.GetVerifiedSets();
@@ -165,64 +383,6 @@ namespace Sungero.BulkExchangeSolution.Client
               Logger.Error(Sungero.BulkExchangeSolution.Resources.CannotSignDocument, ex);
             }
           }
-        }
-      }
-    }
-    
-    public virtual void RejectDocument(IAccountingDocumentBase document)
-    {
-      var approvalSigningAssignments = Functions.Module.Remote.GetApprovalSigningAssignments(document);
-      if (approvalSigningAssignments.Count() > 1)
-      {
-        Dialogs.ShowMessage(Sungero.BulkExchangeSolution.Resources.FewAssignmentError, MessageType.Error);
-        return;
-      }
-
-      var assignment = approvalSigningAssignments.FirstOrDefault();
-      if (assignment == null)
-      {
-        Dialogs.ShowMessage(Sungero.BulkExchangeSolution.Resources.NoAssignmentError, MessageType.Error);
-      }
-      
-      var task = ApprovalTasks.As(assignment.MainTask);
-      var dialog = Dialogs.CreateInputDialog(Sungero.BulkExchangeSolution.Resources.Reject);
-      var abortingReason = dialog.AddMultilineString(Sungero.BulkExchangeSolution.Resources.RejectReason, true);
-      dialog.Buttons.AddOkCancel();
-      dialog.Buttons.Default = DialogButtons.Ok;
-      
-      dialog.SetOnButtonClick(args =>
-                              {
-                                if (!string.IsNullOrEmpty(abortingReason.Value) && string.IsNullOrWhiteSpace(abortingReason.Value))
-                                  args.AddError(Resources.EmptyAbortingReason, abortingReason);
-                              });
-      
-      if (dialog.Show() == DialogButtons.Ok)
-      {
-        assignment.ActiveText += string.IsNullOrWhiteSpace(assignment.ActiveText)
-          ? abortingReason.Value
-          : Environment.NewLine + abortingReason.Value;
-
-        try
-        {
-          // Подписание согласующей подписью с результатом "не согласовано".
-          var isSigned = Signatures.NotEndorse(document.LastVersion, null, abortingReason.Value, assignment.Performer);
-          foreach (var attachment in task.AddendaGroup.OfficialDocuments)
-          {
-            isSigned &= Signatures.NotEndorse(attachment.LastVersion, null, abortingReason.Value, assignment.Performer);
-          }
-
-          if (isSigned)
-            assignment.Complete(Sungero.Docflow.ApprovalSigningAssignment.Result.Abort);
-        }
-        catch (CommonLibrary.Exceptions.PlatformException ex)
-        {
-          if (!ex.IsInternal)
-          {
-            var message = ex.Message.EndsWith(".") ? ex.Message : string.Format("{0}.", ex.Message);
-            Dialogs.ShowMessage(message, MessageType.Error);
-          }
-          else
-            throw;
         }
       }
     }
@@ -262,15 +422,10 @@ namespace Sungero.BulkExchangeSolution.Client
         }
       }
     }
+
+    #endregion
     
-    public void ShowApprovalSigningAssignments(IAccountingDocumentBase document)
-    {
-      var assignments = Functions.Module.Remote.GetApprovalSigningAssignments(document);
-      if (assignments.Count() == 1)
-        assignments.FirstOrDefault().ShowModal();
-      else
-        assignments.ShowModal();
-    }
+    #region Действия списков на подписание
     
     public virtual void SignDocumentSets(System.Collections.Generic.IEnumerable<IAccountingDocumentBase> documents, Sungero.Domain.Client.ExecuteActionArgs e)
     {
@@ -367,10 +522,71 @@ namespace Sungero.BulkExchangeSolution.Client
       }
     }
     
-    private static void ShowResultDialog(List<string> textList)
+    public virtual void RejectDocument(IAccountingDocumentBase document)
     {
-      var text = string.Join(Environment.NewLine, textList);
-      Dialogs.ShowMessage(Resources.DoumentsSignError, text, MessageType.Error);
+      var approvalSigningAssignments = Functions.Module.Remote.GetApprovalSigningAssignments(document);
+      if (approvalSigningAssignments.Count() > 1)
+      {
+        Dialogs.ShowMessage(Sungero.BulkExchangeSolution.Resources.FewAssignmentError, MessageType.Error);
+        return;
+      }
+
+      var assignment = approvalSigningAssignments.FirstOrDefault();
+      if (assignment == null)
+      {
+        Dialogs.ShowMessage(Sungero.BulkExchangeSolution.Resources.NoAssignmentError, MessageType.Error);
+      }
+      
+      var task = ApprovalTasks.As(assignment.MainTask);
+      var dialog = Dialogs.CreateInputDialog(Sungero.BulkExchangeSolution.Resources.Reject);
+      var abortingReason = dialog.AddMultilineString(Sungero.BulkExchangeSolution.Resources.RejectReason, true);
+      dialog.Buttons.AddOkCancel();
+      dialog.Buttons.Default = DialogButtons.Ok;
+      
+      dialog.SetOnButtonClick(args =>
+                              {
+                                if (!string.IsNullOrEmpty(abortingReason.Value) && string.IsNullOrWhiteSpace(abortingReason.Value))
+                                  args.AddError(Resources.EmptyAbortingReason, abortingReason);
+                              });
+      
+      if (dialog.Show() == DialogButtons.Ok)
+      {
+        assignment.ActiveText += string.IsNullOrWhiteSpace(assignment.ActiveText)
+          ? abortingReason.Value
+          : Environment.NewLine + abortingReason.Value;
+
+        try
+        {
+          // Подписание согласующей подписью с результатом "не согласовано".
+          var isSigned = Signatures.NotEndorse(document.LastVersion, null, abortingReason.Value, assignment.Performer);
+          foreach (var attachment in task.AddendaGroup.OfficialDocuments)
+          {
+            isSigned &= Signatures.NotEndorse(attachment.LastVersion, null, abortingReason.Value, assignment.Performer);
+          }
+
+          if (isSigned)
+            assignment.Complete(Sungero.Docflow.ApprovalSigningAssignment.Result.Abort);
+        }
+        catch (CommonLibrary.Exceptions.PlatformException ex)
+        {
+          if (!ex.IsInternal)
+          {
+            var message = ex.Message.EndsWith(".") ? ex.Message : string.Format("{0}.", ex.Message);
+            Dialogs.ShowMessage(message, MessageType.Error);
+          }
+          else
+            throw;
+        }
+      }
+    }
+    
+    public void ShowApprovalSigningAssignments(IAccountingDocumentBase document)
+    {
+      var assignments = Functions.Module.Remote.GetApprovalSigningAssignments(document);
+      if (assignments.Count() == 1)
+        assignments.FirstOrDefault().ShowModal();
+      else
+        assignments.ShowModal();
     }
     
     public void ShowDocumentSet(IAccountingDocumentBase document)
@@ -391,216 +607,13 @@ namespace Sungero.BulkExchangeSolution.Client
         Dialogs.ShowMessage(Resources.NoAssignmentError, MessageType.Error);
     }
     
-    /// <summary>
-    /// Импортировать неформализованный документ.
-    /// </summary>
-    /// <param name="file">Путь к файлу.</param>
-    /// <returns>Документ.</returns>
-    /// <remarks>Работает с локальными путями клиента, не для веб-клиента.</remarks>
-    public virtual Docflow.IAccountingDocumentBase ImportNonformalizedDocument(string file)
+    private static void ShowResultDialog(List<string> textList)
     {
-      var content = System.IO.File.ReadAllBytes(file);
-      var array = Docflow.Structures.Module.ByteArray.Create(content);
-      var contractStatement = FinancialArchive.ContractStatements.Null;
-      using (var memory = new System.IO.MemoryStream(array.Bytes))
-      {
-        // Создать версию. Сохранить в версию.
-        var fileInfo = new FileInfo(file);
-        var fileName = fileInfo.Name;
-        if (fileName.ToLowerInvariant().Contains("акт"))
-        {
-          contractStatement = Functions.Module.Remote.CreateContractStatement();
-          contractStatement.CreateVersion();
-          var version = contractStatement.LastVersion;
-          version.AssociatedApplication = Sungero.Exchange.PublicFunctions.Module.Remote.GetOrCreateAssociatedApplicationByDocumentName(fileName);
-          version.Body.Write(memory);
-          contractStatement.State.Properties.Counterparty.IsRequired = false;
-          contractStatement.State.Properties.BusinessUnit.IsRequired = false;
-          contractStatement.Save();
-        }
-      }
-      
-      return contractStatement;
+      var text = string.Join(Environment.NewLine, textList);
+      Dialogs.ShowMessage(Resources.DoumentsSignError, text, MessageType.Error);
     }
     
-    /// <summary>
-    /// Определить что документ формализованный по расширению имени файла.
-    /// </summary>
-    /// <param name="filesPath">Путь к файлу.</param>
-    /// <returns>True если расширение файла xml.</returns>
-    public virtual bool IsFormalized(string filesPath)
-    {
-      var fileInfo = new FileInfo(filesPath);
-      var fileExtestion = fileInfo.Extension;
-      return Equals(fileExtestion, ".xml");
-    }
+    #endregion
     
-    /// <summary>
-    /// Обработать импортированные документы.
-    /// </summary>
-    /// <param name="documents">Документы.</param>
-    /// <param name="responsible">Ответственный за документ.</param>
-    /// <param name="titleSignatory">Подписывающий титул продавца.</param>
-    public virtual void ProcessImportedDocuments(List<IOfficialDocument> documents, Company.IEmployee responsible, Company.IEmployee titleSignatory)
-    {
-      foreach (var document in documents)
-      {
-        var accountingDocument = Docflow.AccountingDocumentBases.As(document);
-        var isFormalized = accountingDocument.Counterparty != null;
-        
-        if (!isFormalized)
-        {
-          var documentWithCounterparty = documents.Where(d => AccountingDocumentBases.As(d).Counterparty != null).FirstOrDefault();
-          var counterparty = AccountingDocumentBases.As(documentWithCounterparty).Counterparty;
-          accountingDocument.Counterparty = counterparty;
-          accountingDocument.Save();
-        }
-        var signatory = isFormalized ? titleSignatory : null;
-        Functions.Module.Remote.ProcessImportedDocument(accountingDocument, responsible, signatory);
-      }
-    }
-    
-    /// <summary>
-    /// Получить нашу организацию из документов.
-    /// </summary>
-    /// <param name="documents">Документы.</param>
-    /// <returns>Наша организация.</returns>
-    public virtual Company.IBusinessUnit GetBusinessUnit(List<IOfficialDocument> documents)
-    {
-      var documentsWithBusinessUnit = documents.Where(d => AccountingDocumentBases.As(d).BusinessUnit != null).FirstOrDefault();
-      return documentsWithBusinessUnit == null ?
-      null :
-      AccountingDocumentBases.As(documentsWithBusinessUnit).BusinessUnit;
-    }
-    
-    /// <summary>
-    /// Получить руководителя организации из документов.
-    /// </summary>
-    /// <param name="documents">Документы.</param>
-    /// <returns>Руководитель организации.</returns>
-    public virtual Company.IEmployee GetChiefBusinessUnit(List<IOfficialDocument> documents)
-    {
-      var documentsWithBusinessUnit = documents.Where(d => AccountingDocumentBases.As(d).BusinessUnit != null).FirstOrDefault();
-      return documentsWithBusinessUnit == null ?
-      null :
-      AccountingDocumentBases.As(documentsWithBusinessUnit).BusinessUnit.CEO;
-    }
-    
-    /// <summary>
-    /// Добавить полученный из файла номер заказа/договора в коллекцию номеров заказов или коллекцию номеров договоров.
-    /// </summary>
-    /// <param name="filesPath">Путь к файлу.</param>
-    /// <param name="purchaseNumbers">Коллекция номеров заказов.</param>
-    /// <param name="contractNumbers">Коллекция номеров договоров.</param>
-    public virtual void CollectPurchaseAndContractNumbers(string filesPath, List<string> purchaseNumbers, List<string> contractNumbers)
-    {
-      var file = File.ReadAllBytes(filesPath);
-      var byteArray = Docflow.Structures.Module.ByteArray.Create(file);
-      var purchaseOrderNumber = Functions.Module.Remote.GetPurchaseNumber(byteArray);
-      purchaseNumbers.Add(purchaseOrderNumber);
-      if (!string.IsNullOrEmpty(purchaseOrderNumber))
-        return;
-      
-      var contractNumber = Functions.Module.Remote.GetContractNumber(byteArray);
-      if (this.IsFormalized(filesPath))
-        contractNumbers.Add(contractNumber);
-    }
-    
-    /// <summary>
-    /// Проверить полученные номера заказов или номера договоров.
-    /// </summary>
-    /// <param name="purchaseNumbers">Коллекция номеров заказов.</param>
-    /// <param name="contractNumbers">Коллекция номеров договоров.</param>
-    /// <returns>True если 1 уникальный номер заказа или договора, и номера заказа и договора не присутствуют одновременно.</returns>
-    public virtual bool ValidatePurchaseAndContractNumbers(List<string> purchaseNumbers, List<string> contractNumbers)
-    {
-      var uniquePurchaseNumbers = purchaseNumbers.Distinct();
-      var uniqueContractNumbers = contractNumbers.Distinct();
-      var isValid = (uniquePurchaseNumbers.Count() == 1 && !string.IsNullOrEmpty(uniquePurchaseNumbers.Single())) ^
-                    (uniqueContractNumbers.Count() == 1 && !string.IsNullOrEmpty(uniqueContractNumbers.Single()));
-      
-      return isValid;
-    }
-    
-    /// <summary>
-    /// Импортировать документ.
-    /// </summary>
-    /// <param name="filesPath">Путь к файлу.</param>
-    /// <returns>Документ.</returns>
-    public virtual IAccountingDocumentBase ImportDocument(string filesPath)
-    {
-      var document = Docflow.AccountingDocumentBases.Null;
-      var isFormalized = this.IsFormalized(filesPath);
-      if (isFormalized)
-      {
-        Logger.DebugFormat("Import formalized document from path {0}.", filesPath);
-        document = FinancialArchive.PublicFunctions.Module.ImportFormalizedDocument(filesPath, false);
-        document.Save();
-      }
-      else
-      {
-        Logger.DebugFormat("Import nonformalized document from path {0}.", filesPath);
-        document = this.ImportNonformalizedDocument(filesPath);
-        if (document != null)
-          document.Save();
-        else
-        {
-          Logger.DebugFormat("Import nonformalized document from path {0} failed.", filesPath);
-          return document;
-        }
-      }
-      Logger.DebugFormat("Document imported with Id {0}.", document.Id);
-      Logger.DebugFormat("Process document with Id {0}.", document.Id);
-      
-      return document;
-    }
-    
-    /// <summary>
-    /// Создать и стартовать задачу на согласование по регламенту.
-    /// </summary>
-    /// <param name="documents">Документы.</param>
-    /// <param name="author">Автор задачи.</param>
-    /// <param name="signatory">Подписант задачи.</param>
-    /// <returns>True, если задача была стартована.</returns>
-    public virtual bool CreateAndStartApprovalTask(List<IOfficialDocument> documents, Company.IEmployee author, Company.IEmployee signatory)
-    {
-      var schf = Docflow.AccountingDocumentBase.FormalizedFunction.Schf;
-      var contractStatement = documents.FirstOrDefault(d => AccountingDocumentBases.As(d).FormalizedFunction != schf);
-      var totalAmounts = documents.Where(d => AccountingDocumentBases.As(d).TotalAmount != null)
-        .Select(d => AccountingDocumentBases.As(d).TotalAmount)
-        .Distinct()
-        .ToList();
-      if (contractStatement != null && totalAmounts.Count == 1)
-      {
-        var task = Docflow.PublicFunctions.Module.Remote.CreateApprovalTask(contractStatement);
-        task.Author = author;
-        task.Signatory = signatory;
-        task.Start();
-        return true;
-      }
-      
-      return false;
-    }
-    
-    /// <summary>
-    /// Обработать документы нетоварного потока.
-    /// </summary>
-    /// <param name="contractNumbers">Коллекция номеров договоров.</param>
-    /// <param name="documents">Документы.</param>
-    /// <param name="signatory">Полписант.</param>
-    public virtual void ProcessContractStatementDocuments(List<string> contractNumbers, List<IOfficialDocument> documents, Company.IEmployee signatory)
-    {
-      var contractNumber = contractNumbers.FirstOrDefault();
-      var contract = Functions.Module.Remote.GetContractByNumber(contractNumber);
-      
-      foreach (var doc in documents)
-      {
-        var accountingDocument = Docflow.AccountingDocumentBases.As(doc);
-        if (contract != null)
-          accountingDocument.LeadingDocument = contract;
-        accountingDocument.OurSignatory = signatory;
-        accountingDocument.Save();
-      }
-    }
   }
 }
