@@ -119,8 +119,8 @@ namespace Sungero.BulkExchangeSolution.Client
                                                                                        x.Certificate.Enabled == true).Select(x => x.Certificate).FirstOrDefault();
           
           Logger.DebugFormat("Send to counterparty document with Id {0}.", document.Id);
-          Exchange.PublicFunctions.Module.Remote.SendDocuments(document.BusinessUnitBox, document, addenda, true,
-                                                               string.Empty, document.Counterparty, certificate);
+          Exchange.PublicFunctions.Module.Remote.SendDocuments(document, addenda,  document.Counterparty, document.BusinessUnitBox, 
+                                                               certificate, true, string.Empty);
           Logger.DebugFormat("Document with Id {0} sent to counterparty.", document.Id);
           
           var allDocuments = new List<IOfficialDocument>() { document };
