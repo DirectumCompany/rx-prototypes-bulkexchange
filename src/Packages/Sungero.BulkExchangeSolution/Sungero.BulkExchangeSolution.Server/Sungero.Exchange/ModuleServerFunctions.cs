@@ -150,12 +150,12 @@ namespace Sungero.BulkExchangeSolution.Module.Exchange.Server
     /// <param name="box">Абонентский ящик.</param>
     /// <param name="message">Сообщение.</param>
     /// <returns>Признак отправки задания ответственному за ящик/контрагента.</returns>
-    protected override bool NeedReceiveTask(IBoxBase box, IMessage message)
+    protected override bool NeedReceiveDocumentProcessingTask(IBoxBase box, IMessage message)
     {
       var documentSet = this.GetDocumentSet(message);
       var isFullSet = documentSet != null && documentSet.IsFullSet;
       var isReject = documentSet != null && documentSet.ExchangeDocumentInfos.Any(i => i.RejectionStatus != RejectionStatus.NotRequired);
-      return base.NeedReceiveTask(box, message) && !isFullSet && !isReject;
+      return base.NeedReceiveDocumentProcessingTask(box, message) && !isFullSet && !isReject;
     }
     
     public override Sungero.Exchange.Structures.Module.DocumentCertificatesInfo GetDocumentCertificatesToBox(IOfficialDocument document, Sungero.ExchangeCore.IBusinessUnitBox box)
