@@ -166,7 +166,6 @@
   "ResourceInterfaceAssemblyName": "Sungero.Domain.Interfaces",
   "ResourceInterfaceNamespace": "Sungero.BulkExchangeSolution.Module.Exchange",
   "ResourcesKeys": [
-    "DocumentSetError",
     "DocumentsTotalAmountError",
     "TotalAmountIsTooBig",
     "RubAlphaCode",
@@ -179,7 +178,7 @@
     "Incurred"
   ],
   "SpecialFolders": [],
-  "Version": "3.1.14.1",
+  "Version": "3.1.15.1",
   "Widgets": [],
   "Versions": [
     {

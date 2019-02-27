@@ -117,9 +117,6 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="DocumentSetError" xml:space="preserve">
-    <value>Ошибочный комплект документов</value>
-  </data>
   <data name="DocumentsTotalAmountError" xml:space="preserve">
     <value>Суммы документов должны быть одинаковыми</value>
   </data>
@@ -130,7 +127,7 @@
     <value>RUB</value>
   </data>
   <data name="VerificationSuccess" xml:space="preserve">
-    <value>) успешно прошел проверку: </value>
+    <value>) успешно прошел проверку.</value>
   </data>
   <data name="VerificationFail" xml:space="preserve">
     <value>) не прошел проверку: </value>

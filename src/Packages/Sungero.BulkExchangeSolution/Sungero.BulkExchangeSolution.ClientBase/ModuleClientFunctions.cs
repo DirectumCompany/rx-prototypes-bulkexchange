@@ -377,6 +377,10 @@ namespace Sungero.BulkExchangeSolution.Client
                 info.SignStatus = Sungero.BulkExchangeSolution.ExchangeDocumentInfo.SignStatus.Signed;
                 info.Save();
               }
+              else
+              {
+              	Logger.DebugFormat("Cannot sign document set with document ids {0}.", string.Join(", ", info.Document.Id));
+              }
             }
             catch (Exception ex)
             {
