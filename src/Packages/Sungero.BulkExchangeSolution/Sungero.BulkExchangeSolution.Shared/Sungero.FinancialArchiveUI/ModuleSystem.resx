@@ -141,4 +141,55 @@
   <data name="CoverDescription_OutgoingDocumentForSignature" xml:space="preserve">
     <value>TODO</value>
   </data>
+  <data name="sf_32a521fd_7ee0_4870_8293_290b8140f6ac" xml:space="preserve">
+    <value>TODO</value>
+  </data>
+  <data name="CoverAction_FromExchangeService" xml:space="preserve">
+    <value>TODO</value>
+  </data>
+  <data name="CoverDescription_FromExchangeService" xml:space="preserve">
+    <value>TODO</value>
+  </data>
+  <data name="FilterPanel_BusinessUnit_f444b739b0fb474c8fcb289967f97a61" xml:space="preserve">
+    <value>Business unit</value>
+  </data>
+  <data name="FilterPanel_DocumentType_c404270d44de4b4889cc8a2f303ec140" xml:space="preserve">
+    <value>TODO</value>
+  </data>
+  <data name="FilterPanel_Accounting_24b34bfcfaf0473fa12e7a3de4bd9469" xml:space="preserve">
+    <value>TODO</value>
+  </data>
+  <data name="FilterPanel_Contractual_53074d93af3a43c7a6e4820d8f05db8a" xml:space="preserve">
+    <value>TODO</value>
+  </data>
+  <data name="FilterPanel_Other_7bc0c1a296de4410a0001f24ec708237" xml:space="preserve">
+    <value>TODO</value>
+  </data>
+  <data name="FilterPanel_Main_83a3636e014b4d45aaa69686855dcfa9" xml:space="preserve">
+    <value>Main</value>
+  </data>
+  <data name="FilterPanel_Department_099f4befbeb84ca2866daa1f8853062c" xml:space="preserve">
+    <value>Department</value>
+  </data>
+  <data name="FilterPanel_Counterparty_ac15bfa87c924891aa37a6606adc992a" xml:space="preserve">
+    <value>Counterparty</value>
+  </data>
+  <data name="FilterPanel_Responsible_7cf790e990a94bc1a1841f6fca88209a" xml:space="preserve">
+    <value>TODO</value>
+  </data>
+  <data name="FilterPanel_ReceiptDate_69d001eec7a84a9dbda483137084f18a" xml:space="preserve">
+    <value>TODO</value>
+  </data>
+  <data name="FilterPanel_Today_fb5fe8a2f7e54b3f898e0e61d906c9ec" xml:space="preserve">
+    <value>TODO</value>
+  </data>
+  <data name="FilterPanel_ThreeDays_22d8872f1c9647aea8ab0be4deca0682" xml:space="preserve">
+    <value>TODO</value>
+  </data>
+  <data name="FilterPanel_Week_f32a695163174ce2a49507fa79c83769" xml:space="preserve">
+    <value>TODO</value>
+  </data>
+  <data name="FilterPanel_ManualPeriod_a6a0c837f6904c29aeb487d209d85857" xml:space="preserve">
+    <value>User-defined period:</value>
+  </data>
 </root>
