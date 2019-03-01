@@ -6,6 +6,40 @@ using Sungero.CoreEntities;
 
 namespace Sungero.BulkExchangeSolution.Module.FinancialArchiveUI.Server
 {
+  partial class VerifiedOrNeedVerifyDocumentsFolderHandlers
+  {
+
+    public virtual IQueryable<Sungero.Docflow.IAccountingDocumentBase> VerifiedOrNeedVerifyDocumentsDataQuery(IQueryable<Sungero.Docflow.IAccountingDocumentBase> query)
+    {
+      var infos = ExchangeDocumentInfos
+        .GetAll(d => (d.VerificationStatus == Sungero.BulkExchangeSolution.ExchangeDocumentInfo.VerificationStatus.Required ||
+                     d.VerificationStatus == Sungero.BulkExchangeSolution.ExchangeDocumentInfo.VerificationStatus.Completed) && d.PurchaseOrder != null)
+        .ToList();
+
+      if (_filter.Required && !_filter.Verified)
+        infos = infos.Where(d => d.VerificationStatus == Sungero.BulkExchangeSolution.ExchangeDocumentInfo.VerificationStatus.Required).ToList();
+      
+      if (_filter.Verified && !_filter.Required)
+        infos = infos.Where(d => d.VerificationStatus == Sungero.BulkExchangeSolution.ExchangeDocumentInfo.VerificationStatus.Completed).ToList();   
+
+      var documents = infos.Select(x => x.Document).ToList();
+      query = query.Where(x => documents.Contains(x));
+      if (_filter.BusinessUnit != null)
+        query = query.Where(x => Equals(x.BusinessUnit, _filter.BusinessUnit));
+          
+      if (_filter.Department != null)
+        query = query.Where(x => Equals(x.Department, _filter.Department));
+      
+      if (_filter.Responsible != null)
+        query = query.Where(x => Equals(x.ResponsibleEmployee, _filter.Responsible));
+
+      if (_filter.Counterparty != null)
+        query = query.Where(x => Equals(x.Counterparty, _filter.Counterparty));      
+        
+      return query;
+    }
+  }
+
   partial class IncomingDocumentsFromServiceFolderHandlers
   {
 

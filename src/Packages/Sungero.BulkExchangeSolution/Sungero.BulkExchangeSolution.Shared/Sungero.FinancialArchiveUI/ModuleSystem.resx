@@ -192,4 +192,31 @@
   <data name="FilterPanel_ManualPeriod_a6a0c837f6904c29aeb487d209d85857" xml:space="preserve">
     <value>User-defined period:</value>
   </data>
+  <data name="CoverAction_VerifiedOrNeedVerifyDocuments" xml:space="preserve">
+    <value>TODO</value>
+  </data>
+  <data name="CoverDescription_VerifiedOrNeedVerifyDocuments" xml:space="preserve">
+    <value>TODO</value>
+  </data>
+  <data name="sf_2574d622_20ab_4db9_a8c5_3c480ed6ed54" xml:space="preserve">
+    <value>TODO</value>
+  </data>
+  <data name="FilterPanel_Required_ea9c34bb5d554e0dae054bdd6d4587bb" xml:space="preserve">
+    <value>TODO</value>
+  </data>
+  <data name="FilterPanel_Verified_4bf1f7160670471eba25b1521d3a7daa" xml:space="preserve">
+    <value>TODO</value>
+  </data>
+  <data name="FilterPanel_BusinessUnit_4517014b14864eb4a78617cb6332f136" xml:space="preserve">
+    <value>Business Unit</value>
+  </data>
+  <data name="FilterPanel_Department_f28566a679a84f249e3ac2f6385a1be7" xml:space="preserve">
+    <value>Department</value>
+  </data>
+  <data name="FilterPanel_Responsible_82acaa0349b3409a8d9da77aa3f12693" xml:space="preserve">
+    <value>TODO</value>
+  </data>
+  <data name="FilterPanel_Counterparty_edb7ff10da6b44359762482fc2b5134b" xml:space="preserve">
+    <value>Counterparty</value>
+  </data>
 </root>
