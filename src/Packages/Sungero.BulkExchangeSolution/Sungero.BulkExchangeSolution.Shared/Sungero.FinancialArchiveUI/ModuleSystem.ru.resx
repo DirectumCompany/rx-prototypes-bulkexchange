@@ -148,7 +148,7 @@
     <value>Поступившие</value>
   </data>
   <data name="CoverDescription_FromExchangeService" xml:space="preserve">
-    <value>Поступившие документы из сервисов обмена</value>
+    <value>Документы, полученные через сервисы обмена</value>
   </data>
   <data name="FilterPanel_BusinessUnit_f444b739b0fb474c8fcb289967f97a61" xml:space="preserve">
     <value>Наша организация</value>
