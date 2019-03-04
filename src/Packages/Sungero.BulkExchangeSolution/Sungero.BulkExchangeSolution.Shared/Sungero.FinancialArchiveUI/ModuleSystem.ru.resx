@@ -196,7 +196,7 @@
     <value>На проверке в учетной системе</value>
   </data>
   <data name="CoverDescription_VerifiedOrNeedVerifyDocuments" xml:space="preserve">
-    <value>Список документов, проверка в учетной системе которых ожидается или уже прошла</value>
+    <value>Документы, которые либо ожидают, либо прошли проверку в учетной системе</value>
   </data>
   <data name="sf_2574d622_20ab_4db9_a8c5_3c480ed6ed54" xml:space="preserve">
     <value>На проверке в учетной системе</value>
@@ -218,5 +218,11 @@
   </data>
   <data name="FilterPanel_Counterparty_edb7ff10da6b44359762482fc2b5134b" xml:space="preserve">
     <value>Контрагент</value>
+  </data>
+  <data name="FilterPanel_StatusGroup_86bc9b7196b5429088a095a8ce6a620a" xml:space="preserve">
+    <value>Статус</value>
+  </data>
+  <data name="FilterPanel_MainGroup_9c7e8a4894aa45c28b52dc10c7fd9d72" xml:space="preserve">
+    <value> Основное</value>
   </data>
 </root>

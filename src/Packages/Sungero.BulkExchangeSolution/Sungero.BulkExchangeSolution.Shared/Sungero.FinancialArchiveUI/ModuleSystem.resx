@@ -219,4 +219,10 @@
   <data name="FilterPanel_Counterparty_edb7ff10da6b44359762482fc2b5134b" xml:space="preserve">
     <value>Counterparty</value>
   </data>
+  <data name="FilterPanel_StatusGroup_86bc9b7196b5429088a095a8ce6a620a" xml:space="preserve">
+    <value>State</value>
+  </data>
+  <data name="FilterPanel_MainGroup_9c7e8a4894aa45c28b52dc10c7fd9d72" xml:space="preserve">
+    <value>Main</value>
+  </data>
 </root>
