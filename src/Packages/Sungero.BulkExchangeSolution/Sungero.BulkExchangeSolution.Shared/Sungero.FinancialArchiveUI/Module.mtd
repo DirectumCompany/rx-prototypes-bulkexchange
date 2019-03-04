@@ -329,7 +329,12 @@
       "IsShow": true,
       "Kind": "Computable",
       "NeedShowMarkedCount": false,
-      "OpenCardByDefault": true
+      "OpenCardByDefault": true,
+      "SupportedDescendantsTypes": [
+        "59079f7f-a326-4947-bbd6-0ae6dfb5f59b",
+        "96c4f4f3-dc74-497a-b347-e8faf4afe320",
+        "cf8357c3-8266-490d-b75e-0bd3e46b1ae8"
+      ]
     },
     {
       "NameGuid": "2574d622-20ab-4db9-a8c5-3c480ed6ed54",
