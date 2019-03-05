@@ -689,7 +689,12 @@
       "IsShow": false,
       "Kind": "Computable",
       "NeedShowMarkedCount": false,
-      "OpenCardByDefault": true
+      "OpenCardByDefault": true,
+      "SupportedDescendantsTypes": [
+        "59079f7f-a326-4947-bbd6-0ae6dfb5f59b",
+        "96c4f4f3-dc74-497a-b347-e8faf4afe320",
+        "f5f104fb-52e4-422b-9de1-a36937d85a2d"
+      ]
     }
   ],
   "Version": "3.1.16.1",

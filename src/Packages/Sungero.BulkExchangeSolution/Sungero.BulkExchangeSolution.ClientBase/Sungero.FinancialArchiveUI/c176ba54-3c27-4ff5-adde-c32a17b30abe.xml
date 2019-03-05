@@ -6,7 +6,6 @@
       <property name="#LayoutVersion" isnull="true" />
       <property name="$GridControl" iskey="true" value="GridControl">
         <property name="GroupSummary" iskey="true" value="0" />
-        <property name="TotalSummary" iskey="true" value="0" />
         <property name="View" isnull="true" iskey="true">
           <property name="ShowTotalSummary">false</property>
           <property name="ColumnChooserState" isnull="true" iskey="true">
@@ -18,6 +17,8 @@
           <property name="LinesPerRowMode">TwoLinesMode</property>
           <property name="WaitIndicatorType">Panel</property>
         </property>
+        <property name="TotalSummary" iskey="true" value="0" />
+        <property name="GroupCount">0</property>
         <property name="Columns" iskey="true" value="57">
           <property name="Item1" isnull="true" iskey="true">
             <property name="MinWidth">48</property>
@@ -25,7 +26,6 @@
             <property name="SortMode">Custom</property>
             <property name="FixedWidth">true</property>
             <property name="Visible">true</property>
-            <property name="ExtendedVisibleIndex">0</property>
             <property name="VisibleIndex">0</property>
             <property name="Width">48</property>
             <property name="ActualWidth">5*</property>
@@ -218,7 +218,7 @@
             <property name="Name">String_Name</property>
             <property name="ExtendedVisibleIndex">2</property>
             <property name="VisibleIndex">2</property>
-            <property name="ActualWidth">11*</property>
+            <property name="ActualWidth">20*</property>
           </property>
           <property name="Item21" isnull="true" iskey="true">
             <property name="FieldName">Navigation_Author_c612fc4144a3428ba97c433c333d78e9</property>
@@ -238,7 +238,7 @@
             <property name="Name">DateTime_Modified</property>
             <property name="ExtendedVisibleIndex">23</property>
             <property name="VisibleIndex">5</property>
-            <property name="ActualWidth">20*</property>
+            <property name="ActualWidth">9*</property>
           </property>
           <property name="Item23" isnull="true" iskey="true">
             <property name="FieldName">Enumeration_State_LifeCycleState_58cca1021e974f07b6acfd866a8b7cb1</property>
@@ -286,7 +286,7 @@
             <property name="SortMode">Custom</property>
             <property name="Visible">false</property>
             <property name="Name">Enumeration_Electronic_exchange_ExchangeState_58cca1021e974f07b6acfd866a8b7cb1</property>
-            <property name="ExtendedVisibleIndex">28</property>
+            <property name="ExtendedVisibleIndex">29</property>
             <property name="VisibleIndex">4</property>
             <property name="ActualWidth">18*</property>
           </property>
@@ -296,9 +296,9 @@
             <property name="SortMode">Custom</property>
             <property name="Visible">false</property>
             <property name="Name">Navigation_Currency_ffc2629fdc304106a3cec402ae7d32b9</property>
-            <property name="ExtendedVisibleIndex">29</property>
-            <property name="VisibleIndex">4</property>
-            <property name="ActualWidth">8*</property>
+            <property name="ExtendedVisibleIndex">28</property>
+            <property name="VisibleIndex">27</property>
+            <property name="ActualWidth">NaN</property>
           </property>
           <property name="Item29" isnull="true" iskey="true">
             <property name="FieldName">Double_Total_amount</property>
@@ -307,8 +307,8 @@
             <property name="Visible">false</property>
             <property name="Name">Double_Total_amount</property>
             <property name="ExtendedVisibleIndex">30</property>
-            <property name="VisibleIndex">4</property>
-            <property name="ActualWidth">8*</property>
+            <property name="VisibleIndex">28</property>
+            <property name="ActualWidth">NaN</property>
           </property>
           <property name="Item30" isnull="true" iskey="true">
             <property name="FieldName">Integer_ID</property>
@@ -378,7 +378,7 @@
             <property name="Name">Navigation_Business_unit_c612fc4144a3428ba97c433c333d78e9</property>
             <property name="ExtendedVisibleIndex">4</property>
             <property name="VisibleIndex">4</property>
-            <property name="ActualWidth">16*</property>
+            <property name="ActualWidth">19*</property>
           </property>
           <property name="Item37" isnull="true" iskey="true">
             <property name="FieldName">String_Note</property>
@@ -388,7 +388,7 @@
             <property name="Name">String_Note</property>
             <property name="ExtendedVisibleIndex">37</property>
             <property name="VisibleIndex">6</property>
-            <property name="ActualWidth">20*</property>
+            <property name="ActualWidth">30*</property>
           </property>
           <property name="Item38" isnull="true" iskey="true">
             <property name="FieldName">Navigation_Signed_by_c612fc4144a3428ba97c433c333d78e9</property>
@@ -408,7 +408,7 @@
             <property name="Name">Navigation_Counterparty_294767f1009f4fbd80fcf98c49ddc560</property>
             <property name="ExtendedVisibleIndex">3</property>
             <property name="VisibleIndex">3</property>
-            <property name="ActualWidth">20*</property>
+            <property name="ActualWidth">19*</property>
           </property>
           <property name="Item40" isnull="true" iskey="true">
             <property name="FieldName">Navigation_Contact_c8daaef9a6794a29ac01b93c1637c72e</property>
@@ -417,8 +417,8 @@
             <property name="Visible">false</property>
             <property name="Name">Navigation_Contact_c8daaef9a6794a29ac01b93c1637c72e</property>
             <property name="ExtendedVisibleIndex">39</property>
-            <property name="VisibleIndex">7</property>
-            <property name="ActualWidth">9*</property>
+            <property name="VisibleIndex">39</property>
+            <property name="ActualWidth">NaN</property>
           </property>
           <property name="Item41" isnull="true" iskey="true">
             <property name="FieldName">DateTime_Valid_from</property>
@@ -427,8 +427,8 @@
             <property name="Visible">false</property>
             <property name="Name">DateTime_Valid_from</property>
             <property name="ExtendedVisibleIndex">40</property>
-            <property name="VisibleIndex">7</property>
-            <property name="ActualWidth">11*</property>
+            <property name="VisibleIndex">40</property>
+            <property name="ActualWidth">NaN</property>
           </property>
           <property name="Item42" isnull="true" iskey="true">
             <property name="FieldName">DateTime_Valid_till</property>
@@ -437,8 +437,8 @@
             <property name="Visible">false</property>
             <property name="Name">DateTime_Valid_till</property>
             <property name="ExtendedVisibleIndex">41</property>
-            <property name="VisibleIndex">7</property>
-            <property name="ActualWidth">12*</property>
+            <property name="VisibleIndex">41</property>
+            <property name="ActualWidth">NaN</property>
           </property>
           <property name="Item43" isnull="true" iskey="true">
             <property name="FieldName">Navigation_Resp_46__employee_c612fc4144a3428ba97c433c333d78e9</property>
@@ -447,8 +447,8 @@
             <property name="Visible">false</property>
             <property name="Name">Navigation_Resp_46__employee_c612fc4144a3428ba97c433c333d78e9</property>
             <property name="ExtendedVisibleIndex">42</property>
-            <property name="VisibleIndex">7</property>
-            <property name="ActualWidth">14*</property>
+            <property name="VisibleIndex">42</property>
+            <property name="ActualWidth">NaN</property>
           </property>
           <property name="Item44" isnull="true" iskey="true">
             <property name="FieldName">Boolean_Is_standard</property>
@@ -457,8 +457,8 @@
             <property name="Visible">false</property>
             <property name="Name">Boolean_Is_standard</property>
             <property name="ExtendedVisibleIndex">43</property>
-            <property name="VisibleIndex">7</property>
-            <property name="ActualWidth">9*</property>
+            <property name="VisibleIndex">43</property>
+            <property name="ActualWidth">NaN</property>
           </property>
           <property name="Item45" isnull="true" iskey="true">
             <property name="FieldName">Navigation_Contract_030d8d679b944f0dbcc6691016eb70f3</property>
@@ -467,8 +467,8 @@
             <property name="Visible">false</property>
             <property name="Name">Navigation_Contract_030d8d679b944f0dbcc6691016eb70f3</property>
             <property name="ExtendedVisibleIndex">44</property>
-            <property name="VisibleIndex">7</property>
-            <property name="ActualWidth">9*</property>
+            <property name="VisibleIndex">44</property>
+            <property name="ActualWidth">NaN</property>
           </property>
           <property name="Item46" isnull="true" iskey="true">
             <property name="FieldName">String_Number</property>
@@ -477,8 +477,8 @@
             <property name="Visible">false</property>
             <property name="Name">String_Number</property>
             <property name="ExtendedVisibleIndex">45</property>
-            <property name="VisibleIndex">7</property>
-            <property name="ActualWidth">12*</property>
+            <property name="VisibleIndex">45</property>
+            <property name="ActualWidth">NaN</property>
           </property>
           <property name="Item47" isnull="true" iskey="true">
             <property name="FieldName">DateTime_Issued</property>
@@ -487,8 +487,8 @@
             <property name="Visible">false</property>
             <property name="Name">DateTime_Issued</property>
             <property name="ExtendedVisibleIndex">46</property>
-            <property name="VisibleIndex">7</property>
-            <property name="ActualWidth">11*</property>
+            <property name="VisibleIndex">46</property>
+            <property name="ActualWidth">NaN</property>
           </property>
           <property name="Item48" isnull="true" iskey="true">
             <property name="FieldName">Boolean_Formalized</property>
@@ -497,8 +497,8 @@
             <property name="Visible">false</property>
             <property name="Name">Boolean_Formalized</property>
             <property name="ExtendedVisibleIndex">47</property>
-            <property name="VisibleIndex">7</property>
-            <property name="ActualWidth">16*</property>
+            <property name="VisibleIndex">47</property>
+            <property name="ActualWidth">NaN</property>
           </property>
           <property name="Item49" isnull="true" iskey="true">
             <property name="FieldName">Navigation_Signed_by_c8daaef9a6794a29ac01b93c1637c72e</property>
@@ -507,8 +507,8 @@
             <property name="Visible">false</property>
             <property name="Name">Navigation_Signed_by_c8daaef9a6794a29ac01b93c1637c72e</property>
             <property name="ExtendedVisibleIndex">48</property>
-            <property name="VisibleIndex">7</property>
-            <property name="ActualWidth">27*</property>
+            <property name="VisibleIndex">48</property>
+            <property name="ActualWidth">NaN</property>
           </property>
           <property name="Item50" isnull="true" iskey="true">
             <property name="FieldName">Navigation_Business_Unit_Box_f91dcce6a9144c04aba10f940475696b</property>
@@ -517,8 +517,8 @@
             <property name="Visible">false</property>
             <property name="Name">Navigation_Business_Unit_Box_f91dcce6a9144c04aba10f940475696b</property>
             <property name="ExtendedVisibleIndex">49</property>
-            <property name="VisibleIndex">7</property>
-            <property name="ActualWidth">31*</property>
+            <property name="VisibleIndex">49</property>
+            <property name="ActualWidth">NaN</property>
           </property>
           <property name="Item51" isnull="true" iskey="true">
             <property name="FieldName">Boolean_Corrective</property>
@@ -527,8 +527,8 @@
             <property name="Visible">false</property>
             <property name="Name">Boolean_Corrective</property>
             <property name="ExtendedVisibleIndex">50</property>
-            <property name="VisibleIndex">7</property>
-            <property name="ActualWidth">17*</property>
+            <property name="VisibleIndex">50</property>
+            <property name="ActualWidth">NaN</property>
           </property>
           <property name="Item52" isnull="true" iskey="true">
             <property name="FieldName">Navigation_Corrects_030d8d679b944f0dbcc6691016eb70f3</property>
@@ -537,8 +537,8 @@
             <property name="Visible">false</property>
             <property name="Name">Navigation_Corrects_030d8d679b944f0dbcc6691016eb70f3</property>
             <property name="ExtendedVisibleIndex">51</property>
-            <property name="VisibleIndex">7</property>
-            <property name="ActualWidth">13*</property>
+            <property name="VisibleIndex">51</property>
+            <property name="ActualWidth">NaN</property>
           </property>
           <property name="Item53" isnull="true" iskey="true">
             <property name="FieldName">Navigation_Prepared_by_c612fc4144a3428ba97c433c333d78e9</property>
@@ -547,8 +547,8 @@
             <property name="Visible">false</property>
             <property name="Name">Navigation_Prepared_by_c612fc4144a3428ba97c433c333d78e9</property>
             <property name="ExtendedVisibleIndex">52</property>
-            <property name="VisibleIndex">7</property>
-            <property name="ActualWidth">11*</property>
+            <property name="VisibleIndex">52</property>
+            <property name="ActualWidth">NaN</property>
           </property>
           <property name="Item54" isnull="true" iskey="true">
             <property name="FieldName">Navigation_Correspondent_294767f1009f4fbd80fcf98c49ddc560</property>
@@ -557,8 +557,8 @@
             <property name="Visible">false</property>
             <property name="Name">Navigation_Correspondent_294767f1009f4fbd80fcf98c49ddc560</property>
             <property name="ExtendedVisibleIndex">53</property>
-            <property name="VisibleIndex">7</property>
-            <property name="ActualWidth">14*</property>
+            <property name="VisibleIndex">53</property>
+            <property name="ActualWidth">NaN</property>
           </property>
           <property name="Item55" isnull="true" iskey="true">
             <property name="FieldName">Navigation_In_response_to_030d8d679b944f0dbcc6691016eb70f3</property>
@@ -567,8 +567,8 @@
             <property name="Visible">false</property>
             <property name="Name">Navigation_In_response_to_030d8d679b944f0dbcc6691016eb70f3</property>
             <property name="ExtendedVisibleIndex">54</property>
-            <property name="VisibleIndex">7</property>
-            <property name="ActualWidth">10*</property>
+            <property name="VisibleIndex">54</property>
+            <property name="ActualWidth">NaN</property>
           </property>
           <property name="Item56" isnull="true" iskey="true">
             <property name="FieldName">Navigation_Addressee_c8daaef9a6794a29ac01b93c1637c72e</property>
@@ -577,8 +577,8 @@
             <property name="Visible">false</property>
             <property name="Name">Navigation_Addressee_c8daaef9a6794a29ac01b93c1637c72e</property>
             <property name="ExtendedVisibleIndex">55</property>
-            <property name="VisibleIndex">7</property>
-            <property name="ActualWidth">9*</property>
+            <property name="VisibleIndex">55</property>
+            <property name="ActualWidth">NaN</property>
           </property>
           <property name="Item57" isnull="true" iskey="true">
             <property name="FieldName">Boolean_Several_addressees</property>
@@ -587,12 +587,16 @@
             <property name="Visible">false</property>
             <property name="Name">Boolean_Several_addressees</property>
             <property name="ExtendedVisibleIndex">56</property>
-            <property name="VisibleIndex">7</property>
-            <property name="ActualWidth">18*</property>
+            <property name="VisibleIndex">56</property>
+            <property name="ActualWidth">NaN</property>
           </property>
         </property>
-        <property name="SortInfo" iskey="true" value="0" />
-        <property name="GroupCount">0</property>
+        <property name="SortInfo" iskey="true" value="1">
+          <property name="Item1" isnull="true" iskey="true">
+            <property name="FieldName">DateTime_Modified</property>
+            <property name="SortOrder">Descending</property>
+          </property>
+        </property>
         <property name="GroupSummarySortInfo" iskey="true" value="0" />
       </property>
     </XtraSerializer>
