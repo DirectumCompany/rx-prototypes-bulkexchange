@@ -6,6 +6,88 @@ using Sungero.CoreEntities;
 
 namespace Sungero.BulkExchangeSolution.Module.FinancialArchiveUI.Server
 {
+  partial class OutgoingSentDocumentsFolderHandlers
+  {
+
+    public virtual IQueryable<Sungero.Docflow.IOfficialDocument> OutgoingSentDocumentsDataQuery(IQueryable<Sungero.Docflow.IOfficialDocument> query)
+    {
+      var infos = ExchangeDocumentInfos
+        .GetAll(d => d.MessageType == ExchangeDocumentInfo.MessageType.Outgoing);
+      
+      query = query.Where(d => infos.Select(i => i.Document).Contains(d));
+      
+      if (_filter == null)
+        return query;
+      
+      #region Фильтры
+
+      // Фильтр "Наша организация".
+      if (_filter.BusinessUnit != null)
+        query = query.Where(d => Equals(d.BusinessUnit, _filter.BusinessUnit));
+      
+      // Фильтр "Подразделение".
+      if (_filter.Department != null)
+        query = query.Where(d => Equals(d.Department, _filter.Department));
+      
+      // Фильтр "Ответственный"
+      if (_filter.Responsible != null)
+        query = query.Where(d => Docflow.AccountingDocumentBases.Is(d) && Equals(Docflow.AccountingDocumentBases.As(d).ResponsibleEmployee, _filter.Responsible) ||
+                            Docflow.ContractualDocumentBases.Is(d) && Equals(Sungero.Contracts.ContractualDocuments.As(d).ResponsibleEmployee, _filter.Responsible));
+
+      // Фильтр "Контрагент".
+      if (_filter.Counterparty != null)
+        infos = infos.Where(i => Equals(i.Counterparty, _filter.Counterparty));
+
+      // Фильтр "Тип документа"
+      if (_filter.Accounting || _filter.Contractual || _filter.Other)
+        query = query.Where(d => (_filter.Accounting && Docflow.AccountingDocumentBases.Is(d)) ||
+                            (_filter.Contractual && Docflow.ContractualDocumentBases.Is(d)) ||
+                            (_filter.Other && !Docflow.AccountingDocumentBases.Is(d) && !Docflow.ContractualDocumentBases.Is(d)));
+      
+      #region Фильтрация по дате отправки
+
+      DateTime? beginDate = null;
+      DateTime? endDate = null;
+      var currentDate = Calendar.UserToday;
+      
+      if (_filter.Today)
+      {
+        beginDate = currentDate;
+        endDate = currentDate;
+      }
+
+      if (_filter.LastThreeDays)
+      {
+        beginDate = currentDate.AddDays(-3);
+        endDate = currentDate;
+      }
+      if (_filter.LastWeek)
+      {
+        beginDate = currentDate.AddDays(-7);
+        endDate = currentDate;
+      }
+      if (_filter.ManualPeriod)
+      {
+        if (_filter.DateRangeFrom.HasValue)
+          beginDate = _filter.DateRangeFrom.Value;
+        if (_filter.DateRangeTo.HasValue)
+          endDate = _filter.DateRangeTo.Value;
+      }
+
+      if (beginDate != null)
+        infos = infos.Where(d => d.MessageDate >= beginDate.Value.BeginningOfDay());
+      
+      if (endDate != null)
+        infos = infos.Where(d => d.MessageDate <= endDate.Value.EndOfDay());
+      
+      #endregion
+      
+      #endregion
+      
+      return query.Where(d => infos.Select(i => i.Document).Contains(d));
+    }
+  }
+
   partial class OutgoingDocumentToSendFolderHandlers
   {
 
@@ -57,26 +139,38 @@ namespace Sungero.BulkExchangeSolution.Module.FinancialArchiveUI.Server
         .GetAll(d => (d.VerificationStatus == Sungero.BulkExchangeSolution.ExchangeDocumentInfo.VerificationStatus.Required ||
                       d.VerificationStatus == Sungero.BulkExchangeSolution.ExchangeDocumentInfo.VerificationStatus.Completed) && d.PurchaseOrder != null)
         .ToList();
+      
+      if (_filter == null)
+        return query.Where(d => infos.Select(i => i.Document).Contains(d));
 
+      #region Фильтры
+
+      // Фильтр "Ожидает проверки".
       if (_filter.Required && !_filter.Verified)
         infos = infos.Where(d => d.VerificationStatus == Sungero.BulkExchangeSolution.ExchangeDocumentInfo.VerificationStatus.Required).ToList();
       
+      // Фильтр "Прошли проверку".
       if (_filter.Verified && !_filter.Required)
         infos = infos.Where(d => d.VerificationStatus == Sungero.BulkExchangeSolution.ExchangeDocumentInfo.VerificationStatus.Completed).ToList();
 
-      var documents = infos.Select(x => x.Document).ToList();
-      query = query.Where(x => documents.Contains(x));
+      // Фильтр "Наша организация".
+      query = query.Where(d => infos.Select(i => i.Document).Contains(d));
       if (_filter.BusinessUnit != null)
         query = query.Where(x => Equals(x.BusinessUnit, _filter.BusinessUnit));
       
+      // Фильтр "Подразделение".
       if (_filter.Department != null)
         query = query.Where(x => Equals(x.Department, _filter.Department));
       
+      // Фильтр "Ответсвенный".
       if (_filter.Responsible != null)
         query = query.Where(x => Equals(x.ResponsibleEmployee, _filter.Responsible));
 
+      // Фильтр "Контрагент".
       if (_filter.Counterparty != null)
         query = query.Where(x => Equals(x.Counterparty, _filter.Counterparty));
+      
+      #endregion
       
       return query;
     }
@@ -102,7 +196,7 @@ namespace Sungero.BulkExchangeSolution.Module.FinancialArchiveUI.Server
       if (_filter.Department != null)
         query = query.Where(d => Equals(d.Department, _filter.Department));
       
-      // Фильтр "Ответсвенный"
+      // Фильтр "Ответсвенный".
       if (_filter.Responsible != null)
         query = query.Where(d => Docflow.AccountingDocumentBases.Is(d) && Equals(Docflow.AccountingDocumentBases.As(d).ResponsibleEmployee, _filter.Responsible) ||
                             Docflow.ContractualDocumentBases.Is(d) && Equals(Sungero.Contracts.ContractualDocuments.As(d).ResponsibleEmployee, _filter.Responsible));

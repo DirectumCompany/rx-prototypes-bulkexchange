@@ -258,4 +258,55 @@
   <data name="CoverDescription_OutgoingDocumentToSend" xml:space="preserve">
     <value>Подписанные документы, ожидающие отправки через сервис обмена.</value>
   </data>
+  <data name="sf_c176ba54_3c27_4ff5_adde_c32a17b30abe" xml:space="preserve">
+    <value>Отправленные</value>
+  </data>
+  <data name="FilterPanel_DocumentType_bf4e67b3f9e74220afb56d2c93798a06" xml:space="preserve">
+    <value>Тип документа</value>
+  </data>
+  <data name="FilterPanel_Main_3e6cccee56df48e6a8c6fcc668f244a6" xml:space="preserve">
+    <value>Основное</value>
+  </data>
+  <data name="FilterPanel_SentDate_e7ccc79245d248009ab5482afe0327b0" xml:space="preserve">
+    <value>Дата отправки</value>
+  </data>
+  <data name="FilterPanel_Accounting_008d0d9abfaf4c79b4615f0da862ac93" xml:space="preserve">
+    <value>Финансовые</value>
+  </data>
+  <data name="FilterPanel_Contractual_f872600d6f634770b5d13b0d0dd38300" xml:space="preserve">
+    <value>Договорные</value>
+  </data>
+  <data name="FilterPanel_Other_603ced36c420447ea0d81e52649e041f" xml:space="preserve">
+    <value>Прочие</value>
+  </data>
+  <data name="FilterPanel_BusinessUnit_f5a8e64adc2b480e94245cd2531551de" xml:space="preserve">
+    <value>Наша организация</value>
+  </data>
+  <data name="FilterPanel_Department_998b9f906d034a7cab5db52ee0cefffc" xml:space="preserve">
+    <value>Подразделение</value>
+  </data>
+  <data name="FilterPanel_Responsible_3411ded78be944ae9ec1077a3b4c134d" xml:space="preserve">
+    <value>Ответственный</value>
+  </data>
+  <data name="FilterPanel_Counterparty_4544c64f1ec34c7eb7cf3764d747eed0" xml:space="preserve">
+    <value>Контрагент</value>
+  </data>
+  <data name="FilterPanel_Today_b61ddf6ae6d34a35b5e435b33b3d0a85" xml:space="preserve">
+    <value>Сегодня</value>
+  </data>
+  <data name="FilterPanel_LastThreeDays_3347cb60462747179ba5a8b614ce2fb9" xml:space="preserve">
+    <value>За 3 дня</value>
+  </data>
+  <data name="FilterPanel_LastWeek_32a947d4c65945dd9ca0f2382c476d5f" xml:space="preserve">
+    <value>За неделю</value>
+  </data>
+  <data name="FilterPanel_ManualPeriod_bea3f9ca8f504f4b9c7f4a27d18f832e" xml:space="preserve">
+    <value>Произвольный период:</value>
+  </data>
+  <data name="CoverAction_OutgoingSentDocuments" xml:space="preserve">
+    <value>Отправленные</value>
+  </data>
+  <data name="CoverDescription_OutgoingSentDocuments" xml:space="preserve">
+    <value>Документы, отправленные через сервис обмена</value>
+  </data>
 </root>

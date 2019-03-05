@@ -36,6 +36,14 @@
       },
       {
         "$type": "Sungero.Metadata.CoverComputableFolderActionMetadata, Sungero.Metadata",
+        "NameGuid": "aba683cf-8039-43e4-a99d-3248d700be9d",
+        "Name": "OutgoingSentDocuments",
+        "ComputableFolderId": "c176ba54-3c27-4ff5-adde-c32a17b30abe",
+        "GroupId": "72ec4d3b-8932-4cc1-b70c-81778b065a8b",
+        "PreviousItemGuid": "abc59fb0-0982-45d1-bc5a-ba0ecd27b4b0"
+      },
+      {
+        "$type": "Sungero.Metadata.CoverComputableFolderActionMetadata, Sungero.Metadata",
         "NameGuid": "abc59fb0-0982-45d1-bc5a-ba0ecd27b4b0",
         "Name": "OutgoingDocumentToSend",
         "ComputableFolderId": "9a079fc7-918c-4335-a005-102b40c202f5",
@@ -136,6 +144,10 @@
     {
       "ItemId": "9a079fc7-918c-4335-a005-102b40c202f5",
       "PreviousItemId": "2574d622-20ab-4db9-a8c5-3c480ed6ed54"
+    },
+    {
+      "ItemId": "c176ba54-3c27-4ff5-adde-c32a17b30abe",
+      "PreviousItemId": "9a079fc7-918c-4335-a005-102b40c202f5"
     }
   ],
   "HandledEvents": [
@@ -476,6 +488,13 @@
             "PreviousGuid": "8f04e9f0-e205-4d33-8564-5946d05f0702"
           },
           {
+            "$type": "Sungero.Metadata.FilterListItemMetadata, Sungero.Metadata",
+            "NameGuid": "d7b6a289-01e5-428e-8f9f-408f3c6e9e39",
+            "Name": "Other",
+            "ParentGuid": "123a9d49-2cc0-4cac-a92e-5584522246d9",
+            "PreviousGuid": "6ee8f231-9b8a-4a39-9a51-cf807032e84a"
+          },
+          {
             "$type": "Sungero.Metadata.FilterGroupMetadata, Sungero.Metadata",
             "NameGuid": "6fa04a6b-feaf-4f5c-baa9-89a332cee65a",
             "Name": "Main",
@@ -528,8 +547,149 @@
       "OpenCardByDefault": true,
       "SupportedDescendantsTypes": [
         "59079f7f-a326-4947-bbd6-0ae6dfb5f59b",
-        "96c4f4f3-dc74-497a-b347-e8faf4afe320"
+        "96c4f4f3-dc74-497a-b347-e8faf4afe320",
+        "f5f104fb-52e4-422b-9de1-a36937d85a2d"
       ]
+    },
+    {
+      "NameGuid": "c176ba54-3c27-4ff5-adde-c32a17b30abe",
+      "Name": "OutgoingSentDocuments",
+      "DefaultContentType": "58cca102-1e97-4f07-b6ac-fd866a8b7cb1",
+      "DisplayType": "Module",
+      "FilterPanel": {
+        "NameGuid": "203e3c57-85f7-4c90-94ce-bf35c6d03a6e",
+        "Name": "FilterPanel",
+        "Controls": [
+          {
+            "$type": "Sungero.Metadata.FilterGroupMetadata, Sungero.Metadata",
+            "NameGuid": "bf4e67b3-f9e7-4220-afb5-6d2c93798a06",
+            "Name": "DocumentType"
+          },
+          {
+            "$type": "Sungero.Metadata.FilterGroupMetadata, Sungero.Metadata",
+            "NameGuid": "3e6cccee-56df-48e6-a8c6-fcc668f244a6",
+            "Name": "Main",
+            "PreviousGuid": "bf4e67b3-f9e7-4220-afb5-6d2c93798a06"
+          },
+          {
+            "$type": "Sungero.Metadata.FilterGroupMetadata, Sungero.Metadata",
+            "NameGuid": "e7ccc792-45d2-4800-9ab5-482afe0327b0",
+            "Name": "SentDate",
+            "PreviousGuid": "3e6cccee-56df-48e6-a8c6-fcc668f244a6"
+          },
+          {
+            "$type": "Sungero.Metadata.FilterListMetadata, Sungero.Metadata",
+            "NameGuid": "ab3aa997-d561-451b-9cb8-050bc42b8126",
+            "Name": "DocumentTypeList",
+            "IsMultiSelect": true,
+            "ParentGuid": "bf4e67b3-f9e7-4220-afb5-6d2c93798a06"
+          },
+          {
+            "$type": "Sungero.Metadata.FilterListItemMetadata, Sungero.Metadata",
+            "NameGuid": "008d0d9a-bfaf-4c79-b461-5f0da862ac93",
+            "Name": "Accounting",
+            "ParentGuid": "ab3aa997-d561-451b-9cb8-050bc42b8126"
+          },
+          {
+            "$type": "Sungero.Metadata.FilterListItemMetadata, Sungero.Metadata",
+            "NameGuid": "f872600d-6f63-4770-b5d1-3b0d0dd38300",
+            "Name": "Contractual",
+            "ParentGuid": "ab3aa997-d561-451b-9cb8-050bc42b8126",
+            "PreviousGuid": "008d0d9a-bfaf-4c79-b461-5f0da862ac93"
+          },
+          {
+            "$type": "Sungero.Metadata.FilterListItemMetadata, Sungero.Metadata",
+            "NameGuid": "603ced36-c420-447e-a0d8-1e52649e041f",
+            "Name": "Other",
+            "ParentGuid": "ab3aa997-d561-451b-9cb8-050bc42b8126",
+            "PreviousGuid": "f872600d-6f63-4770-b5d1-3b0d0dd38300"
+          },
+          {
+            "$type": "Sungero.Metadata.FilterNavigationMetadata, Sungero.Metadata",
+            "NameGuid": "f5a8e64a-dc2b-480e-9424-5cd2531551de",
+            "Name": "BusinessUnit",
+            "EntityGuid": "eff95720-181f-4f7d-892d-dec034c7b2ab",
+            "MultilineMode": "Single",
+            "ParentGuid": "3e6cccee-56df-48e6-a8c6-fcc668f244a6"
+          },
+          {
+            "$type": "Sungero.Metadata.FilterNavigationMetadata, Sungero.Metadata",
+            "NameGuid": "998b9f90-6d03-4a7c-ab5d-b52ee0cefffc",
+            "Name": "Department",
+            "EntityGuid": "61b1c19f-26e2-49a5-b3d3-0d3618151e12",
+            "MultilineMode": "Single",
+            "ParentGuid": "3e6cccee-56df-48e6-a8c6-fcc668f244a6",
+            "PreviousGuid": "f5a8e64a-dc2b-480e-9424-5cd2531551de"
+          },
+          {
+            "$type": "Sungero.Metadata.FilterNavigationMetadata, Sungero.Metadata",
+            "NameGuid": "3411ded7-8be9-44ae-9ec1-077a3b4c134d",
+            "Name": "Responsible",
+            "EntityGuid": "b7905516-2be5-4931-961c-cb38d5677565",
+            "MultilineMode": "Single",
+            "ParentGuid": "3e6cccee-56df-48e6-a8c6-fcc668f244a6",
+            "PreviousGuid": "998b9f90-6d03-4a7c-ab5d-b52ee0cefffc"
+          },
+          {
+            "$type": "Sungero.Metadata.FilterNavigationMetadata, Sungero.Metadata",
+            "NameGuid": "4544c64f-1ec3-4c7e-b7cf-3764d747eed0",
+            "Name": "Counterparty",
+            "EntityGuid": "294767f1-009f-4fbd-80fc-f98c49ddc560",
+            "LookupMode": "Standalone",
+            "MultilineMode": "Single",
+            "ParentGuid": "3e6cccee-56df-48e6-a8c6-fcc668f244a6",
+            "PreviousGuid": "3411ded7-8be9-44ae-9ec1-077a3b4c134d"
+          },
+          {
+            "$type": "Sungero.Metadata.FilterListMetadata, Sungero.Metadata",
+            "NameGuid": "22b94462-92f8-47a1-a853-0697fc4ef3ef",
+            "Name": "SentDateList",
+            "ParentGuid": "e7ccc792-45d2-4800-9ab5-482afe0327b0"
+          },
+          {
+            "$type": "Sungero.Metadata.FilterListItemMetadata, Sungero.Metadata",
+            "NameGuid": "b61ddf6a-e6d3-4a35-b5e4-35b33b3d0a85",
+            "Name": "Today",
+            "ParentGuid": "22b94462-92f8-47a1-a853-0697fc4ef3ef"
+          },
+          {
+            "$type": "Sungero.Metadata.FilterListItemMetadata, Sungero.Metadata",
+            "NameGuid": "3347cb60-4627-4717-9ba5-a8b614ce2fb9",
+            "Name": "LastThreeDays",
+            "ParentGuid": "22b94462-92f8-47a1-a853-0697fc4ef3ef",
+            "PreviousGuid": "b61ddf6a-e6d3-4a35-b5e4-35b33b3d0a85"
+          },
+          {
+            "$type": "Sungero.Metadata.FilterListItemMetadata, Sungero.Metadata",
+            "NameGuid": "32a947d4-c659-45dd-9ca0-f2382c476d5f",
+            "Name": "LastWeek",
+            "ParentGuid": "22b94462-92f8-47a1-a853-0697fc4ef3ef",
+            "PreviousGuid": "3347cb60-4627-4717-9ba5-a8b614ce2fb9"
+          },
+          {
+            "$type": "Sungero.Metadata.FilterListItemMetadata, Sungero.Metadata",
+            "NameGuid": "bea3f9ca-8f50-4f4b-9c7f-4a27d18f832e",
+            "Name": "ManualPeriod",
+            "ParentGuid": "22b94462-92f8-47a1-a853-0697fc4ef3ef",
+            "PreviousGuid": "32a947d4-c659-45dd-9ca0-f2382c476d5f"
+          },
+          {
+            "$type": "Sungero.Metadata.FilterDateRangeMetadata, Sungero.Metadata",
+            "NameGuid": "07b26eab-9bac-46e4-a721-df932cd19408",
+            "Name": "DateRange",
+            "MasterControlId": "bea3f9ca-8f50-4f4b-9c7f-4a27d18f832e",
+            "ParentGuid": "e7ccc792-45d2-4800-9ab5-482afe0327b0",
+            "PreviousGuid": "22b94462-92f8-47a1-a853-0697fc4ef3ef"
+          }
+        ]
+      },
+      "HandledEvents": [
+        "DataQueryServer"
+      ],
+      "IsShow": false,
+      "Kind": "Computable",
+      "NeedShowMarkedCount": false,
+      "OpenCardByDefault": true
     }
   ],
   "Version": "3.1.16.1",
