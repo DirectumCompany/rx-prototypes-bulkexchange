@@ -237,9 +237,6 @@
   <data name="FilterPanel_Contractual_6ee8f2319b8a4a399a51cf807032e84a" xml:space="preserve">
     <value>Договорные</value>
   </data>
-  <data name="FilterPanel_Other_d7b6a28901e5428e8f9f408f3c6e9e39" xml:space="preserve">
-    <value>Другие</value>
-  </data>
   <data name="FilterPanel_Main_6fa04a6bfeaf4f5cbaa989a332cee65a" xml:space="preserve">
     <value>Основное</value>
   </data>
@@ -259,6 +256,6 @@
     <value>Ожидают отправки</value>
   </data>
   <data name="CoverDescription_OutgoingDocumentToSend" xml:space="preserve">
-    <value>Подписанные докменты, ожидающие отправки через сервис обмена.</value>
+    <value>Подписанные документы, ожидающие отправки через сервис обмена.</value>
   </data>
 </root>

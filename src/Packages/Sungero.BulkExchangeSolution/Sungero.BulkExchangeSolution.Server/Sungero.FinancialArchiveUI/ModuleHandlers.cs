@@ -11,7 +11,9 @@ namespace Sungero.BulkExchangeSolution.Module.FinancialArchiveUI.Server
 
     public virtual IQueryable<Sungero.Docflow.IOfficialDocument> OutgoingDocumentToSendDataQuery(IQueryable<Sungero.Docflow.IOfficialDocument> query)
     {
-      query = query.Where(d => /*d.BusinessUnitBox != null && */d.ExchangeState == null && d.LastVersionApproved == true);
+      query = query.Where(d => d.ExchangeState == null && d.LastVersionApproved == true && d.ExternalApprovalState == null &&
+                          (Docflow.AccountingDocumentBases.Is(d) && Docflow.AccountingDocumentBases.As(d).Counterparty.CanExchange == true ||
+                           Docflow.ContractualDocumentBases.Is(d) && Sungero.Contracts.ContractualDocuments.As(d).Counterparty.CanExchange == true));
       
       if (_filter == null)
         return query;
@@ -30,16 +32,16 @@ namespace Sungero.BulkExchangeSolution.Module.FinancialArchiveUI.Server
       if (_filter.Responsible != null)
         query = query.Where(d => Docflow.AccountingDocumentBases.Is(d) && Equals(Docflow.AccountingDocumentBases.As(d).ResponsibleEmployee, _filter.Responsible) ||
                             Docflow.ContractualDocumentBases.Is(d) && Equals(Sungero.Contracts.ContractualDocuments.As(d).ResponsibleEmployee, _filter.Responsible));
-      /*
+      
       // Фильтр "Контрагент".
       if (_filter.Counterparty != null)
-        infos = infos.Where(i => Equals(i.Counterparty, _filter.Counterparty));
-      */
+        query = query.Where(d => Docflow.AccountingDocumentBases.Is(d) && Equals(Docflow.AccountingDocumentBases.As(d).Counterparty, _filter.Counterparty) ||
+                            Docflow.ContractualDocumentBases.Is(d) && Equals(Sungero.Contracts.ContractualDocuments.As(d).Counterparty, _filter.Counterparty));
+      
       // Фильтр "Тип документа"
-      if (_filter.Accounting || _filter.Contractual || _filter.Other)
+      if (_filter.Accounting || _filter.Contractual)
         query = query.Where(d => (_filter.Accounting && Docflow.AccountingDocumentBases.Is(d)) ||
-                            (_filter.Contractual && Docflow.ContractualDocumentBases.Is(d)) ||
-                            (_filter.Other && !Docflow.AccountingDocumentBases.Is(d) && !Docflow.ContractualDocumentBases.Is(d)));
+                            (_filter.Contractual && Docflow.ContractualDocumentBases.Is(d)));
       #endregion
       
       return query;

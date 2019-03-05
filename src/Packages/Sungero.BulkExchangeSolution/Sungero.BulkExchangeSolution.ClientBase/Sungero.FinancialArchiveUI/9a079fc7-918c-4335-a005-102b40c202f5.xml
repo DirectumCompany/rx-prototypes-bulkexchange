@@ -25,7 +25,6 @@
             <property name="SortMode">Custom</property>
             <property name="FixedWidth">true</property>
             <property name="Visible">true</property>
-            <property name="ExtendedVisibleIndex">0</property>
             <property name="VisibleIndex">0</property>
             <property name="Width">48</property>
             <property name="ActualWidth">5*</property>
@@ -98,7 +97,7 @@
             <property name="Name">Boolean_Return_from_counterparty_required</property>
             <property name="ExtendedVisibleIndex">7</property>
             <property name="VisibleIndex">2</property>
-            <property name="ActualWidth">27*</property>
+            <property name="ActualWidth">29*</property>
           </property>
           <property name="Item9" isnull="true" iskey="true">
             <property name="FieldName">Navigation_Delivered_to_c612fc4144a3428ba97c433c333d78e9</property>
@@ -218,7 +217,7 @@
             <property name="Name">String_Name</property>
             <property name="ExtendedVisibleIndex">19</property>
             <property name="VisibleIndex">2</property>
-            <property name="ActualWidth">6*</property>
+            <property name="ActualWidth">20*</property>
           </property>
           <property name="Item21" isnull="true" iskey="true">
             <property name="FieldName">Navigation_Author_c612fc4144a3428ba97c433c333d78e9</property>
@@ -238,7 +237,7 @@
             <property name="Name">DateTime_Modified</property>
             <property name="ExtendedVisibleIndex">36</property>
             <property name="VisibleIndex">5</property>
-            <property name="ActualWidth">10*</property>
+            <property name="ActualWidth">9*</property>
           </property>
           <property name="Item23" isnull="true" iskey="true">
             <property name="FieldName">Enumeration_State_LifeCycleState_58cca1021e974f07b6acfd866a8b7cb1</property>
@@ -378,7 +377,7 @@
             <property name="Name">Navigation_Business_unit_c612fc4144a3428ba97c433c333d78e9</property>
             <property name="ExtendedVisibleIndex">35</property>
             <property name="VisibleIndex">4</property>
-            <property name="ActualWidth">10*</property>
+            <property name="ActualWidth">19*</property>
           </property>
           <property name="Item37" isnull="true" iskey="true">
             <property name="FieldName">String_Note</property>
@@ -388,7 +387,7 @@
             <property name="Name">String_Note</property>
             <property name="ExtendedVisibleIndex">37</property>
             <property name="VisibleIndex">6</property>
-            <property name="ActualWidth">12*</property>
+            <property name="ActualWidth">30*</property>
           </property>
           <property name="Item38" isnull="true" iskey="true">
             <property name="FieldName">Navigation_Signed_by_c612fc4144a3428ba97c433c333d78e9</property>
@@ -398,7 +397,7 @@
             <property name="Name">Navigation_Signed_by_c612fc4144a3428ba97c433c333d78e9</property>
             <property name="ExtendedVisibleIndex">38</property>
             <property name="VisibleIndex">6</property>
-            <property name="ActualWidth">28*</property>
+            <property name="ActualWidth">30*</property>
           </property>
           <property name="Item39" isnull="true" iskey="true">
             <property name="FieldName">Navigation_Counterparty_294767f1009f4fbd80fcf98c49ddc560</property>
@@ -408,7 +407,7 @@
             <property name="Name">Navigation_Counterparty_294767f1009f4fbd80fcf98c49ddc560</property>
             <property name="ExtendedVisibleIndex">20</property>
             <property name="VisibleIndex">3</property>
-            <property name="ActualWidth">11*</property>
+            <property name="ActualWidth">19*</property>
           </property>
           <property name="Item40" isnull="true" iskey="true">
             <property name="FieldName">Navigation_Contact_c8daaef9a6794a29ac01b93c1637c72e</property>
@@ -508,7 +507,7 @@
             <property name="Name">Navigation_Signed_by_c8daaef9a6794a29ac01b93c1637c72e</property>
             <property name="ExtendedVisibleIndex">48</property>
             <property name="VisibleIndex">7</property>
-            <property name="ActualWidth">27*</property>
+            <property name="ActualWidth">29*</property>
           </property>
           <property name="Item50" isnull="true" iskey="true">
             <property name="FieldName">Navigation_Business_Unit_Box_f91dcce6a9144c04aba10f940475696b</property>
@@ -518,7 +517,7 @@
             <property name="Name">Navigation_Business_Unit_Box_f91dcce6a9144c04aba10f940475696b</property>
             <property name="ExtendedVisibleIndex">49</property>
             <property name="VisibleIndex">7</property>
-            <property name="ActualWidth">30*</property>
+            <property name="ActualWidth">32*</property>
           </property>
           <property name="Item51" isnull="true" iskey="true">
             <property name="FieldName">Boolean_Corrective</property>
@@ -541,7 +540,12 @@
             <property name="ActualWidth">13*</property>
           </property>
         </property>
-        <property name="SortInfo" iskey="true" value="0" />
+        <property name="SortInfo" iskey="true" value="1">
+          <property name="Item1" isnull="true" iskey="true">
+            <property name="FieldName">DateTime_Modified</property>
+            <property name="SortOrder">Descending</property>
+          </property>
+        </property>
         <property name="GroupCount">0</property>
         <property name="GroupSummarySortInfo" iskey="true" value="0" />
       </property>
