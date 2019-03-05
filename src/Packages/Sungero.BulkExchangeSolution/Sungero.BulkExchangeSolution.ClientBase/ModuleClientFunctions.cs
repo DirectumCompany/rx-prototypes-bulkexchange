@@ -61,7 +61,7 @@ namespace Sungero.BulkExchangeSolution.Client
           var responsible = isContractStatementDocumentSet ? salesManager : chiefAccountant;
           var titleSignatory = isContractStatementDocumentSet ? chief : chiefAccountant;
           
-          this.ProcessImportedDocuments(documents, responsible, titleSignatory);
+          this.ProcessImportedDocuments(documents, responsible, titleSignatory, isContractStatementDocumentSet);
           
           if (isContractStatementDocumentSet)
           {
@@ -178,7 +178,8 @@ namespace Sungero.BulkExchangeSolution.Client
     /// <param name="documents">Документы.</param>
     /// <param name="responsible">Ответственный за документ.</param>
     /// <param name="titleSignatory">Подписывающий титул продавца.</param>
-    public virtual void ProcessImportedDocuments(List<IOfficialDocument> documents, Company.IEmployee responsible, Company.IEmployee titleSignatory)
+    /// <param name="isContractStatement">Признак нетоварного потока.</param>
+    public virtual void ProcessImportedDocuments(List<IOfficialDocument> documents, Company.IEmployee responsible, Company.IEmployee titleSignatory, bool isContractStatement)
     {
       foreach (var document in documents)
       {
@@ -193,7 +194,7 @@ namespace Sungero.BulkExchangeSolution.Client
           accountingDocument.Save();
         }
         var signatory = isFormalized ? titleSignatory : null;
-        Functions.Module.Remote.ProcessImportedDocument(accountingDocument, responsible, signatory);
+        Functions.Module.Remote.ProcessImportedDocument(accountingDocument, responsible, signatory, isContractStatement);
       }
     }
     

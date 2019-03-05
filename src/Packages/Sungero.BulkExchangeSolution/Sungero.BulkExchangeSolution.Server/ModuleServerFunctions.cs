@@ -53,14 +53,15 @@ namespace Sungero.BulkExchangeSolution.Server
     /// <param name="document">Документ.</param>
     /// <param name="responsible">Ответственный.</param>
     /// <param name="titleSignatory">Подписывающий титул продавца.</param>
+    /// <param name="isContractStatement">Признак нетоварного потока.</param>
     [Remote]
-    public virtual void ProcessImportedDocument(IAccountingDocumentBase document, IEmployee responsible, IEmployee titleSignatory)
+    public virtual void ProcessImportedDocument(IAccountingDocumentBase document, IEmployee responsible, IEmployee titleSignatory, bool isContractStatement)
     {
       if (titleSignatory != null)
         Docflow.PublicFunctions.AccountingDocumentBase.Remote.GenerateDefaultSellerTitle(document, titleSignatory);
 
       BulkExchangeSolution.Module.Exchange.PublicFunctions.Module.SetDocumentResponsible(document, responsible);
-      var caseFile = this.GetImportedDocumentsDefaultCaseFile();
+      var caseFile = Sungero.BulkExchangeSolution.Module.Exchange.PublicFunctions.Module.GetDefaultCaseFile(document, false, isContractStatement);
       if (caseFile != null)
         document.CaseFile = caseFile;
       document.Save();
@@ -143,16 +144,6 @@ namespace Sungero.BulkExchangeSolution.Server
     public Contracts.IContract GetContractByNumber(string contractNumber)
     {
       return Sungero.Contracts.Contracts.GetAll(c => Equals(c.RegistrationNumber, contractNumber)).FirstOrDefault();
-    }
-    
-    /// <summary>
-    /// Получить дело по умолчанию для импортируемых документов.
-    /// </summary>
-    /// <returns>Дело.</returns>
-    [Remote]
-    public ICaseFile GetImportedDocumentsDefaultCaseFile()
-    {
-      return Docflow.CaseFiles.GetAll(c => c.Status == Docflow.CaseFile.Status.Active).FirstOrDefault();
     }
     
     [Remote(IsPure = true)]

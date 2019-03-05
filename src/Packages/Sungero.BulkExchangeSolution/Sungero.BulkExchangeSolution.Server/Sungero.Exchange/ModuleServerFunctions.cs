@@ -22,12 +22,12 @@ namespace Sungero.BulkExchangeSolution.Module.Exchange.Server
     #region Перекрытие получения сообщений
 
     protected override bool ProcessDocumentsFromNewIncomingMessage(IMessage message,
-      ExchangeCore.IMessageQueueItem queueItem,
-      List<Sungero.Exchange.IExchangeDocumentInfo> infos,
-      List<IDocument> processingDocuments,
-      ICounterparty sender,
-      bool isIncoming,
-      IBoxBase box)
+                                                                   ExchangeCore.IMessageQueueItem queueItem,
+                                                                   List<Sungero.Exchange.IExchangeDocumentInfo> infos,
+                                                                   List<IDocument> processingDocuments,
+                                                                   ICounterparty sender,
+                                                                   bool isIncoming,
+                                                                   IBoxBase box)
     {
       var queueItems = MessageQueueItems.GetAll(q => Equals(q.RootBox, queueItem.RootBox)).ToList();
       var responsible = BoxBase.GetExchangeDocumentResponsible(box, sender, infos);
@@ -130,8 +130,8 @@ namespace Sungero.BulkExchangeSolution.Module.Exchange.Server
     }
     
     protected override bool StartExchangeTask(IMessage message, List<Sungero.Exchange.IExchangeDocumentInfo> infos, ICounterparty sender, bool isIncoming,
-      IBoxBase box,
-      string exchangeTaskActiveTextBoundedDocuments)
+                                              IBoxBase box,
+                                              string exchangeTaskActiveTextBoundedDocuments)
     {
       var exchangeDocumentInfos = Sungero.BulkExchangeSolution.ExchangeDocumentInfos.GetAll().Where(e => e.ServiceMessageId == message.ServiceMessageId).ToList();
       if (exchangeDocumentInfos.Any(i => i.VerificationStatus == VerificationStatus.Required))
@@ -189,9 +189,9 @@ namespace Sungero.BulkExchangeSolution.Module.Exchange.Server
     /// <param name="serviceName">Наименование сервиса обмена.</param>
     /// <param name="comment">Комментарий.</param>
     protected override void SendDocumentReplyNotice(IBoxBase box, IOfficialDocumentTracking trackingString, int? versionNumber,
-      bool versionIsChanged, bool signed,
-      string signatoryInfo, bool isInvoiceAmendmentRequest,
-      string serviceName, string comment)
+                                                    bool versionIsChanged, bool signed,
+                                                    string signatoryInfo, bool isInvoiceAmendmentRequest,
+                                                    string serviceName, string comment)
     {
       if (signed && !isInvoiceAmendmentRequest)
       {
@@ -423,7 +423,7 @@ namespace Sungero.BulkExchangeSolution.Module.Exchange.Server
       
       var counterparty = documentSet.ExchangeDocumentInfos.Select(i => i.Counterparty).Distinct().Single();
       var responsible = CompanyBases.Is(counterparty) ? CompanyBases.As(counterparty).Responsible : null;
-      var caseFile = Docflow.CaseFiles.GetAll(c => c.Status == Docflow.CaseFile.Status.Active).FirstOrDefault();
+      var isContractStatementDocumentSet = documentSet.Type == BulkExchangeSolution.Constants.Exchange.ExchangeDocumentInfo.DocumentSetType.ContractStatement;
       
       foreach (var info in documentSet.ExchangeDocumentInfos)
       {
@@ -436,8 +436,7 @@ namespace Sungero.BulkExchangeSolution.Module.Exchange.Server
           continue;
         
         // Заполнить договор для акта.
-        if (documentSet.Type == BulkExchangeSolution.Constants.Exchange.ExchangeDocumentInfo.DocumentSetType.ContractStatement &&
-            !string.IsNullOrEmpty(info.ContractNumber))
+        if (isContractStatementDocumentSet && !string.IsNullOrEmpty(info.ContractNumber))
         {
           var contract = Contracts.ContractBases.GetAll(c => Equals(accountingDocument.Counterparty, c.Counterparty) && c.RegistrationNumber == info.ContractNumber).FirstOrDefault();
           accountingDocument.LeadingDocument = contract;
@@ -448,11 +447,10 @@ namespace Sungero.BulkExchangeSolution.Module.Exchange.Server
         if (documentSet.IsFullSet == true)
         {
           // Заполнить номенклатуру дела.
-          if (caseFile != null)
-            accountingDocument.CaseFile = caseFile;
+          accountingDocument.CaseFile = this.GetDefaultCaseFile(accountingDocument, info.MessageType == MessageType.Incoming, isContractStatementDocumentSet);
           
           // Выдать права главному бухгалтеру на товарные документы.
-          if (documentSet.Type == BulkExchangeSolution.Constants.Exchange.ExchangeDocumentInfo.DocumentSetType.Waybill)
+          if (!isContractStatementDocumentSet)
           {
             var chiefAccountant = Roles.GetAll(r => r.Name.Equals(Constants.Module.ChiefAccountantRoleName)).FirstOrDefault();
             accountingDocument.AccessRights.Grant(chiefAccountant, DefaultAccessRightsTypes.FullAccess);
@@ -673,7 +671,38 @@ namespace Sungero.BulkExchangeSolution.Module.Exchange.Server
         document.AccessRights.Save();
       }
     }
-
+    
+    [Public]
+    /// <summary>
+    /// Получить номенклатуру дела для документа.
+    /// </summary>
+    /// <param name="document">Документ.</param>
+    /// <param name="isIncoming">Признак входящего документа.</param>
+    /// <param name="isContractStatement">Признак нетоварного потока.</param>
+    /// <returns>Номенклатуру дела.</returns>
+    public virtual ICaseFile GetDefaultCaseFile(IOfficialDocument document, bool isIncoming, bool isContractStatement)
+    {
+      var caseFileName = string.Empty;
+      
+      if (Sungero.FinancialArchive.IncomingTaxInvoices.Is(document))
+        caseFileName = "Счета-фактуры полученные";
+      if (Sungero.FinancialArchive.OutgoingTaxInvoices.Is(document))
+        caseFileName = "Счета-фактуры выставленные";
+      if (Sungero.FinancialArchive.Waybills.Is(document))
+        caseFileName = isIncoming ? "Товарные накладные полученные" : "Товарные накладные выставленные";
+      if (Sungero.FinancialArchive.ContractStatements.Is(document))
+        caseFileName = isIncoming ? "Акты выполненных работ полученные" : "Акты выполненных работ выставленные";
+      if (Sungero.FinancialArchive.UniversalTransferDocuments.Is(document))
+      {
+        if (isContractStatement)
+          caseFileName = isIncoming ? "Акты выполненных работ полученные" : "Акты выполненных работ выставленные";
+        else
+          caseFileName = isIncoming ? "Товарные накладные полученные" : "Товарные накладные выставленные";
+      }
+      if (!string.IsNullOrEmpty(caseFileName))
+        return Docflow.CaseFiles.GetAll(c => c.Title == caseFileName).FirstOrDefault();
+      return null;
+    }
     #endregion
     
   }

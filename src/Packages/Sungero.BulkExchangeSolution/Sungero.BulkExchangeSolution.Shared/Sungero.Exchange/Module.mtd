@@ -133,6 +133,28 @@
       "ReturnTypeFullName": "System.String"
     },
     {
+      "Name": "GetDefaultCaseFile",
+      "Parameters": [
+        {
+          "Name": "document",
+          "ParameterType": "global::Sungero.Docflow.IOfficialDocument",
+          "ParameterTypeFullName": "Sungero.Docflow.IOfficialDocument, Sungero.Domain.Interfaces"
+        },
+        {
+          "Name": "isIncoming",
+          "ParameterType": "global::System.Boolean",
+          "ParameterTypeFullName": "System.Boolean"
+        },
+        {
+          "Name": "isContractStatement",
+          "ParameterType": "global::System.Boolean",
+          "ParameterTypeFullName": "System.Boolean"
+        }
+      ],
+      "ReturnType": "global::Sungero.Docflow.ICaseFile",
+      "ReturnTypeFullName": "Sungero.Docflow.ICaseFile, Sungero.Domain.Interfaces"
+    },
+    {
       "Name": "GetPurchaseOrderNumber",
       "Parameters": [
         {
