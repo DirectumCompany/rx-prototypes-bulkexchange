@@ -98,7 +98,7 @@
             <property name="Name">Boolean_Return_from_counterparty_required</property>
             <property name="ExtendedVisibleIndex">17</property>
             <property name="VisibleIndex">4</property>
-            <property name="ActualWidth">32*</property>
+            <property name="ActualWidth">35*</property>
           </property>
           <property name="Item9" isnull="true" iskey="true">
             <property name="FieldName">Navigation_Delivered_to_c612fc4144a3428ba97c433c333d78e9</property>
@@ -218,7 +218,7 @@
             <property name="Name">String_Name</property>
             <property name="ExtendedVisibleIndex">5</property>
             <property name="VisibleIndex">2</property>
-            <property name="ActualWidth">23*</property>
+            <property name="ActualWidth">20*</property>
           </property>
           <property name="Item21" isnull="true" iskey="true">
             <property name="FieldName">Navigation_Author_c612fc4144a3428ba97c433c333d78e9</property>
@@ -378,7 +378,7 @@
             <property name="Name">Navigation_Business_unit_c612fc4144a3428ba97c433c333d78e9</property>
             <property name="ExtendedVisibleIndex">33</property>
             <property name="VisibleIndex">4</property>
-            <property name="ActualWidth">14*</property>
+            <property name="ActualWidth">19*</property>
           </property>
           <property name="Item37" isnull="true" iskey="true">
             <property name="FieldName">String_Note</property>
@@ -388,7 +388,7 @@
             <property name="Name">String_Note</property>
             <property name="ExtendedVisibleIndex">40</property>
             <property name="VisibleIndex">6</property>
-            <property name="ActualWidth">23*</property>
+            <property name="ActualWidth">28*</property>
           </property>
           <property name="Item38" isnull="true" iskey="true">
             <property name="FieldName">Navigation_Signed_by_c612fc4144a3428ba97c433c333d78e9</property>
@@ -398,7 +398,7 @@
             <property name="Name">Navigation_Signed_by_c612fc4144a3428ba97c433c333d78e9</property>
             <property name="ExtendedVisibleIndex">35</property>
             <property name="VisibleIndex">6</property>
-            <property name="ActualWidth">33*</property>
+            <property name="ActualWidth">36*</property>
           </property>
           <property name="Item39" isnull="true" iskey="true">
             <property name="FieldName">Navigation_Counterparty_294767f1009f4fbd80fcf98c49ddc560</property>

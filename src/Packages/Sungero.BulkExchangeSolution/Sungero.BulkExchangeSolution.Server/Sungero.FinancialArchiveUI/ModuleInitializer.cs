@@ -33,11 +33,16 @@ namespace Sungero.BulkExchangeSolution.Module.FinancialArchiveUI.Server
           Docflow.PublicFunctions.Module.DeleteLicense();
         }
         
-        // Права на папку "На подписание".
+        // Права на папки.
         FinancialArchiveUI.SpecialFolders.IncomingDocumentsForSignature.AccessRights.Grant(role, DefaultAccessRightsTypes.Read);
         FinancialArchiveUI.SpecialFolders.IncomingDocumentsForSignature.AccessRights.Save();
         FinancialArchiveUI.SpecialFolders.OutgoingDocumentsForSignature.AccessRights.Grant(role, DefaultAccessRightsTypes.Read);
         FinancialArchiveUI.SpecialFolders.OutgoingDocumentsForSignature.AccessRights.Save();
+        FinancialArchiveUI.SpecialFolders.IncomingDocumentsFromService.AccessRights.Grant(role, DefaultAccessRightsTypes.Read);
+        FinancialArchiveUI.SpecialFolders.IncomingDocumentsFromService.AccessRights.Save();
+        FinancialArchiveUI.SpecialFolders.VerifiedOrNeedVerifyDocuments.AccessRights.Grant(role, DefaultAccessRightsTypes.Read);
+        FinancialArchiveUI.SpecialFolders.VerifiedOrNeedVerifyDocuments.AccessRights.Save();
+        
       }
       finally
       {

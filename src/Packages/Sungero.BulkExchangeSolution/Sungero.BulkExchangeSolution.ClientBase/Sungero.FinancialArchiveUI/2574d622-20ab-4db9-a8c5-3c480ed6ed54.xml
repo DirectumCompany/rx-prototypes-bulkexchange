@@ -68,7 +68,7 @@
             <property name="Visible">true</property>
             <property name="Name">String_Name</property>
             <property name="ExtendedVisibleIndex">5</property>
-            <property name="VisibleIndex">1</property>
+            <property name="VisibleIndex">2</property>
             <property name="ActualWidth">20*</property>
           </property>
           <property name="Item6" isnull="true" iskey="true">
@@ -77,7 +77,7 @@
             <property name="SortMode">Custom</property>
             <property name="Visible">false</property>
             <property name="Name">Navigation_Author_c612fc4144a3428ba97c433c333d78e9</property>
-            <property name="ExtendedVisibleIndex">9</property>
+            <property name="ExtendedVisibleIndex">10</property>
             <property name="VisibleIndex">2</property>
             <property name="ActualWidth">7*</property>
           </property>
@@ -85,7 +85,7 @@
             <property name="FieldName">Boolean__64_</property>
             <property name="AutoFilterCondition">Equals</property>
             <property name="SortMode">Custom</property>
-            <property name="Visible">false</property>
+            <property name="Visible">true</property>
             <property name="Name">Boolean__64_</property>
             <property name="ExtendedVisibleIndex">1</property>
             <property name="VisibleIndex">1</property>
@@ -95,10 +95,10 @@
             <property name="FieldName">DateTime_Created</property>
             <property name="AutoFilterCondition">Equals</property>
             <property name="SortMode">Custom</property>
-            <property name="Visible">false</property>
+            <property name="Visible">true</property>
             <property name="Name">DateTime_Created</property>
-            <property name="ExtendedVisibleIndex">10</property>
-            <property name="VisibleIndex">3</property>
+            <property name="ExtendedVisibleIndex">9</property>
+            <property name="VisibleIndex">6</property>
             <property name="ActualWidth">9*</property>
           </property>
           <property name="Item9" isnull="true" iskey="true">
@@ -135,10 +135,10 @@
             <property name="FieldName">DateTime_Document_date</property>
             <property name="AutoFilterCondition">Equals</property>
             <property name="SortMode">Custom</property>
-            <property name="Visible">true</property>
+            <property name="Visible">false</property>
             <property name="Name">DateTime_Document_date</property>
             <property name="ExtendedVisibleIndex">13</property>
-            <property name="VisibleIndex">5</property>
+            <property name="VisibleIndex">7</property>
             <property name="ActualWidth">14*</property>
           </property>
           <property name="Item13" isnull="true" iskey="true">
@@ -328,7 +328,7 @@
             <property name="Visible">true</property>
             <property name="Name">Navigation_Business_unit_c612fc4144a3428ba97c433c333d78e9</property>
             <property name="ExtendedVisibleIndex">7</property>
-            <property name="VisibleIndex">3</property>
+            <property name="VisibleIndex">4</property>
             <property name="ActualWidth">19*</property>
           </property>
           <property name="Item32" isnull="true" iskey="true">
@@ -338,8 +338,8 @@
             <property name="Visible">true</property>
             <property name="Name">String_Note</property>
             <property name="ExtendedVisibleIndex">33</property>
-            <property name="VisibleIndex">6</property>
-            <property name="ActualWidth">14*</property>
+            <property name="VisibleIndex">7</property>
+            <property name="ActualWidth">16*</property>
           </property>
           <property name="Item33" isnull="true" iskey="true">
             <property name="FieldName">Navigation_Department_c612fc4144a3428ba97c433c333d78e9</property>
@@ -378,7 +378,7 @@
             <property name="Visible">true</property>
             <property name="Name">Double_Total_amount</property>
             <property name="ExtendedVisibleIndex">8</property>
-            <property name="VisibleIndex">4</property>
+            <property name="VisibleIndex">5</property>
             <property name="ActualWidth">11*</property>
           </property>
           <property name="Item37" isnull="true" iskey="true">
@@ -398,7 +398,7 @@
             <property name="Visible">true</property>
             <property name="Name">Navigation_Counterparty_294767f1009f4fbd80fcf98c49ddc560</property>
             <property name="ExtendedVisibleIndex">6</property>
-            <property name="VisibleIndex">2</property>
+            <property name="VisibleIndex">3</property>
             <property name="ActualWidth">19*</property>
           </property>
           <property name="Item39" isnull="true" iskey="true">
@@ -514,7 +514,7 @@
         </property>
         <property name="SortInfo" iskey="true" value="1">
           <property name="Item1" isnull="true" iskey="true">
-            <property name="FieldName">DateTime_Document_date</property>
+            <property name="FieldName">DateTime_Created</property>
             <property name="SortOrder">Descending</property>
           </property>
         </property>

@@ -268,7 +268,7 @@
             "LookupMode": "Standalone",
             "MultilineMode": "Single",
             "ParentGuid": "83a3636e-014b-4d45-aaa6-9686855dcfa9",
-            "PreviousGuid": "099f4bef-beb8-4ca2-866d-aa1f8853062c"
+            "PreviousGuid": "7cf790e9-90a9-4bc1-a184-1f6fca88209a"
           },
           {
             "$type": "Sungero.Metadata.FilterNavigationMetadata, Sungero.Metadata",
@@ -277,7 +277,7 @@
             "EntityGuid": "b7905516-2be5-4931-961c-cb38d5677565",
             "MultilineMode": "Single",
             "ParentGuid": "83a3636e-014b-4d45-aaa6-9686855dcfa9",
-            "PreviousGuid": "ac15bfa8-7c92-4891-aa37-a6606adc992a"
+            "PreviousGuid": "099f4bef-beb8-4ca2-866d-aa1f8853062c"
           },
           {
             "$type": "Sungero.Metadata.FilterListMetadata, Sungero.Metadata",
@@ -326,7 +326,7 @@
       "HandledEvents": [
         "DataQueryServer"
       ],
-      "IsShow": true,
+      "IsShow": false,
       "Kind": "Computable",
       "NeedShowMarkedCount": false,
       "OpenCardByDefault": true,
