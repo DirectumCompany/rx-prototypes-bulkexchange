@@ -225,4 +225,40 @@
   <data name="FilterPanel_MainGroup_9c7e8a4894aa45c28b52dc10c7fd9d72" xml:space="preserve">
     <value> Основное</value>
   </data>
+  <data name="sf_9a079fc7_918c_4335_a005_102b40c202f5" xml:space="preserve">
+    <value>Ожидают отправки</value>
+  </data>
+  <data name="FilterPanel_DocumentType_78220c1615eb4937b96b4f253afe8e5b" xml:space="preserve">
+    <value>Тип документа</value>
+  </data>
+  <data name="FilterPanel_Accounting_8f04e9f0e2054d3385645946d05f0702" xml:space="preserve">
+    <value>Финансовые</value>
+  </data>
+  <data name="FilterPanel_Contractual_6ee8f2319b8a4a399a51cf807032e84a" xml:space="preserve">
+    <value>Договорные</value>
+  </data>
+  <data name="FilterPanel_Other_d7b6a28901e5428e8f9f408f3c6e9e39" xml:space="preserve">
+    <value>Другие</value>
+  </data>
+  <data name="FilterPanel_Main_6fa04a6bfeaf4f5cbaa989a332cee65a" xml:space="preserve">
+    <value>Основное</value>
+  </data>
+  <data name="FilterPanel_BusinessUnit_70fe759fe85245e7baba2c06869cb330" xml:space="preserve">
+    <value>Наша организация</value>
+  </data>
+  <data name="FilterPanel_Department_213eaca3859d4a34a670f0cacc7c5590" xml:space="preserve">
+    <value>Подразделение</value>
+  </data>
+  <data name="FilterPanel_Responsible_2877ee2ffdde4be6bcd2c6c05bc32675" xml:space="preserve">
+    <value>Ответственный</value>
+  </data>
+  <data name="FilterPanel_Counterparty_0eb219aac4794f3ba71dd3ded80245ae" xml:space="preserve">
+    <value>Контрагент</value>
+  </data>
+  <data name="CoverAction_OutgoingDocumentToSend" xml:space="preserve">
+    <value>Ожидают отправки</value>
+  </data>
+  <data name="CoverDescription_OutgoingDocumentToSend" xml:space="preserve">
+    <value>Подписанные докменты, ожидающие отправки через сервис обмена.</value>
+  </data>
 </root>

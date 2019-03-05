@@ -6,6 +6,46 @@ using Sungero.CoreEntities;
 
 namespace Sungero.BulkExchangeSolution.Module.FinancialArchiveUI.Server
 {
+  partial class OutgoingDocumentToSendFolderHandlers
+  {
+
+    public virtual IQueryable<Sungero.Docflow.IOfficialDocument> OutgoingDocumentToSendDataQuery(IQueryable<Sungero.Docflow.IOfficialDocument> query)
+    {
+      query = query.Where(d => /*d.BusinessUnitBox != null && */d.ExchangeState == null && d.LastVersionApproved == true);
+      
+      if (_filter == null)
+        return query;
+      
+      #region Фильтры
+      
+      // Фильтр "Наша организация".
+      if (_filter.BusinessUnit != null)
+        query = query.Where(d => Equals(d.BusinessUnit, _filter.BusinessUnit));
+      
+      // Фильтр "Подразделение".
+      if (_filter.Department != null)
+        query = query.Where(d => Equals(d.Department, _filter.Department));
+      
+      // Фильтр "Ответственный"
+      if (_filter.Responsible != null)
+        query = query.Where(d => Docflow.AccountingDocumentBases.Is(d) && Equals(Docflow.AccountingDocumentBases.As(d).ResponsibleEmployee, _filter.Responsible) ||
+                            Docflow.ContractualDocumentBases.Is(d) && Equals(Sungero.Contracts.ContractualDocuments.As(d).ResponsibleEmployee, _filter.Responsible));
+      /*
+      // Фильтр "Контрагент".
+      if (_filter.Counterparty != null)
+        infos = infos.Where(i => Equals(i.Counterparty, _filter.Counterparty));
+      */
+      // Фильтр "Тип документа"
+      if (_filter.Accounting || _filter.Contractual || _filter.Other)
+        query = query.Where(d => (_filter.Accounting && Docflow.AccountingDocumentBases.Is(d)) ||
+                            (_filter.Contractual && Docflow.ContractualDocumentBases.Is(d)) ||
+                            (_filter.Other && !Docflow.AccountingDocumentBases.Is(d) && !Docflow.ContractualDocumentBases.Is(d)));
+      #endregion
+      
+      return query;
+    }
+  }
+
   partial class VerifiedOrNeedVerifyDocumentsFolderHandlers
   {
 
@@ -13,20 +53,20 @@ namespace Sungero.BulkExchangeSolution.Module.FinancialArchiveUI.Server
     {
       var infos = ExchangeDocumentInfos
         .GetAll(d => (d.VerificationStatus == Sungero.BulkExchangeSolution.ExchangeDocumentInfo.VerificationStatus.Required ||
-                     d.VerificationStatus == Sungero.BulkExchangeSolution.ExchangeDocumentInfo.VerificationStatus.Completed) && d.PurchaseOrder != null)
+                      d.VerificationStatus == Sungero.BulkExchangeSolution.ExchangeDocumentInfo.VerificationStatus.Completed) && d.PurchaseOrder != null)
         .ToList();
 
       if (_filter.Required && !_filter.Verified)
         infos = infos.Where(d => d.VerificationStatus == Sungero.BulkExchangeSolution.ExchangeDocumentInfo.VerificationStatus.Required).ToList();
       
       if (_filter.Verified && !_filter.Required)
-        infos = infos.Where(d => d.VerificationStatus == Sungero.BulkExchangeSolution.ExchangeDocumentInfo.VerificationStatus.Completed).ToList();   
+        infos = infos.Where(d => d.VerificationStatus == Sungero.BulkExchangeSolution.ExchangeDocumentInfo.VerificationStatus.Completed).ToList();
 
       var documents = infos.Select(x => x.Document).ToList();
       query = query.Where(x => documents.Contains(x));
       if (_filter.BusinessUnit != null)
         query = query.Where(x => Equals(x.BusinessUnit, _filter.BusinessUnit));
-          
+      
       if (_filter.Department != null)
         query = query.Where(x => Equals(x.Department, _filter.Department));
       
@@ -34,8 +74,8 @@ namespace Sungero.BulkExchangeSolution.Module.FinancialArchiveUI.Server
         query = query.Where(x => Equals(x.ResponsibleEmployee, _filter.Responsible));
 
       if (_filter.Counterparty != null)
-        query = query.Where(x => Equals(x.Counterparty, _filter.Counterparty));      
-        
+        query = query.Where(x => Equals(x.Counterparty, _filter.Counterparty));
+      
       return query;
     }
   }
@@ -104,7 +144,7 @@ namespace Sungero.BulkExchangeSolution.Module.FinancialArchiveUI.Server
       
       if (endDate != null)
         query = query.Where(d => d.Created <= endDate.Value.EndOfDay());
-            
+      
       #endregion
       
       // Фильтр "Тип документа"

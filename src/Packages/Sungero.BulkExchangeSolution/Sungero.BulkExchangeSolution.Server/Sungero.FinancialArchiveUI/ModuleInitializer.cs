@@ -42,6 +42,8 @@ namespace Sungero.BulkExchangeSolution.Module.FinancialArchiveUI.Server
         FinancialArchiveUI.SpecialFolders.IncomingDocumentsFromService.AccessRights.Save();
         FinancialArchiveUI.SpecialFolders.VerifiedOrNeedVerifyDocuments.AccessRights.Grant(role, DefaultAccessRightsTypes.Read);
         FinancialArchiveUI.SpecialFolders.VerifiedOrNeedVerifyDocuments.AccessRights.Save();
+        FinancialArchiveUI.SpecialFolders.OutgoingDocumentToSend.AccessRights.Grant(role, DefaultAccessRightsTypes.Read);
+        FinancialArchiveUI.SpecialFolders.OutgoingDocumentToSend.AccessRights.Save();        
         
       }
       finally
