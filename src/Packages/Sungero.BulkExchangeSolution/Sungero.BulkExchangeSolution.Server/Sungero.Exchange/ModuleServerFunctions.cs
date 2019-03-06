@@ -384,7 +384,8 @@ namespace Sungero.BulkExchangeSolution.Module.Exchange.Server
         return;
       
       var accountDocument = AccountingDocumentBases.As(document);
-      if (accountDocument.ExchangeState == Docflow.OfficialDocument.ExchangeState.SignRequired && accountDocument.BuyerTitleId == null)
+      if (accountDocument.ExchangeState == Docflow.OfficialDocument.ExchangeState.SignRequired && accountDocument.BuyerTitleId == null &&
+          document.BusinessUnit.CEO != null)
       {
         if (!document.AccessRights.IsGrantedDirectly(DefaultAccessRightsTypes.Change, document.BusinessUnit.CEO))
         {
@@ -647,6 +648,8 @@ namespace Sungero.BulkExchangeSolution.Module.Exchange.Server
     [Public]
     public void SetDocumentResponsible(IAccountingDocumentBase accountingDocument, Sungero.Company.IEmployee responsible)
     {
+      if (responsible == null)
+        return;
       if (accountingDocument.Department == null)
       {
         // Подразделение зарегистрированного документа можно менять только на смене рег.данных.
