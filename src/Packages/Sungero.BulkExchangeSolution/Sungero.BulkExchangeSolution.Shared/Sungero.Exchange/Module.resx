@@ -139,12 +139,12 @@
     <value>Verification failed: </value>
   </data>
   <data name="CounterpartyResponsibleNotFoundSubject" xml:space="preserve">
-    <value>TODO</value>
+    <value>Specify employee responsible for counterparty {0}</value>
   </data>
   <data name="CounterpartyResponsibleNotFoundText" xml:space="preserve">
-    <value>TODO</value>
+    <value>Specify responsible employee in the card of counterparty {0}</value>
   </data>
   <data name="Incurred" xml:space="preserve">
-    <value>TODO</value>
+    <value>Posted</value>
   </data>
 </root>

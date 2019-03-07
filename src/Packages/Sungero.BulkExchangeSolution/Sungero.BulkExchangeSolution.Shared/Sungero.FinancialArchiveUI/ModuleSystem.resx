@@ -118,28 +118,28 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="CoverGroup_IncomingDocuments" xml:space="preserve">
-    <value>TODO</value>
+    <value>Incoming Documents</value>
   </data>
   <data name="CoverAction_ForSignature" xml:space="preserve">
-    <value>TODO</value>
+    <value>For Signing</value>
   </data>
   <data name="CoverDescription_ForSignature" xml:space="preserve">
-    <value>TODO</value>
+    <value>Bulk signing of financial documents received via exchange services.</value>
   </data>
   <data name="sf_254be29d_ab75_4e4d_9439_87a1a5b98c32" xml:space="preserve">
-    <value>TODO</value>
+    <value>For Signing</value>
   </data>
   <data name="sf_72776663_15ee_413f_99bd_8554f398e9f9" xml:space="preserve">
-    <value>TODO</value>
+    <value>For Signing</value>
   </data>
   <data name="CoverGroup_OutgoingDocuments" xml:space="preserve">
-    <value>TODO</value>
+    <value>Outgoing Documents</value>
   </data>
   <data name="CoverAction_OutgoingDocumentForSignature" xml:space="preserve">
-    <value>TODO</value>
+    <value>For Signing</value>
   </data>
   <data name="CoverDescription_OutgoingDocumentForSignature" xml:space="preserve">
-    <value>TODO</value>
+    <value>Bulk signing of financial documents to send them via exchange services.</value>
   </data>
   <data name="sf_32a521fd_7ee0_4870_8293_290b8140f6ac" xml:space="preserve">
     <value>TODO</value>

@@ -121,10 +121,10 @@
     <value>Reject</value>
   </data>
   <data name="Action_RejectDescription" xml:space="preserve">
-    <value>TODO</value>
+    <value>Refuse to sign the document.</value>
   </data>
   <data name="Action_RejectHint" xml:space="preserve">
-    <value>TODO</value>
+    <value>Reject Document Signing</value>
   </data>
   <data name="Action_RejectConfirmationMessage" xml:space="preserve">
     <value />
@@ -133,13 +133,13 @@
     <value />
   </data>
   <data name="Action_SignDocumentSet" xml:space="preserve">
-    <value>TODO</value>
+    <value>Sign Packages</value>
   </data>
   <data name="Action_SignDocumentSetDescription" xml:space="preserve">
-    <value>TODO</value>
+    <value>Sign packages of financial documents.</value>
   </data>
   <data name="Action_SignDocumentSetHint" xml:space="preserve">
-    <value>TODO</value>
+    <value>Sign Document Packages</value>
   </data>
   <data name="Action_SignDocumentSetConfirmationMessage" xml:space="preserve">
     <value />
@@ -151,10 +151,10 @@
     <value>ShowApprovalSigningAssignment</value>
   </data>
   <data name="Action_ShowApprovalSigningAssignmentDescription" xml:space="preserve">
-    <value>TODO</value>
+    <value>Open an assignment to sign financial documents.</value>
   </data>
   <data name="Action_ShowApprovalSigningAssignmentHint" xml:space="preserve">
-    <value>TODO</value>
+    <value>Open Signing Assignment</value>
   </data>
   <data name="Action_ShowApprovalSigningAssignmentConfirmationMessage" xml:space="preserve">
     <value />
@@ -166,13 +166,13 @@
     <value>Sign</value>
   </data>
   <data name="Action_ShowDocumentSet" xml:space="preserve">
-    <value>TODO</value>
+    <value>Show Package</value>
   </data>
   <data name="Action_ShowDocumentSetDescription" xml:space="preserve">
-    <value>TODO</value>
+    <value>Show documents that belong to the same package.</value>
   </data>
   <data name="Action_ShowDocumentSetHint" xml:space="preserve">
-    <value>TODO</value>
+    <value>Show Document Package</value>
   </data>
   <data name="Action_ShowDocumentSetConfirmationMessage" xml:space="preserve">
     <value />

@@ -124,13 +124,13 @@
     <value>Некорректно сформирован комплект (накладная и счет-фактура)</value>
   </data>
   <data name="EmptyAbortingReason" xml:space="preserve">
-    <value>Заполните причину отказа.</value>
+    <value>Укажите причину отказа.</value>
   </data>
   <data name="FewAssignmentError" xml:space="preserve">
-    <value>Документ вложен в несколько заданий на подписание</value>
+    <value>Документ вложен в несколько заданий на подписание.</value>
   </data>
   <data name="NoAssignmentError" xml:space="preserve">
-    <value>Не найдены задания на подписание для документа</value>
+    <value>Не найдены задания на подписание для документа.</value>
   </data>
   <data name="RejectReason" xml:space="preserve">
     <value>Причина отказа</value>
@@ -148,7 +148,7 @@
     <value>Вы действительно хотите подписать выбранные комплекты документов?</value>
   </data>
   <data name="DoumentsSignError" xml:space="preserve">
-    <value>При подписании документов произошли ошибки</value>
+    <value>При подписании документов произошли ошибки.</value>
   </data>
   <data name="SomeDocumentsNotSigned" xml:space="preserve">
     <value>Некоторые документы не были подписаны:</value>

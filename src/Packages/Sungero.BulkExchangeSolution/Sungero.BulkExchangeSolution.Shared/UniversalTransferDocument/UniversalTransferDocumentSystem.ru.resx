@@ -121,7 +121,7 @@
     <value>Отказать</value>
   </data>
   <data name="Action_RejectDescription" xml:space="preserve">
-    <value>Отказ в подписании документа</value>
+    <value>Отказ в подписании документа.</value>
   </data>
   <data name="Action_RejectHint" xml:space="preserve">
     <value>Отказать в подписании документа</value>
@@ -133,7 +133,7 @@
     <value>Подписать комплекты</value>
   </data>
   <data name="Action_SignDocumentSetDescription" xml:space="preserve">
-    <value>Подписание комплектов финансовых документов</value>
+    <value>Подписание комплектов финансовых документов.</value>
   </data>
   <data name="Action_SignDocumentSetHint" xml:space="preserve">
     <value>Подписать комплекты документов</value>
@@ -151,7 +151,7 @@
     <value>Показать комплект</value>
   </data>
   <data name="Action_ShowDocumentSetDescription" xml:space="preserve">
-    <value>Показ документов, относящихся к одному комплекту</value>
+    <value>Показ документов, относящихся к одному комплекту.</value>
   </data>
   <data name="Action_ShowDocumentSetHint" xml:space="preserve">
     <value>Показать комплект документов</value>

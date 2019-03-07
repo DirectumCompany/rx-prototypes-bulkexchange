@@ -124,34 +124,34 @@
     <value>The package (waybill and tax invoice) is generated incorrectly</value>
   </data>
   <data name="EmptyAbortingReason" xml:space="preserve">
-    <value>TODO</value>
+    <value>Specify the reason for rejection.</value>
   </data>
   <data name="FewAssignmentError" xml:space="preserve">
-    <value>TODO</value>
+    <value>The document is attached to several assignments for signing.</value>
   </data>
   <data name="NoAssignmentError" xml:space="preserve">
-    <value>TODO</value>
+    <value>There are no assignments to sign this document.</value>
   </data>
   <data name="RejectReason" xml:space="preserve">
-    <value>TODO</value>
+    <value>Reason for rejection</value>
   </data>
   <data name="Reject" xml:space="preserve">
-    <value>TODO</value>
+    <value>Rejection</value>
   </data>
   <data name="MultipleBusinessUnitsError" xml:space="preserve">
-    <value>TODO</value>
+    <value>Bulk signing is available only for documents of our company.</value>
   </data>
   <data name="CannotSignDocuments" xml:space="preserve">
-    <value>TODO</value>
+    <value>  - signing error - {0}</value>
   </data>
   <data name="SignDocumentSetsConfirmationMessage" xml:space="preserve">
-    <value>TODO</value>
+    <value>Are you sure you want to sign the selected document packages?</value>
   </data>
   <data name="DoumentsSignError" xml:space="preserve">
-    <value>TODO</value>
+    <value>Errors occurred during document signing.</value>
   </data>
   <data name="SomeDocumentsNotSigned" xml:space="preserve">
-    <value>TODO</value>
+    <value>Some documents were not signed:</value>
   </data>
   <data name="CannotImportDocument" xml:space="preserve">
     <value>Cannot import document</value>
