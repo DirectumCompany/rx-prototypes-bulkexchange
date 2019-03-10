@@ -488,13 +488,6 @@
             "PreviousGuid": "8f04e9f0-e205-4d33-8564-5946d05f0702"
           },
           {
-            "$type": "Sungero.Metadata.FilterListItemMetadata, Sungero.Metadata",
-            "NameGuid": "d7b6a289-01e5-428e-8f9f-408f3c6e9e39",
-            "Name": "Other",
-            "ParentGuid": "123a9d49-2cc0-4cac-a92e-5584522246d9",
-            "PreviousGuid": "6ee8f231-9b8a-4a39-9a51-cf807032e84a"
-          },
-          {
             "$type": "Sungero.Metadata.FilterGroupMetadata, Sungero.Metadata",
             "NameGuid": "6fa04a6b-feaf-4f5c-baa9-89a332cee65a",
             "Name": "Main",
@@ -547,8 +540,7 @@
       "OpenCardByDefault": true,
       "SupportedDescendantsTypes": [
         "59079f7f-a326-4947-bbd6-0ae6dfb5f59b",
-        "96c4f4f3-dc74-497a-b347-e8faf4afe320",
-        "f5f104fb-52e4-422b-9de1-a36937d85a2d"
+        "96c4f4f3-dc74-497a-b347-e8faf4afe320"
       ]
     },
     {
