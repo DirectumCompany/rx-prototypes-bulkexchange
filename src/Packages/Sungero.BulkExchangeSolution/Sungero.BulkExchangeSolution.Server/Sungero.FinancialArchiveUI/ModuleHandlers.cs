@@ -137,8 +137,7 @@ namespace Sungero.BulkExchangeSolution.Module.FinancialArchiveUI.Server
     {
       var infos = ExchangeDocumentInfos
         .GetAll(d => (d.VerificationStatus == Sungero.BulkExchangeSolution.ExchangeDocumentInfo.VerificationStatus.Required ||
-                      d.VerificationStatus == Sungero.BulkExchangeSolution.ExchangeDocumentInfo.VerificationStatus.Completed) && d.PurchaseOrder != null)
-        .ToList();
+                      d.VerificationStatus == Sungero.BulkExchangeSolution.ExchangeDocumentInfo.VerificationStatus.Completed) && d.PurchaseOrder != null);
       
       if (_filter == null)
         return query.Where(d => infos.Select(i => i.Document).Contains(d));
@@ -147,11 +146,11 @@ namespace Sungero.BulkExchangeSolution.Module.FinancialArchiveUI.Server
 
       // Фильтр "Ожидает проверки".
       if (_filter.Required && !_filter.Verified)
-        infos = infos.Where(d => d.VerificationStatus == Sungero.BulkExchangeSolution.ExchangeDocumentInfo.VerificationStatus.Required).ToList();
+        infos = infos.Where(d => d.VerificationStatus == Sungero.BulkExchangeSolution.ExchangeDocumentInfo.VerificationStatus.Required);
       
       // Фильтр "Прошли проверку".
       if (_filter.Verified && !_filter.Required)
-        infos = infos.Where(d => d.VerificationStatus == Sungero.BulkExchangeSolution.ExchangeDocumentInfo.VerificationStatus.Completed).ToList();
+        infos = infos.Where(d => d.VerificationStatus == Sungero.BulkExchangeSolution.ExchangeDocumentInfo.VerificationStatus.Completed);
 
       // Фильтр "Наша организация".
       query = query.Where(d => infos.Select(i => i.Document).Contains(d));
@@ -170,9 +169,8 @@ namespace Sungero.BulkExchangeSolution.Module.FinancialArchiveUI.Server
       if (_filter.Counterparty != null)
         query = query.Where(x => Equals(x.Counterparty, _filter.Counterparty));
       
-      #endregion
-      
-      return query;
+      #endregion     
+      return query.Where(d => infos.Select(i => i.Document).Contains(d));
     }
   }
 
