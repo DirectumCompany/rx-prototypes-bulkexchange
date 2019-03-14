@@ -446,13 +446,15 @@ namespace Sungero.BulkExchangeSolution.Module.Exchange.Server
           if (contract != null && contract.ResponsibleEmployee != null)
             responsible = contract.ResponsibleEmployee;
         }
-
-        var setNumber = isContractStatementDocumentSet ? Resources.ContractNumberFormat(info.ContractNumber) : Resources.PONumberFormat(info.PurchaseOrder);
-        if (string.IsNullOrWhiteSpace(info.Document.Note))
-          info.Document.Note = setNumber;
-        else
-          info.Document.Note += Environment.NewLine + setNumber;
-
+        
+        if (accountingDocument.IsFormalized == true)
+        {
+          var setNumber = isContractStatementDocumentSet ? Resources.ContractNumberFormat(info.ContractNumber) : Resources.PONumberFormat(info.PurchaseOrder);
+          if (string.IsNullOrWhiteSpace(info.Document.Note))
+            info.Document.Note = setNumber;
+          else
+            info.Document.Note += Environment.NewLine + setNumber;
+        }
         if (documentSet.IsFullSet == true)
         {
           // Заполнить номенклатуру дела.
