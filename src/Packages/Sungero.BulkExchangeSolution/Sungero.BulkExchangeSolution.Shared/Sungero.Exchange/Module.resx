@@ -147,4 +147,10 @@
   <data name="Incurred" xml:space="preserve">
     <value>Posted</value>
   </data>
+  <data name="ContractNumber" xml:space="preserve">
+    <value>TODO</value>
+  </data>
+  <data name="PONumber" xml:space="preserve">
+    <value>TODO</value>
+  </data>
 </root>

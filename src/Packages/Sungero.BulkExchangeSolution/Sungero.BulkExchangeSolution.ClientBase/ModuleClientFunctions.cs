@@ -74,6 +74,10 @@ namespace Sungero.BulkExchangeSolution.Client
               Logger.DebugFormat("Completed start approval task from document with Id {0}.", contractStatement.Id);
             }
           }
+          else
+          {
+            this.ProcessWaybillDocuments(documents);
+          }
         }
         catch (Exception ex)
         {
@@ -119,7 +123,7 @@ namespace Sungero.BulkExchangeSolution.Client
                                                                                        x.Certificate.Enabled == true).Select(x => x.Certificate).FirstOrDefault();
           
           Logger.DebugFormat("Send to counterparty document with Id {0}.", document.Id);
-          Exchange.PublicFunctions.Module.Remote.SendDocuments(document, addenda,  document.Counterparty, document.BusinessUnitBox, 
+          Exchange.PublicFunctions.Module.Remote.SendDocuments(document, addenda,  document.Counterparty, document.BusinessUnitBox,
                                                                certificate, true, string.Empty);
           Logger.DebugFormat("Document with Id {0} sent to counterparty.", document.Id);
           
@@ -212,12 +216,43 @@ namespace Sungero.BulkExchangeSolution.Client
       foreach (var doc in documents)
       {
         var accountingDocument = Docflow.AccountingDocumentBases.As(doc);
+        
+        if (!string.IsNullOrEmpty(contractNumber))
+        {
+          var contractNumberString = Module.Exchange.Resources.ContractNumberFormat(contractNumber);
+          if (string.IsNullOrWhiteSpace(accountingDocument.Note))
+            accountingDocument.Note = contractNumberString;
+          else
+            accountingDocument.Note += Environment.NewLine + contractNumberString;
+        }
+        
         if (contract != null)
           accountingDocument.LeadingDocument = contract;
-        accountingDocument.OurSignatory = signatory;
+        
+        accountingDocument.OurSignatory = signatory;      
         accountingDocument.Save();
       }
     }
+    
+    /// <summary>
+    /// Обработать документы товарного потока.
+    /// </summary>
+    /// <param name="documents">Документы.</param>
+    public virtual void ProcessWaybillDocuments(List<IOfficialDocument> documents)
+    {      
+      foreach (var doc in documents)
+      { 
+        var PurchaseNumber =  Module.Exchange.Resources.PONumberFormat(Functions.Module.Remote.GetPurchaseNumber(doc));
+        if (!string.IsNullOrEmpty(PurchaseNumber))
+        {
+          if (string.IsNullOrWhiteSpace(doc.Note))
+            doc.Note = PurchaseNumber;
+          else
+            doc.Note += Environment.NewLine + PurchaseNumber;
+        } 
+        doc.Save();
+      }
+    }    
     
     /// <summary>
     /// Определить что документ формализованный по расширению имени файла.
@@ -380,7 +415,7 @@ namespace Sungero.BulkExchangeSolution.Client
               }
               else
               {
-              	Logger.DebugFormat("Cannot sign document set with document ids {0}.", string.Join(", ", info.Document.Id));
+                Logger.DebugFormat("Cannot sign document set with document ids {0}.", string.Join(", ", info.Document.Id));
               }
             }
             catch (Exception ex)

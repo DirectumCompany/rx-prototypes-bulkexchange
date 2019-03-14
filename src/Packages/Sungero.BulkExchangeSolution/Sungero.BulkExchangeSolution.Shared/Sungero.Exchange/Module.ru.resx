@@ -147,4 +147,10 @@
   <data name="Incurred" xml:space="preserve">
     <value>Проведено</value>
   </data>
+  <data name="ContractNumber" xml:space="preserve">
+    <value>Номер договора: {0}</value>
+  </data>
+  <data name="PONumber" xml:space="preserve">
+    <value>Номер заказа: {0}</value>
+  </data>
 </root>
