@@ -44,10 +44,7 @@ namespace Sungero.BulkExchangeSolution.Module.Exchange.Server
         this.ProcessDocumenSetFromNewIncomingMessage(documentSet);
         
         if (documentSet.IsFullSet)
-        {
-          Functions.Module.VerifyDocumentSet(documentSet);
           this.SendContractStatementForApproval(documentSet);
-        }
       }
       
       return base.ProcessDocumentsFromNewIncomingMessage(message, queueItem, infos, processingDocuments, sender, isIncoming, box);
