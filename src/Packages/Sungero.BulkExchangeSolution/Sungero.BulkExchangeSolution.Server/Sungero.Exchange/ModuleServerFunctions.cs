@@ -315,9 +315,7 @@ namespace Sungero.BulkExchangeSolution.Module.Exchange.Server
         }
       }
 
-      var logMessage = Resources.DocumentSetWithIDs.ToString();
-      for (int i = 0; i < documents.Count; i++)
-        logMessage += i == 0 ? documents[i].Id.ToString() : ", " + documents[i].Id;
+      string logMessage = Resources.DocumentSetWithIDsFormat(string.Join(", ", documents.Select(d => d.Id)));
       
       var documentInfo = documentSet.ExchangeDocumentInfos.FirstOrDefault(x => Sungero.FinancialArchive.UniversalTransferDocuments.Is(x.Document) || Waybills.Is(x.Document));
       var task = documentInfo.VerificationTask;

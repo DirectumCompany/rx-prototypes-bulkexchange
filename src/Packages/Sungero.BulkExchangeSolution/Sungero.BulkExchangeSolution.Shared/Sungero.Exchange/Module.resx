@@ -127,13 +127,13 @@
     <value>RUB</value>
   </data>
   <data name="VerificationSuccess" xml:space="preserve">
-    <value>) successfully verified.</value>
+    <value>successfully verified.</value>
   </data>
   <data name="VerificationFail" xml:space="preserve">
-    <value>) not verified: </value>
+    <value>not verified: </value>
   </data>
   <data name="DocumentSetWithIDs" xml:space="preserve">
-    <value>Package with documents (ID</value>
+    <value>Package with documents (ID {0}) </value>
   </data>
   <data name="VerificationFailedTaskText" xml:space="preserve">
     <value>Verification failed: </value>
