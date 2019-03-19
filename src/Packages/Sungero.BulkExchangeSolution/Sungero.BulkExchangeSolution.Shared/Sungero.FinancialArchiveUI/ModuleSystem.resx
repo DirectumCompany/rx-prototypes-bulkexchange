@@ -142,28 +142,28 @@
     <value>Bulk signing of financial documents to send them via exchange services.</value>
   </data>
   <data name="sf_32a521fd_7ee0_4870_8293_290b8140f6ac" xml:space="preserve">
-    <value>TODO</value>
+    <value>Received Documents</value>
   </data>
   <data name="CoverAction_FromExchangeService" xml:space="preserve">
-    <value>TODO</value>
+    <value>Received</value>
   </data>
   <data name="CoverDescription_FromExchangeService" xml:space="preserve">
-    <value>TODO</value>
+    <value>Documents received via exchange services.</value>
   </data>
   <data name="FilterPanel_BusinessUnit_f444b739b0fb474c8fcb289967f97a61" xml:space="preserve">
     <value>Business unit</value>
   </data>
   <data name="FilterPanel_DocumentType_c404270d44de4b4889cc8a2f303ec140" xml:space="preserve">
-    <value>TODO</value>
+    <value>Document Type</value>
   </data>
   <data name="FilterPanel_Accounting_24b34bfcfaf0473fa12e7a3de4bd9469" xml:space="preserve">
-    <value>TODO</value>
+    <value>Financial</value>
   </data>
   <data name="FilterPanel_Contractual_53074d93af3a43c7a6e4820d8f05db8a" xml:space="preserve">
-    <value>TODO</value>
+    <value>Contractual</value>
   </data>
   <data name="FilterPanel_Other_7bc0c1a296de4410a0001f24ec708237" xml:space="preserve">
-    <value>TODO</value>
+    <value>Other</value>
   </data>
   <data name="FilterPanel_Main_83a3636e014b4d45aaa69686855dcfa9" xml:space="preserve">
     <value>Main</value>
@@ -175,37 +175,37 @@
     <value>Counterparty</value>
   </data>
   <data name="FilterPanel_Responsible_7cf790e990a94bc1a1841f6fca88209a" xml:space="preserve">
-    <value>TODO</value>
+    <value>Responsible</value>
   </data>
   <data name="FilterPanel_ReceiptDate_69d001eec7a84a9dbda483137084f18a" xml:space="preserve">
-    <value>TODO</value>
+    <value>Receipt Date</value>
   </data>
   <data name="FilterPanel_Today_fb5fe8a2f7e54b3f898e0e61d906c9ec" xml:space="preserve">
-    <value>TODO</value>
+    <value>Today</value>
   </data>
   <data name="FilterPanel_ThreeDays_22d8872f1c9647aea8ab0be4deca0682" xml:space="preserve">
-    <value>TODO</value>
+    <value>3 Days</value>
   </data>
   <data name="FilterPanel_Week_f32a695163174ce2a49507fa79c83769" xml:space="preserve">
-    <value>TODO</value>
+    <value>Week</value>
   </data>
   <data name="FilterPanel_ManualPeriod_a6a0c837f6904c29aeb487d209d85857" xml:space="preserve">
     <value>User-defined period:</value>
   </data>
   <data name="CoverAction_VerifiedOrNeedVerifyDocuments" xml:space="preserve">
-    <value>TODO</value>
+    <value>On Verification in Accounting System</value>
   </data>
   <data name="CoverDescription_VerifiedOrNeedVerifyDocuments" xml:space="preserve">
-    <value>TODO</value>
+    <value>Documents waiting to be verified or already verified in an accounting system.</value>
   </data>
   <data name="sf_2574d622_20ab_4db9_a8c5_3c480ed6ed54" xml:space="preserve">
-    <value>TODO</value>
+    <value>On Verification in Accounting System</value>
   </data>
   <data name="FilterPanel_Required_ea9c34bb5d554e0dae054bdd6d4587bb" xml:space="preserve">
-    <value>TODO</value>
+    <value>To Be Verified</value>
   </data>
   <data name="FilterPanel_Verified_4bf1f7160670471eba25b1521d3a7daa" xml:space="preserve">
-    <value>TODO</value>
+    <value>Verified</value>
   </data>
   <data name="FilterPanel_BusinessUnit_4517014b14864eb4a78617cb6332f136" xml:space="preserve">
     <value>Business Unit</value>
@@ -214,7 +214,7 @@
     <value>Department</value>
   </data>
   <data name="FilterPanel_Responsible_82acaa0349b3409a8d9da77aa3f12693" xml:space="preserve">
-    <value>TODO</value>
+    <value>Responsible</value>
   </data>
   <data name="FilterPanel_Counterparty_edb7ff10da6b44359762482fc2b5134b" xml:space="preserve">
     <value>Counterparty</value>
@@ -226,7 +226,7 @@
     <value>Main</value>
   </data>
   <data name="sf_9a079fc7_918c_4335_a005_102b40c202f5" xml:space="preserve">
-    <value>TODO</value>
+    <value>Waiting To Be Sent</value>
   </data>
   <data name="FilterPanel_DocumentTypeList_123a9d492cc04caca92e5584522246d9" xml:space="preserve">
     <value />
@@ -235,10 +235,10 @@
     <value />
   </data>
   <data name="FilterPanel_Accounting_8f04e9f0e2054d3385645946d05f0702" xml:space="preserve">
-    <value>TODO</value>
+    <value>Financial</value>
   </data>
   <data name="FilterPanel_Contractual_6ee8f2319b8a4a399a51cf807032e84a" xml:space="preserve">
-    <value>TODO</value>
+    <value>Contractual</value>
   </data>
   <data name="FilterPanel_Main_6fa04a6bfeaf4f5cbaa989a332cee65a" xml:space="preserve">
     <value>Main</value>
@@ -250,19 +250,19 @@
     <value>Department</value>
   </data>
   <data name="FilterPanel_Responsible_2877ee2ffdde4be6bcd2c6c05bc32675" xml:space="preserve">
-    <value>TODO</value>
+    <value>Responsible</value>
   </data>
   <data name="FilterPanel_Counterparty_0eb219aac4794f3ba71dd3ded80245ae" xml:space="preserve">
     <value>Counterparty</value>
   </data>
   <data name="CoverAction_OutgoingDocumentToSend" xml:space="preserve">
-    <value>TODO</value>
+    <value>Waiting to be Sent</value>
   </data>
   <data name="CoverDescription_OutgoingDocumentToSend" xml:space="preserve">
-    <value>TODO</value>
+    <value>Signed documents waiting to be sent via an exchange service.</value>
   </data>
   <data name="sf_c176ba54_3c27_4ff5_adde_c32a17b30abe" xml:space="preserve">
-    <value>TODO</value>
+    <value>Sent</value>
   </data>
   <data name="FilterPanel_DocumentType_bf4e67b3f9e74220afb56d2c93798a06" xml:space="preserve">
     <value>Document type</value>
@@ -271,16 +271,16 @@
     <value>Main</value>
   </data>
   <data name="FilterPanel_SentDate_e7ccc79245d248009ab5482afe0327b0" xml:space="preserve">
-    <value>TODO</value>
+    <value>Date Sent</value>
   </data>
   <data name="FilterPanel_Accounting_008d0d9abfaf4c79b4615f0da862ac93" xml:space="preserve">
-    <value>TODO</value>
+    <value>Financial</value>
   </data>
   <data name="FilterPanel_Contractual_f872600d6f634770b5d13b0d0dd38300" xml:space="preserve">
-    <value>TODO</value>
+    <value>Contractual</value>
   </data>
   <data name="FilterPanel_Other_603ced36c420447ea0d81e52649e041f" xml:space="preserve">
-    <value>TODO</value>
+    <value>Other</value>
   </data>
   <data name="FilterPanel_BusinessUnit_f5a8e64adc2b480e94245cd2531551de" xml:space="preserve">
     <value>Business unit</value>
@@ -289,7 +289,7 @@
     <value>Department</value>
   </data>
   <data name="FilterPanel_Responsible_3411ded78be944ae9ec1077a3b4c134d" xml:space="preserve">
-    <value>TODO</value>
+    <value>Responsible</value>
   </data>
   <data name="FilterPanel_Counterparty_4544c64f1ec34c7eb7cf3764d747eed0" xml:space="preserve">
     <value>Counterparty</value>
@@ -298,18 +298,18 @@
     <value>Today</value>
   </data>
   <data name="FilterPanel_LastThreeDays_3347cb60462747179ba5a8b614ce2fb9" xml:space="preserve">
-    <value>TODO</value>
+    <value>3 Days</value>
   </data>
   <data name="FilterPanel_LastWeek_32a947d4c65945dd9ca0f2382c476d5f" xml:space="preserve">
-    <value>TODO</value>
+    <value>Week</value>
   </data>
   <data name="FilterPanel_ManualPeriod_bea3f9ca8f504f4b9c7f4a27d18f832e" xml:space="preserve">
     <value>User-defined period:</value>
   </data>
   <data name="CoverAction_OutgoingSentDocuments" xml:space="preserve">
-    <value>TODO</value>
+    <value>Sent</value>
   </data>
   <data name="CoverDescription_OutgoingSentDocuments" xml:space="preserve">
-    <value>TODO</value>
+    <value>Documents sent via an exchange service.</value>
   </data>
 </root>

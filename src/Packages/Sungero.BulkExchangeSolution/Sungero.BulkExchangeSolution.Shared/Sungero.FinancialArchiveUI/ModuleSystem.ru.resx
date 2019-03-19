@@ -148,7 +148,7 @@
     <value>Поступившие</value>
   </data>
   <data name="CoverDescription_FromExchangeService" xml:space="preserve">
-    <value>Документы, полученные через сервисы обмена</value>
+    <value>Документы, полученные через сервисы обмена.</value>
   </data>
   <data name="FilterPanel_BusinessUnit_f444b739b0fb474c8fcb289967f97a61" xml:space="preserve">
     <value>Наша организация</value>
@@ -196,7 +196,7 @@
     <value>На проверке в учетной системе</value>
   </data>
   <data name="CoverDescription_VerifiedOrNeedVerifyDocuments" xml:space="preserve">
-    <value>Документы, которые либо ожидают, либо прошли проверку в учетной системе</value>
+    <value>Документы, ожидающие или прошедшие проверку в учетной системе.</value>
   </data>
   <data name="sf_2574d622_20ab_4db9_a8c5_3c480ed6ed54" xml:space="preserve">
     <value>На проверке в учетной системе</value>
