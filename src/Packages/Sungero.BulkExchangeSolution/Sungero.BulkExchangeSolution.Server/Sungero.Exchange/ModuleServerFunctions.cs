@@ -301,7 +301,7 @@ namespace Sungero.BulkExchangeSolution.Module.Exchange.Server
         if (document.TotalAmount != totalAmount)
         {
           result = false;
-          reason = Resources.VerificationFailError;
+          reason = Resources.DocumentsTotalAmountError;
         }
 
         var rubCurrency = Currencies.GetAll().FirstOrDefault(x =>

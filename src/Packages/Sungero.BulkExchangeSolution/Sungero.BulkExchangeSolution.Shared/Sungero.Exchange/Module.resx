@@ -150,4 +150,7 @@
   <data name="VerificationFailError" xml:space="preserve">
     <value>There is no such document in the accounting system</value>
   </data>
+  <data name="DocumentsTotalAmountError" xml:space="preserve">
+    <value>Documents amounts must be equal</value>
+  </data>
 </root>
