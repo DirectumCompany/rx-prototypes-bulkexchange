@@ -117,12 +117,6 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="DocumentsTotalAmountError" xml:space="preserve">
-    <value>Суммы документов должны быть одинаковыми</value>
-  </data>
-  <data name="TotalAmountIsTooBig" xml:space="preserve">
-    <value>Сумма должна быть меньше 100 000 российских рублей</value>
-  </data>
   <data name="RubAlphaCode" xml:space="preserve">
     <value>RUB</value>
   </data>
@@ -152,5 +146,8 @@
   </data>
   <data name="PONumber" xml:space="preserve">
     <value>Номер заказа: {0}</value>
+  </data>
+  <data name="VerificationFailError" xml:space="preserve">
+    <value>Документ отсутствует в учетной системе</value>
   </data>
 </root>

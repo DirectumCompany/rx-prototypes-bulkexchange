@@ -301,7 +301,7 @@ namespace Sungero.BulkExchangeSolution.Module.Exchange.Server
         if (document.TotalAmount != totalAmount)
         {
           result = false;
-          reason = Resources.DocumentsTotalAmountError;
+          reason = Resources.VerificationFailError;
         }
 
         var rubCurrency = Currencies.GetAll().FirstOrDefault(x =>
@@ -311,7 +311,7 @@ namespace Sungero.BulkExchangeSolution.Module.Exchange.Server
         if (!Equals(document.Currency, rubCurrency) || document.TotalAmount >= Constants.Module.DocumentMaxTotalAmount)
         {
           result = false;
-          reason = Resources.TotalAmountIsTooBig;
+          reason = Resources.VerificationFailError;
         }
       }
 

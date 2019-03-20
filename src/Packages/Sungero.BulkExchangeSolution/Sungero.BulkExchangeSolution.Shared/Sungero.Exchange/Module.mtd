@@ -188,8 +188,6 @@
   "ResourceInterfaceAssemblyName": "Sungero.Domain.Interfaces",
   "ResourceInterfaceNamespace": "Sungero.BulkExchangeSolution.Module.Exchange",
   "ResourcesKeys": [
-    "DocumentsTotalAmountError",
-    "TotalAmountIsTooBig",
     "RubAlphaCode",
     "VerificationSuccess",
     "VerificationFail",
@@ -199,7 +197,8 @@
     "CounterpartyResponsibleNotFoundText",
     "Incurred",
     "ContractNumber",
-    "PONumber"
+    "PONumber",
+    "VerificationFailError"
   ],
   "SpecialFolders": [],
   "Version": "3.1.25.1",
