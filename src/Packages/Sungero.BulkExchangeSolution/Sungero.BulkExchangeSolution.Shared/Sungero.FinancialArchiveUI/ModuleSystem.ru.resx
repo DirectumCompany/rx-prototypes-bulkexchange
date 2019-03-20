@@ -309,4 +309,7 @@
   <data name="CoverDescription_OutgoingSentDocuments" xml:space="preserve">
     <value>Документы, отправленные через сервис обмена</value>
   </data>
+  <data name="FilterPanel_Failed_be44fdf76d25426fbf556441305f00ba" xml:space="preserve">
+    <value>Не прошли проверку</value>
+  </data>
 </root>

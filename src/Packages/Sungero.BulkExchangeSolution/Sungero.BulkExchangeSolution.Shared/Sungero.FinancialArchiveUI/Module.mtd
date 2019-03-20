@@ -436,6 +436,13 @@
             "MultilineMode": "Single",
             "ParentGuid": "9c7e8a48-94aa-45c2-8b52-dc10c7fd9d72",
             "PreviousGuid": "82acaa03-49b3-409a-8d9d-a77aa3f12693"
+          },
+          {
+            "$type": "Sungero.Metadata.FilterListItemMetadata, Sungero.Metadata",
+            "NameGuid": "be44fdf7-6d25-426f-bf55-6441305f00ba",
+            "Name": "Failed",
+            "ParentGuid": "e46f4434-9bcf-419c-a7ce-ea1384bf05ca",
+            "PreviousGuid": "4bf1f716-0670-471e-ba25-b1521d3a7daa"
           }
         ]
       },

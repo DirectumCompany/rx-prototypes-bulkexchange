@@ -141,17 +141,33 @@ namespace Sungero.BulkExchangeSolution.Module.FinancialArchiveUI.Server
       
       if (_filter == null)
         return query.Where(d => infos.Select(i => i.Document).Contains(d));
-
+ 
       #region Фильтры
-
-      // Фильтр "Ожидает проверки".
-      if (_filter.Required && !_filter.Verified)
-        infos = infos.Where(d => d.VerificationStatus == Sungero.BulkExchangeSolution.ExchangeDocumentInfo.VerificationStatus.Required);
       
-      // Фильтр "Прошли проверку".
-      if (_filter.Verified && !_filter.Required)
-        infos = infos.Where(d => d.VerificationStatus == Sungero.BulkExchangeSolution.ExchangeDocumentInfo.VerificationStatus.Completed);
+      // Фильтр "Ожидает проверки"
+      if (_filter.Required && !_filter.Verified && !_filter.Failed)
+        infos = infos.Where(d => d.VerificationStatus == ExchangeDocumentInfo.VerificationStatus.Required && d.VerificationTask == null);
+      
+      // Фильтр "Прошли проверку". 
+      if (_filter.Verified && !_filter.Failed && !_filter.Required)
+        infos = infos.Where(d => d.VerificationStatus == ExchangeDocumentInfo.VerificationStatus.Completed);
 
+      // Фильтр "Не прошли проверку"
+      if (_filter.Failed && !_filter.Verified && !_filter.Required)
+        infos = infos.Where(d => d.VerificationStatus == ExchangeDocumentInfo.VerificationStatus.Required && d.VerificationTask != null);
+
+      if (_filter.Verified && _filter.Failed && !_filter.Required)
+        infos = infos.Where(d => d.VerificationStatus == ExchangeDocumentInfo.VerificationStatus.Completed ||
+                                 d.VerificationStatus == ExchangeDocumentInfo.VerificationStatus.Required && d.VerificationTask != null);
+      
+      if (_filter.Verified && _filter.Required && !_filter.Failed)
+        infos = infos.Where(d => d.VerificationStatus == ExchangeDocumentInfo.VerificationStatus.Completed ||
+                                 d.VerificationStatus == ExchangeDocumentInfo.VerificationStatus.Required && d.VerificationTask == null);
+
+      if (_filter.Failed && _filter.Required && !_filter.Verified)
+        infos = infos.Where(d => d.VerificationStatus == ExchangeDocumentInfo.VerificationStatus.Required);
+      
+      
       // Фильтр "Наша организация".
       query = query.Where(d => infos.Select(i => i.Document).Contains(d));
       if (_filter.BusinessUnit != null)
