@@ -148,9 +148,9 @@
     <value>Posted</value>
   </data>
   <data name="ContractNumber" xml:space="preserve">
-    <value>TODO</value>
+    <value>Contract number: {0}</value>
   </data>
   <data name="PONumber" xml:space="preserve">
-    <value>TODO</value>
+    <value>Purchase order number: {0}</value>
   </data>
 </root>
