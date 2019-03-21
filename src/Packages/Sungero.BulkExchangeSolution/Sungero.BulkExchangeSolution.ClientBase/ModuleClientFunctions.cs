@@ -640,7 +640,9 @@ namespace Sungero.BulkExchangeSolution.Client
       
       if (assignments.Count() == 1)
       {
-        var documents = assignments.SelectMany(x => x.AllAttachments).Select(a => OfficialDocuments.As(a)).ToList();
+        var documents = assignments.SelectMany(x => x.DocumentGroup.OfficialDocuments).Select(a => OfficialDocuments.As(a)).ToList();
+        var addendaGroupDocuments = assignments.SelectMany(x => x.AddendaGroup.OfficialDocuments).Select(a => OfficialDocuments.As(a)).ToList();
+        documents.AddRange(addendaGroupDocuments);
         documents.ShowModal();
       }
       else
