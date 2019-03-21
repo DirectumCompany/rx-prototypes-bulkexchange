@@ -88,7 +88,7 @@ namespace Sungero.BulkExchangeSolution.Client
     
     public virtual void SignImportedDocuments()
     {
-      var documents = Functions.Module.Remote.GetImportedDocuments().Where(d => d.LastVersionApproved != true);
+      var documents = Functions.Module.Remote.GetImportedDocuments().Where(d => d.LastVersionApproved != true && !d.Note.Contains("Номер договора"));
       foreach (var document in documents)
       {
         try
