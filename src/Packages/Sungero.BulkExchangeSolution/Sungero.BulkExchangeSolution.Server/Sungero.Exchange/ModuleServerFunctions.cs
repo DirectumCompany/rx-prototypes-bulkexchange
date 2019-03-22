@@ -36,7 +36,7 @@ namespace Sungero.BulkExchangeSolution.Module.Exchange.Server
         this.StartSimpleTaskWhenCounterpartyResponsibleNotFound(queueItems, MessageQueueItems.As(queueItem), sender, queueItem.RootBox);
         return false;
       }
-      
+
       var documentSet = this.GetDocumentSet(message);
       if (documentSet != null)
       {
@@ -45,6 +45,15 @@ namespace Sungero.BulkExchangeSolution.Module.Exchange.Server
         
         if (documentSet.IsFullSet)
           this.SendContractStatementForApproval(documentSet);
+      }
+      else
+      {
+        foreach (var document in infos.Select(x => x.Document))
+        {
+          var transferDocument = document as IAccountingDocumentBase;
+          if (transferDocument != null)
+            this.SetDocumentResponsible(transferDocument, responsible);
+        }
       }
       
       return base.ProcessDocumentsFromNewIncomingMessage(message, queueItem, infos, processingDocuments, sender, isIncoming, box);
