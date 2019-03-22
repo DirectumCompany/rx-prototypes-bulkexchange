@@ -121,22 +121,22 @@
     <value>Входящие документы</value>
   </data>
   <data name="CoverAction_ForSignature" xml:space="preserve">
-    <value>На подписание</value>
+    <value>На подписании</value>
   </data>
   <data name="CoverDescription_ForSignature" xml:space="preserve">
     <value>Массовое подписание финансовых документов, полученных через сервисы обмена.</value>
   </data>
   <data name="sf_254be29d_ab75_4e4d_9439_87a1a5b98c32" xml:space="preserve">
-    <value>На подписание</value>
+    <value>На подписании</value>
   </data>
   <data name="sf_72776663_15ee_413f_99bd_8554f398e9f9" xml:space="preserve">
-    <value>На подписание</value>
+    <value>На подписании</value>
   </data>
   <data name="CoverGroup_OutgoingDocuments" xml:space="preserve">
     <value>Исходящие документы</value>
   </data>
   <data name="CoverAction_OutgoingDocumentForSignature" xml:space="preserve">
-    <value>На подписание</value>
+    <value>На подписании</value>
   </data>
   <data name="CoverDescription_OutgoingDocumentForSignature" xml:space="preserve">
     <value>Массовое подписание финансовых документов для отправки в сервисы обмена.</value>
@@ -193,13 +193,13 @@
     <value>Произвольный период</value>
   </data>
   <data name="CoverAction_VerifiedOrNeedVerifyDocuments" xml:space="preserve">
-    <value>На проверке в учетной системе</value>
+    <value>Проверка в учетной системе</value>
   </data>
   <data name="CoverDescription_VerifiedOrNeedVerifyDocuments" xml:space="preserve">
-    <value>Документы, ожидающие или прошедшие проверку в учетной системе.</value>
+    <value>Документы, ожидающие, прошедшие или не прошедшие автоматическую проверку в учетной системе.</value>
   </data>
   <data name="sf_2574d622_20ab_4db9_a8c5_3c480ed6ed54" xml:space="preserve">
-    <value>На проверке в учетной системе</value>
+    <value>Проверка в учетной системе</value>
   </data>
   <data name="FilterPanel_Required_ea9c34bb5d554e0dae054bdd6d4587bb" xml:space="preserve">
     <value>Ожидают проверки</value>

@@ -193,13 +193,13 @@
     <value>User-defined period:</value>
   </data>
   <data name="CoverAction_VerifiedOrNeedVerifyDocuments" xml:space="preserve">
-    <value>On Verification in Accounting System</value>
+    <value>TODO</value>
   </data>
   <data name="CoverDescription_VerifiedOrNeedVerifyDocuments" xml:space="preserve">
     <value>Documents waiting to be verified or already verified in an accounting system.</value>
   </data>
   <data name="sf_2574d622_20ab_4db9_a8c5_3c480ed6ed54" xml:space="preserve">
-    <value>On Verification in Accounting System</value>
+    <value>TODO</value>
   </data>
   <data name="FilterPanel_Required_ea9c34bb5d554e0dae054bdd6d4587bb" xml:space="preserve">
     <value>To Be Verified</value>
