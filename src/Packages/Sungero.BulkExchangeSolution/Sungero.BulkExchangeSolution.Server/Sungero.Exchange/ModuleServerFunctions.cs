@@ -50,7 +50,7 @@ namespace Sungero.BulkExchangeSolution.Module.Exchange.Server
       {
         foreach (var document in infos.Select(x => x.Document))
         {
-          var transferDocument = document as IAccountingDocumentBase;
+          var transferDocument = AccountingDocumentBases.As(document);
           if (transferDocument != null)
             this.SetDocumentResponsible(transferDocument, responsible);
         }
