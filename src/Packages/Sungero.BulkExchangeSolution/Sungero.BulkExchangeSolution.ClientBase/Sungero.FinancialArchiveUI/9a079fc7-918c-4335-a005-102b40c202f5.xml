@@ -6,6 +6,7 @@
       <property name="#LayoutVersion" isnull="true" />
       <property name="$GridControl" iskey="true" value="GridControl">
         <property name="GroupSummary" iskey="true" value="0" />
+        <property name="TotalSummary" iskey="true" value="0" />
         <property name="View" isnull="true" iskey="true">
           <property name="ShowTotalSummary">false</property>
           <property name="ColumnChooserState" isnull="true" iskey="true">
@@ -17,9 +18,7 @@
           <property name="LinesPerRowMode">TwoLinesMode</property>
           <property name="WaitIndicatorType">Panel</property>
         </property>
-        <property name="TotalSummary" iskey="true" value="0" />
-        <property name="GroupCount">0</property>
-        <property name="Columns" iskey="true" value="52">
+        <property name="Columns" iskey="true" value="57">
           <property name="Item1" isnull="true" iskey="true">
             <property name="MinWidth">48</property>
             <property name="FieldName">T</property>
@@ -540,6 +539,51 @@
             <property name="VisibleIndex">7</property>
             <property name="ActualWidth">13*</property>
           </property>
+          <property name="Item53" isnull="true" iskey="true">
+            <property name="FieldName">Navigation_Prepared_by_c612fc4144a3428ba97c433c333d78e9</property>
+            <property name="AutoFilterCondition">Contains</property>
+            <property name="SortMode">Custom</property>
+            <property name="Visible">false</property>
+            <property name="Name">Navigation_Prepared_by_c612fc4144a3428ba97c433c333d78e9</property>
+            <property name="VisibleIndex">52</property>
+            <property name="ActualWidth">NaN</property>
+          </property>
+          <property name="Item54" isnull="true" iskey="true">
+            <property name="FieldName">Navigation_Correspondent_294767f1009f4fbd80fcf98c49ddc560</property>
+            <property name="AutoFilterCondition">Contains</property>
+            <property name="SortMode">Custom</property>
+            <property name="Visible">false</property>
+            <property name="Name">Navigation_Correspondent_294767f1009f4fbd80fcf98c49ddc560</property>
+            <property name="VisibleIndex">53</property>
+            <property name="ActualWidth">NaN</property>
+          </property>
+          <property name="Item55" isnull="true" iskey="true">
+            <property name="FieldName">Navigation_In_response_to_030d8d679b944f0dbcc6691016eb70f3</property>
+            <property name="AutoFilterCondition">Contains</property>
+            <property name="SortMode">Custom</property>
+            <property name="Visible">false</property>
+            <property name="Name">Navigation_In_response_to_030d8d679b944f0dbcc6691016eb70f3</property>
+            <property name="VisibleIndex">54</property>
+            <property name="ActualWidth">NaN</property>
+          </property>
+          <property name="Item56" isnull="true" iskey="true">
+            <property name="FieldName">Navigation_Addressee_c8daaef9a6794a29ac01b93c1637c72e</property>
+            <property name="AutoFilterCondition">Contains</property>
+            <property name="SortMode">Custom</property>
+            <property name="Visible">false</property>
+            <property name="Name">Navigation_Addressee_c8daaef9a6794a29ac01b93c1637c72e</property>
+            <property name="VisibleIndex">55</property>
+            <property name="ActualWidth">NaN</property>
+          </property>
+          <property name="Item57" isnull="true" iskey="true">
+            <property name="FieldName">Boolean_Several_addressees</property>
+            <property name="AutoFilterCondition">Equals</property>
+            <property name="SortMode">Custom</property>
+            <property name="Visible">false</property>
+            <property name="Name">Boolean_Several_addressees</property>
+            <property name="VisibleIndex">56</property>
+            <property name="ActualWidth">NaN</property>
+          </property>
         </property>
         <property name="SortInfo" iskey="true" value="1">
           <property name="Item1" isnull="true" iskey="true">
@@ -547,6 +591,7 @@
             <property name="SortOrder">Descending</property>
           </property>
         </property>
+        <property name="GroupCount">0</property>
         <property name="GroupSummarySortInfo" iskey="true" value="0" />
       </property>
     </XtraSerializer>

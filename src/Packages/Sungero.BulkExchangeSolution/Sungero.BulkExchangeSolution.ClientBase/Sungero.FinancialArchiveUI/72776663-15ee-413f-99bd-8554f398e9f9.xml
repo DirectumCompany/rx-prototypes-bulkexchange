@@ -19,7 +19,7 @@
         </property>
         <property name="TotalSummary" iskey="true" value="0" />
         <property name="GroupCount">0</property>
-        <property name="Columns" iskey="true" value="49">
+        <property name="Columns" iskey="true" value="48">
           <property name="Item1" isnull="true" iskey="true">
             <property name="MinWidth">48</property>
             <property name="FieldName">T</property>
@@ -241,15 +241,6 @@
             <property name="ActualWidth">18*</property>
           </property>
           <property name="Item23" isnull="true" iskey="true">
-            <property name="FieldName">Integer_Order_Number</property>
-            <property name="AutoFilterCondition">Equals</property>
-            <property name="SortMode">Custom</property>
-            <property name="Visible">false</property>
-            <property name="Name">Integer_Order_Number</property>
-            <property name="VisibleIndex">22</property>
-            <property name="ActualWidth">NaN</property>
-          </property>
-          <property name="Item24" isnull="true" iskey="true">
             <property name="FieldName">DateTime_Document_date</property>
             <property name="AutoFilterCondition">Equals</property>
             <property name="SortMode">Custom</property>
@@ -259,7 +250,7 @@
             <property name="VisibleIndex">5</property>
             <property name="ActualWidth">17*</property>
           </property>
-          <property name="Item25" isnull="true" iskey="true">
+          <property name="Item24" isnull="true" iskey="true">
             <property name="FieldName">Navigation_Document_register_d7800dd5a9d241e9bbc4a39292ac1eeb</property>
             <property name="AutoFilterCondition">Contains</property>
             <property name="SortMode">Custom</property>
@@ -269,7 +260,7 @@
             <property name="VisibleIndex">9</property>
             <property name="ActualWidth">21*</property>
           </property>
-          <property name="Item26" isnull="true" iskey="true">
+          <property name="Item25" isnull="true" iskey="true">
             <property name="FieldName">Navigation_Delivery_method_276d7e4aea114740af17893abc6bc6e9</property>
             <property name="AutoFilterCondition">Contains</property>
             <property name="SortMode">Custom</property>
@@ -279,7 +270,7 @@
             <property name="VisibleIndex">7</property>
             <property name="ActualWidth">17*</property>
           </property>
-          <property name="Item27" isnull="true" iskey="true">
+          <property name="Item26" isnull="true" iskey="true">
             <property name="FieldName">Navigation_File_493bb59eae484cb5ab66071de5f890b0</property>
             <property name="AutoFilterCondition">Contains</property>
             <property name="SortMode">Custom</property>
@@ -289,7 +280,7 @@
             <property name="VisibleIndex">7</property>
             <property name="ActualWidth">8*</property>
           </property>
-          <property name="Item28" isnull="true" iskey="true">
+          <property name="Item27" isnull="true" iskey="true">
             <property name="FieldName">DateTime_Date_placed_to_file</property>
             <property name="AutoFilterCondition">Equals</property>
             <property name="SortMode">Custom</property>
@@ -299,7 +290,7 @@
             <property name="VisibleIndex">7</property>
             <property name="ActualWidth">18*</property>
           </property>
-          <property name="Item29" isnull="true" iskey="true">
+          <property name="Item28" isnull="true" iskey="true">
             <property name="FieldName">Boolean_Return_required</property>
             <property name="AutoFilterCondition">Equals</property>
             <property name="SortMode">Custom</property>
@@ -309,7 +300,7 @@
             <property name="VisibleIndex">7</property>
             <property name="ActualWidth">18*</property>
           </property>
-          <property name="Item30" isnull="true" iskey="true">
+          <property name="Item29" isnull="true" iskey="true">
             <property name="FieldName">Boolean_Return_from_counterparty_required</property>
             <property name="AutoFilterCondition">Equals</property>
             <property name="SortMode">Custom</property>
@@ -319,7 +310,7 @@
             <property name="VisibleIndex">7</property>
             <property name="ActualWidth">33*</property>
           </property>
-          <property name="Item31" isnull="true" iskey="true">
+          <property name="Item30" isnull="true" iskey="true">
             <property name="FieldName">Navigation_Delivered_to_c612fc4144a3428ba97c433c333d78e9</property>
             <property name="AutoFilterCondition">Contains</property>
             <property name="SortMode">Custom</property>
@@ -329,7 +320,7 @@
             <property name="VisibleIndex">7</property>
             <property name="ActualWidth">15*</property>
           </property>
-          <property name="Item32" isnull="true" iskey="true">
+          <property name="Item31" isnull="true" iskey="true">
             <property name="FieldName">DateTime_Return_deadline</property>
             <property name="AutoFilterCondition">Equals</property>
             <property name="SortMode">Custom</property>
@@ -339,7 +330,7 @@
             <property name="VisibleIndex">7</property>
             <property name="ActualWidth">15*</property>
           </property>
-          <property name="Item33" isnull="true" iskey="true">
+          <property name="Item32" isnull="true" iskey="true">
             <property name="FieldName">DateTime_Return_date</property>
             <property name="AutoFilterCondition">Equals</property>
             <property name="SortMode">Custom</property>
@@ -349,7 +340,7 @@
             <property name="VisibleIndex">7</property>
             <property name="ActualWidth">15*</property>
           </property>
-          <property name="Item34" isnull="true" iskey="true">
+          <property name="Item33" isnull="true" iskey="true">
             <property name="FieldName">Enumeration_State_LifeCycleState_58cca1021e974f07b6acfd866a8b7cb1</property>
             <property name="AutoFilterCondition">Contains</property>
             <property name="SortMode">Custom</property>
@@ -359,7 +350,7 @@
             <property name="VisibleIndex">5</property>
             <property name="ActualWidth">12*</property>
           </property>
-          <property name="Item35" isnull="true" iskey="true">
+          <property name="Item34" isnull="true" iskey="true">
             <property name="FieldName">Enumeration_Registration_state_RegistrationState_58cca1021e974f07b6acfd866a8b7cb1</property>
             <property name="AutoFilterCondition">Contains</property>
             <property name="SortMode">Custom</property>
@@ -369,7 +360,7 @@
             <property name="VisibleIndex">8</property>
             <property name="ActualWidth">14*</property>
           </property>
-          <property name="Item36" isnull="true" iskey="true">
+          <property name="Item35" isnull="true" iskey="true">
             <property name="FieldName">Enumeration_Internal_approval_InternalApprovalState_58cca1021e974f07b6acfd866a8b7cb1</property>
             <property name="AutoFilterCondition">Contains</property>
             <property name="SortMode">Custom</property>
@@ -379,7 +370,7 @@
             <property name="VisibleIndex">8</property>
             <property name="ActualWidth">15*</property>
           </property>
-          <property name="Item37" isnull="true" iskey="true">
+          <property name="Item36" isnull="true" iskey="true">
             <property name="FieldName">Enumeration_External_approval_ExternalApprovalState_58cca1021e974f07b6acfd866a8b7cb1</property>
             <property name="AutoFilterCondition">Contains</property>
             <property name="SortMode">Custom</property>
@@ -389,7 +380,7 @@
             <property name="VisibleIndex">8</property>
             <property name="ActualWidth">21*</property>
           </property>
-          <property name="Item38" isnull="true" iskey="true">
+          <property name="Item37" isnull="true" iskey="true">
             <property name="FieldName">Enumeration_Execution_ExecutionState_58cca1021e974f07b6acfd866a8b7cb1</property>
             <property name="AutoFilterCondition">Contains</property>
             <property name="SortMode">Custom</property>
@@ -399,7 +390,7 @@
             <property name="VisibleIndex">8</property>
             <property name="ActualWidth">13*</property>
           </property>
-          <property name="Item39" isnull="true" iskey="true">
+          <property name="Item38" isnull="true" iskey="true">
             <property name="FieldName">Enumeration_Follow_up_ControlExecutionState_58cca1021e974f07b6acfd866a8b7cb1</property>
             <property name="AutoFilterCondition">Contains</property>
             <property name="SortMode">Custom</property>
@@ -409,7 +400,7 @@
             <property name="VisibleIndex">8</property>
             <property name="ActualWidth">21*</property>
           </property>
-          <property name="Item40" isnull="true" iskey="true">
+          <property name="Item39" isnull="true" iskey="true">
             <property name="FieldName">Text_Location</property>
             <property name="AutoFilterCondition">Contains</property>
             <property name="SortMode">Custom</property>
@@ -419,7 +410,7 @@
             <property name="VisibleIndex">8</property>
             <property name="ActualWidth">19*</property>
           </property>
-          <property name="Item41" isnull="true" iskey="true">
+          <property name="Item40" isnull="true" iskey="true">
             <property name="FieldName">Navigation_Employee_resp_46__for_return_c612fc4144a3428ba97c433c333d78e9</property>
             <property name="AutoFilterCondition">Contains</property>
             <property name="SortMode">Custom</property>
@@ -429,7 +420,7 @@
             <property name="VisibleIndex">8</property>
             <property name="ActualWidth">25*</property>
           </property>
-          <property name="Item42" isnull="true" iskey="true">
+          <property name="Item41" isnull="true" iskey="true">
             <property name="FieldName">DateTime_Scheduled_return_date_from_counterparty</property>
             <property name="AutoFilterCondition">Equals</property>
             <property name="SortMode">Custom</property>
@@ -439,7 +430,7 @@
             <property name="VisibleIndex">8</property>
             <property name="ActualWidth">30*</property>
           </property>
-          <property name="Item43" isnull="true" iskey="true">
+          <property name="Item42" isnull="true" iskey="true">
             <property name="FieldName">Navigation_Document_kind_14a5962389a24ea8b6e92ad4365f358c</property>
             <property name="AutoFilterCondition">Contains</property>
             <property name="SortMode">Custom</property>
@@ -449,7 +440,7 @@
             <property name="VisibleIndex">5</property>
             <property name="ActualWidth">16*</property>
           </property>
-          <property name="Item44" isnull="true" iskey="true">
+          <property name="Item43" isnull="true" iskey="true">
             <property name="FieldName">Navigation_Business_unit_c612fc4144a3428ba97c433c333d78e9</property>
             <property name="AutoFilterCondition">Contains</property>
             <property name="SortMode">Custom</property>
@@ -459,7 +450,7 @@
             <property name="VisibleIndex">4</property>
             <property name="ActualWidth">17*</property>
           </property>
-          <property name="Item45" isnull="true" iskey="true">
+          <property name="Item44" isnull="true" iskey="true">
             <property name="FieldName">String_Subject</property>
             <property name="AutoFilterCondition">Contains</property>
             <property name="SortMode">Custom</property>
@@ -469,7 +460,7 @@
             <property name="VisibleIndex">5</property>
             <property name="ActualWidth">14*</property>
           </property>
-          <property name="Item46" isnull="true" iskey="true">
+          <property name="Item45" isnull="true" iskey="true">
             <property name="FieldName">String_Note</property>
             <property name="AutoFilterCondition">Contains</property>
             <property name="SortMode">Custom</property>
@@ -479,7 +470,7 @@
             <property name="VisibleIndex">6</property>
             <property name="ActualWidth">16*</property>
           </property>
-          <property name="Item47" isnull="true" iskey="true">
+          <property name="Item46" isnull="true" iskey="true">
             <property name="FieldName">Navigation_Signed_by_c612fc4144a3428ba97c433c333d78e9</property>
             <property name="AutoFilterCondition">Contains</property>
             <property name="SortMode">Custom</property>
@@ -489,7 +480,7 @@
             <property name="VisibleIndex">12</property>
             <property name="ActualWidth">34*</property>
           </property>
-          <property name="Item48" isnull="true" iskey="true">
+          <property name="Item47" isnull="true" iskey="true">
             <property name="FieldName">Boolean_Corrective</property>
             <property name="AutoFilterCondition">Equals</property>
             <property name="SortMode">Custom</property>
@@ -499,7 +490,7 @@
             <property name="VisibleIndex">12</property>
             <property name="ActualWidth">20*</property>
           </property>
-          <property name="Item49" isnull="true" iskey="true">
+          <property name="Item48" isnull="true" iskey="true">
             <property name="FieldName">Navigation_Corrects_030d8d679b944f0dbcc6691016eb70f3</property>
             <property name="AutoFilterCondition">Contains</property>
             <property name="SortMode">Custom</property>
