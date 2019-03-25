@@ -483,7 +483,8 @@ namespace Sungero.BulkExchangeSolution.Client
       
       var businessUnitBox = documents.Select(d => d.BusinessUnitBox).FirstOrDefault();
       var currentEmployee = Company.Employees.Current;
-      var certificate = Sungero.Exchange.PublicFunctions.Module.GetUserExchangeCertificate(businessUnitBox, currentEmployee);
+
+      var certificate = businessUnitBox != null ? Sungero.Exchange.PublicFunctions.Module.GetUserExchangeCertificate(businessUnitBox, currentEmployee) : null;
       
       if (certificate == null)
       {
