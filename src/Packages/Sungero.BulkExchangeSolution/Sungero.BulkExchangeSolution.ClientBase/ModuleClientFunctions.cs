@@ -486,7 +486,7 @@ namespace Sungero.BulkExchangeSolution.Client
 
       var certificate = businessUnitBox != null ? Sungero.Exchange.PublicFunctions.Module.GetUserExchangeCertificate(businessUnitBox, currentEmployee) : null;
       
-      if (certificate == null)
+      if (businessUnitBox != null && certificate == null)
       {
         ShowResultDialog(new List<string>() { Exchange.Resources.CertificateNotFound });
         return;
