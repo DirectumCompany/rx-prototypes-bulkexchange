@@ -212,7 +212,9 @@ namespace Sungero.BulkExchangeSolution.Client
     {
       var contractNumber = contractNumbers.FirstOrDefault();
       var contract = Functions.Module.Remote.GetContractByNumber(contractNumber);
-      
+      var businessUnitBoxs = documents.Where(d => Docflow.AccountingDocumentBases.Is(d) && Docflow.AccountingDocumentBases.As(d).BusinessUnitBox != null)
+        .Select(d => Docflow.AccountingDocumentBases.As(d).BusinessUnitBox).Distinct();
+        
       foreach (var doc in documents)
       {
         var accountingDocument = Docflow.AccountingDocumentBases.As(doc);
@@ -229,7 +231,10 @@ namespace Sungero.BulkExchangeSolution.Client
         if (contract != null)
           accountingDocument.LeadingDocument = contract;
         
-        accountingDocument.OurSignatory = signatory;      
+        if (accountingDocument.BusinessUnitBox == null && businessUnitBoxs.Count() == 1)
+          accountingDocument.BusinessUnitBox = businessUnitBoxs.FirstOrDefault();
+        
+        accountingDocument.OurSignatory = signatory;
         accountingDocument.Save();
       }
     }
@@ -239,9 +244,9 @@ namespace Sungero.BulkExchangeSolution.Client
     /// </summary>
     /// <param name="documents">Документы.</param>
     public virtual void ProcessWaybillDocuments(List<IOfficialDocument> documents)
-    {      
+    {
       foreach (var doc in documents)
-      { 
+      {
         var PurchaseNumber =  Module.Exchange.Resources.PONumberFormat(Functions.Module.Remote.GetPurchaseNumber(doc));
         if (!string.IsNullOrEmpty(PurchaseNumber))
         {
@@ -249,10 +254,10 @@ namespace Sungero.BulkExchangeSolution.Client
             doc.Note = PurchaseNumber;
           else
             doc.Note += Environment.NewLine + PurchaseNumber;
-        } 
+        }
         doc.Save();
       }
-    }    
+    }
     
     /// <summary>
     /// Определить что документ формализованный по расширению имени файла.
