@@ -456,7 +456,7 @@ namespace Sungero.BulkExchangeSolution.Module.Exchange.Server
           var setNumber = isContractStatementDocumentSet ? Resources.ContractNumberFormat(info.ContractNumber) : Resources.PONumberFormat(info.PurchaseOrder);
           if (string.IsNullOrWhiteSpace(info.Document.Note))
             info.Document.Note = setNumber;
-          else
+          else if (!info.Document.Note.Contains(setNumber))
             info.Document.Note += Environment.NewLine + setNumber;
         }
         if (documentSet.IsFullSet == true)
