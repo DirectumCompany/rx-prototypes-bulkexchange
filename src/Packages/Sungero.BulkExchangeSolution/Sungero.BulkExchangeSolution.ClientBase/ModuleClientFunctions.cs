@@ -212,7 +212,7 @@ namespace Sungero.BulkExchangeSolution.Client
     {
       var contractNumber = contractNumbers.FirstOrDefault();
       var contract = Functions.Module.Remote.GetContractByNumber(contractNumber);
-      var businessUnitBoxs = documents.Where(d => Docflow.AccountingDocumentBases.Is(d) && Docflow.AccountingDocumentBases.As(d).BusinessUnitBox != null)
+      var businessUnitBoxes = documents.Where(d => Docflow.AccountingDocumentBases.Is(d) && Docflow.AccountingDocumentBases.As(d).BusinessUnitBox != null)
         .Select(d => Docflow.AccountingDocumentBases.As(d).BusinessUnitBox).Distinct();
         
       foreach (var doc in documents)
@@ -231,8 +231,8 @@ namespace Sungero.BulkExchangeSolution.Client
         if (contract != null)
           accountingDocument.LeadingDocument = contract;
         
-        if (accountingDocument.BusinessUnitBox == null && businessUnitBoxs.Count() == 1)
-          accountingDocument.BusinessUnitBox = businessUnitBoxs.FirstOrDefault();
+        if (accountingDocument.BusinessUnitBox == null && businessUnitBoxes.Count() == 1)
+          accountingDocument.BusinessUnitBox = businessUnitBoxes.FirstOrDefault();
         
         accountingDocument.OurSignatory = signatory;
         accountingDocument.Save();
