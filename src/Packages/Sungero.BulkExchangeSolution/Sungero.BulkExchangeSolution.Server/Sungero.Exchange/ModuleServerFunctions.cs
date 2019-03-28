@@ -539,8 +539,11 @@ namespace Sungero.BulkExchangeSolution.Module.Exchange.Server
         var processingTask = this.CreateExchangeTask(message,
                                                      documentSet.ExchangeDocumentInfos.Select(x => Sungero.Exchange.ExchangeDocumentInfos.As(x)).ToList(), documentInfo.Counterparty, isIncoming, documentInfo.RootBox, taskText);
         processingTask.Start();
-        documentInfo.VerificationTask = processingTask;
-        documentInfo.Save();
+        foreach (var info in documentSet.ExchangeDocumentInfos)
+        {
+          info.VerificationTask = processingTask;
+          info.Save();
+        }
       }
       
       // Если задачу уже прекратили или завершили, а сверка повторяется - сверка неактуальна.
