@@ -142,7 +142,7 @@
     <value>Bulk signing is available only for documents of our company.</value>
   </data>
   <data name="CannotSignDocuments" xml:space="preserve">
-    <value>  - signing error - {0}</value>
+    <value>  - signing error.</value>
   </data>
   <data name="SignDocumentSetsConfirmationMessage" xml:space="preserve">
     <value>Are you sure you want to sign the selected document packages?</value>

@@ -142,7 +142,7 @@
     <value>Массовое подписание доступно только для документов нашей организации.</value>
   </data>
   <data name="CannotSignDocuments" xml:space="preserve">
-    <value>  - ошибка подписания - {0}</value>
+    <value>  - ошибка подписания.</value>
   </data>
   <data name="SignDocumentSetsConfirmationMessage" xml:space="preserve">
     <value>Вы действительно хотите подписать выбранные комплекты документов?</value>

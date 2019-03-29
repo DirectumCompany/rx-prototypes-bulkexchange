@@ -214,7 +214,7 @@ namespace Sungero.BulkExchangeSolution.Client
       var contract = Functions.Module.Remote.GetContractByNumber(contractNumber);
       var businessUnitBoxes = documents.Where(d => Docflow.AccountingDocumentBases.Is(d) && Docflow.AccountingDocumentBases.As(d).BusinessUnitBox != null)
         .Select(d => Docflow.AccountingDocumentBases.As(d).BusinessUnitBox).Distinct();
-        
+      
       foreach (var doc in documents)
       {
         var accountingDocument = Docflow.AccountingDocumentBases.As(doc);
@@ -498,9 +498,9 @@ namespace Sungero.BulkExchangeSolution.Client
       }
       
       var errortList = new List<string>();
-      var exceptionDictionary = new Dictionary<string, int>();
-      var documentsInMultipleAssignments = 0;
-      var notSignedDocuments = 0;
+      var exceptionList = new List<string>();
+      var documentsInMultipleAssignmentsArePresent = false;
+      var unsignedDocumentsArePresent = false;
       foreach (var document in documents)
       {
         var approvalSigningAssignments = Functions.Module.Remote.GetApprovalSigningAssignments(document);
@@ -510,7 +510,7 @@ namespace Sungero.BulkExchangeSolution.Client
         
         if (approvalSigningAssignments.Count() > 1)
         {
-          documentsInMultipleAssignments++;
+          documentsInMultipleAssignmentsArePresent = true;
           continue;
         }
         
@@ -530,7 +530,7 @@ namespace Sungero.BulkExchangeSolution.Client
         try
         {
           if (!Docflow.PublicFunctions.OfficialDocument.ApproveWithAddenda(document, addendas, certificate, activeText, null, false, null))
-            notSignedDocuments++;
+            unsignedDocumentsArePresent = true;
           else
             approvalSigningAssignment.Complete(Docflow.ApprovalSigningAssignment.Result.Sign);
         }
@@ -539,10 +539,8 @@ namespace Sungero.BulkExchangeSolution.Client
           if (!ex.IsInternal)
           {
             var message = ex.Message.ToLower().TrimEnd('.');
-            if (exceptionDictionary.ContainsKey(message))
-              exceptionDictionary[message]++;
-            else
-              exceptionDictionary.Add(message, 1);
+            if (!exceptionList.Contains(message))
+              exceptionList.Add(message);
           }
           else
           {
@@ -551,15 +549,15 @@ namespace Sungero.BulkExchangeSolution.Client
         }
       }
       
-      if (exceptionDictionary.Any())
-        foreach (var exception in exceptionDictionary)
-          errortList.Add(string.Format("  - {0} - {1}", exception.Key, exception.Value));
+      if (exceptionList.Any())
+        foreach (var exception in exceptionList)
+          errortList.Add(string.Format("  - {0}", exception));
       
-      if (notSignedDocuments > 0)
-        errortList.Insert(0, Sungero.BulkExchangeSolution.Resources.CannotSignDocumentsFormat(notSignedDocuments));
+      if (unsignedDocumentsArePresent)
+        errortList.Insert(0, Sungero.BulkExchangeSolution.Resources.CannotSignDocuments);
       
-      if (documentsInMultipleAssignments > 0)
-        errortList.Insert(0, string.Format("  - {0} - {1}", Sungero.BulkExchangeSolution.Resources.FewAssignmentError.ToString().ToLower(), documentsInMultipleAssignments));
+      if (documentsInMultipleAssignmentsArePresent)
+        errortList.Insert(0, string.Format("  - {0}", Sungero.BulkExchangeSolution.Resources.FewAssignmentError.ToString().ToLower()));
       
       if (errortList.Any())
       {
