@@ -102,6 +102,8 @@ namespace Sungero.BulkExchangeSolution.Module.Exchange.Server
             createdDocument.Subject = "Выполнение услуг";
             createdDocument.Note = document.Comment;
             createdDocument.Save();
+            var number = new Random().Next(100, 1000).ToString();
+            Docflow.PublicFunctions.OfficialDocument.TryExternalRegister(createdDocument, number, Calendar.UserToday);
             exchangeDocumentInfo.Save();
           }
         }
