@@ -30,7 +30,7 @@ namespace Sungero.BulkExchangeSolution.Module.Exchange.Server
                                                                    IBoxBase box)
     {
       var queueItems = MessageQueueItems.GetAll(q => Equals(q.RootBox, queueItem.RootBox)).ToList();
-      var responsible = BoxBase.GetExchangeDocumentResponsible(box, sender, infos);
+      var responsible = BoxBase.Remote.GetExchangeDocumentResponsible(box, sender, infos);
       if (responsible == null)
       {
         this.StartSimpleTaskWhenCounterpartyResponsibleNotFound(queueItems, MessageQueueItems.As(queueItem), sender, queueItem.RootBox);
@@ -129,7 +129,7 @@ namespace Sungero.BulkExchangeSolution.Module.Exchange.Server
         contractStatement.BusinessUnit = ExchangeCore.PublicFunctions.BoxBase.GetBusinessUnit(box);
         contractStatement.BusinessUnitBox = ExchangeCore.PublicFunctions.BoxBase.GetRootBox(box);
         contractStatement.Counterparty = counterparty;
-        var responsible = ExchangeCore.PublicFunctions.BoxBase.GetExchangeDocumentResponsible(box, counterparty,  new List<Sungero.Exchange.IExchangeDocumentInfo>() { info });
+        var responsible = ExchangeCore.PublicFunctions.BoxBase.Remote.GetExchangeDocumentResponsible(box, counterparty,  new List<Sungero.Exchange.IExchangeDocumentInfo>() { info });
         if (responsible != null)
           contractStatement.AccessRights.Grant(responsible, DefaultAccessRightsTypes.FullAccess);
         contractStatement.IsFormalized = false;
