@@ -1,0 +1,217 @@
+{
+  "$type": "Sungero.Metadata.LayerModuleMetadata, Sungero.Metadata",
+  "NameGuid": "9bf9840f-5687-4a17-8b9e-98e930513d01",
+  "Name": "Exchange",
+  "AssociatedGuid": "50f2374f-3b0a-4a4b-b161-0073e1165a67",
+  "BaseGuid": "cec41b99-da21-422f-9332-0fbc423e95c0",
+  "ClientBaseAssemblyName": "Sungero.BulkExchangeSolution.ClientBase",
+  "ClientBaseNamespace": "Sungero.BulkExchangeSolution.Module.Exchange.ClientBase",
+  "Code": "ExCh",
+  "CompanyCode": "Sungero",
+  "ExplorerTreeOrder": [],
+  "IconResourcesKeys": [],
+  "Importance": "Medium",
+  "IsVisible": false,
+  "Jobs": [
+    {
+      "NameGuid": "65fa7815-170d-489c-b613-c2c2366161a4",
+      "Name": "BodyConverterJob",
+      "Daily": "Repeat",
+      "IsAncestorMetadata": true,
+      "MonthSchedule": "Monthly",
+      "StartAt": "1753-01-01T00:00:00",
+      "TimePeriod": 10
+    },
+    {
+      "NameGuid": "13f61e21-8bb9-4a3d-b72b-e92da64c60b4",
+      "Name": "GetMessages",
+      "Daily": "Repeat",
+      "DaysOfWeekSchedule": "Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday",
+      "IsAncestorMetadata": true,
+      "Monthly": "Weekly",
+      "MonthSchedule": "Monthly",
+      "Overridden": [
+        "Monthly",
+        "DaysOfWeekSchedule",
+        "DaysOfMonthSchedule",
+        "IsAtEndOfMonth",
+        "Daily",
+        "EndAt",
+        "TimePeriod",
+        "StartAt"
+      ],
+      "TimePeriod": 10
+    },
+    {
+      "NameGuid": "e7b6f44d-78eb-4c9f-b6e5-ffa66a262e91",
+      "Name": "SendReceiptNotificationTasks",
+      "IsAncestorMetadata": true,
+      "MonthSchedule": "Monthly",
+      "StartAt": "1753-01-01T14:00:00"
+    },
+    {
+      "NameGuid": "b54f0e86-0cac-49bf-b99b-30ffd8030d9b",
+      "Name": "CreateReceiptNotifications",
+      "Daily": "Repeat",
+      "IsAncestorMetadata": true,
+      "MonthSchedule": "Monthly",
+      "TimePeriod": 10
+    },
+    {
+      "NameGuid": "a050e9dc-ac0a-40c2-a322-7f1832e53f36",
+      "Name": "SendSignedReceiptNotifications",
+      "Daily": "Repeat",
+      "IsAncestorMetadata": true,
+      "MonthSchedule": "Monthly",
+      "TimePeriod": 10
+    },
+    {
+      "NameGuid": "5db5338d-6db7-4463-8819-81587d164a5c",
+      "Name": "VerifyDocuments",
+      "Daily": "Repeat",
+      "GenerateHandler": true,
+      "MonthSchedule": "Monthly",
+      "TimePeriod": 5
+    },
+    {
+      "NameGuid": "317b0658-e0bb-4733-ac3c-df0b52ae95bf",
+      "Name": "SendSignedDocuments",
+      "Daily": "Repeat",
+      "GenerateHandler": true,
+      "MonthSchedule": "Monthly",
+      "TimePeriod": 5
+    }
+  ],
+  "LayeredFromGuid": "cec41b99-da21-422f-9332-0fbc423e95c0",
+  "Libraries": [
+    {
+      "NameGuid": "8afc00b9-ff69-4efe-b800-1d7c065f63d0",
+      "Name": "DCX",
+      "Scope": "Server"
+    }
+  ],
+  "Overridden": [
+    "IsVisible",
+    "Libraries"
+  ],
+  "PublicFunctions": [
+    {
+      "Name": "AddRelationsForDocuments",
+      "IsRemote": true,
+      "Parameters": [
+        {
+          "Name": "documents",
+          "ParameterType": "global::System.Collections.Generic.List<global::Sungero.Docflow.IOfficialDocument>",
+          "ParameterTypeFullName": "System.Collections.Generic.List"
+        }
+      ],
+      "Placement": "Shared",
+      "ReturnType": "void",
+      "ReturnTypeFullName": "System.Void"
+    },
+    {
+      "Name": "GetAdditionalProperties",
+      "Parameters": [
+        {
+          "Name": "xml",
+          "ParameterType": "System.Byte[]"
+        }
+      ],
+      "ReturnType": "global::System.Collections.Generic.List<System.Xml.Linq.XElement>",
+      "ReturnTypeFullName": "System.Collections.Generic.List"
+    },
+    {
+      "Name": "GetContractNumber",
+      "Parameters": [
+        {
+          "Name": "xmlElements",
+          "ParameterType": "global::System.Collections.Generic.List<System.Xml.Linq.XElement>",
+          "ParameterTypeFullName": "System.Collections.Generic.List"
+        }
+      ],
+      "ReturnType": "global::System.String",
+      "ReturnTypeFullName": "System.String"
+    },
+    {
+      "Name": "GetDefaultCaseFile",
+      "Parameters": [
+        {
+          "Name": "document",
+          "ParameterType": "global::Sungero.Docflow.IOfficialDocument",
+          "ParameterTypeFullName": "Sungero.Docflow.IOfficialDocument, Sungero.Domain.Interfaces"
+        },
+        {
+          "Name": "isIncoming",
+          "ParameterType": "global::System.Boolean",
+          "ParameterTypeFullName": "System.Boolean"
+        },
+        {
+          "Name": "isContractStatement",
+          "ParameterType": "global::System.Boolean",
+          "ParameterTypeFullName": "System.Boolean"
+        }
+      ],
+      "ReturnType": "global::Sungero.Docflow.ICaseFile",
+      "ReturnTypeFullName": "Sungero.Docflow.ICaseFile, Sungero.Domain.Interfaces"
+    },
+    {
+      "Name": "GetPurchaseOrderNumber",
+      "Parameters": [
+        {
+          "Name": "xmlElements",
+          "ParameterType": "global::System.Collections.Generic.List<System.Xml.Linq.XElement>",
+          "ParameterTypeFullName": "System.Collections.Generic.List"
+        }
+      ],
+      "ReturnType": "global::System.String",
+      "ReturnTypeFullName": "System.String"
+    },
+    {
+      "Name": "SetDocumentResponsible",
+      "Parameters": [
+        {
+          "Name": "accountingDocument",
+          "ParameterType": "global::Sungero.Docflow.IAccountingDocumentBase",
+          "ParameterTypeFullName": "Sungero.Docflow.IAccountingDocumentBase, Sungero.Domain.Interfaces"
+        },
+        {
+          "Name": "responsible",
+          "ParameterType": "global::Sungero.Company.IEmployee",
+          "ParameterTypeFullName": "Sungero.Company.IEmployee, Sungero.Domain.Interfaces"
+        }
+      ],
+      "ReturnType": "void",
+      "ReturnTypeFullName": "System.Void"
+    }
+  ],
+  "PublicStructures": [],
+  "ResourceInterfaceAssemblyName": "Sungero.Domain.Interfaces",
+  "ResourceInterfaceNamespace": "Sungero.BulkExchangeSolution.Module.Exchange",
+  "ResourcesKeys": [
+    "RubAlphaCode",
+    "VerificationSuccess",
+    "VerificationFail",
+    "DocumentSetWithIDs",
+    "VerificationFailedTaskText",
+    "CounterpartyResponsibleNotFoundSubject",
+    "CounterpartyResponsibleNotFoundText",
+    "Incurred",
+    "ContractNumber",
+    "PONumber",
+    "VerificationFailError",
+    "DocumentsTotalAmountError"
+  ],
+  "SpecialFolders": [],
+  "Version": "3.1.33.1",
+  "Widgets": [],
+  "Versions": [
+    {
+      "Type": "LayerModuleMetadata",
+      "Number": 6
+    },
+    {
+      "Type": "ModuleMetadata",
+      "Number": 6
+    }
+  ]
+}

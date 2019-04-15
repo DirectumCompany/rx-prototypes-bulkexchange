@@ -1,0 +1,176 @@
+{
+  "$type": "Sungero.Metadata.DocumentMetadata, Sungero.Content.Shared",
+  "NameGuid": "e0e85323-ef1e-4c7c-8eeb-f1cb2d6dfe14",
+  "Name": "Waybill",
+  "AccessRightsMode": "Both",
+  "Actions": [
+    {
+      "NameGuid": "3071d502-52df-4c6d-a89c-eab2a6d2667f",
+      "Name": "Reject",
+      "ActionArea": "Collection",
+      "GenerateHandler": true,
+      "LargeIconName": "Action_Reject_large_3071d50252df4c6da89ceab2a6d2667f.png",
+      "NeedRefreshCollectionAfterExecute": true,
+      "SmallIconName": "Action_Reject_small_3071d50252df4c6da89ceab2a6d2667f.png"
+    },
+    {
+      "NameGuid": "dfe02439-0006-4040-bff0-563dba6eb953",
+      "Name": "SignDocumentSet",
+      "ActionArea": "Collection",
+      "GenerateHandler": true,
+      "IsMultiSelectAction": true,
+      "LargeIconName": "Action_SignDocumentSet_large_dfe0243900064040bff0563dba6eb953.png",
+      "NeedRefreshCollectionAfterExecute": true,
+      "SmallIconName": "Action_SignDocumentSet_small_dfe0243900064040bff0563dba6eb953.png"
+    },
+    {
+      "NameGuid": "c56b39f0-5e9e-4e13-90ea-7881a093d966",
+      "Name": "ShowApprovalSigningAssignment",
+      "ActionArea": "Collection",
+      "GenerateHandler": true,
+      "LargeIconName": "Action_ShowApprovalSigningAssignment_large_c56b39f05e9e4e1390ea7881a093d966.png",
+      "NeedRefreshCollectionAfterExecute": true,
+      "SmallIconName": "Action_ShowApprovalSigningAssignment_small_c56b39f05e9e4e1390ea7881a093d966.png"
+    },
+    {
+      "NameGuid": "57688c37-f8a6-416e-81e6-24d0dcd9d0d1",
+      "Name": "ShowDocumentSet",
+      "ActionArea": "Collection",
+      "GenerateHandler": true,
+      "LargeIconName": "Action_ShowSet_large_57688c37f8a6416e81e624d0dcd9d0d1.png",
+      "SmallIconName": "Action_ShowSet_small_57688c37f8a6416e81e624d0dcd9d0d1.png"
+    }
+  ],
+  "BaseGuid": "4e81f9ca-b95a-4fd4-bf76-ea7176c215a7",
+  "CanBeNavigationPropertyType": true,
+  "CreationAreaMetadata": {
+    "NameGuid": "7322020b-3299-4fba-b9b0-4c995bd2e401",
+    "Name": "CreationArea",
+    "Buttons": [],
+    "IsAncestorMetadata": true
+  },
+  "ExtraSearchProperties": [],
+  "FilterPanel": {
+    "NameGuid": "80d3ce1a-9a72-443a-8b6c-6c6eef0c8d0f",
+    "Name": "FilterPanel",
+    "Controls": [],
+    "IsAncestorMetadata": true
+  },
+  "IconResourcesKeys": [],
+  "LayeredFromGuid": "4e81f9ca-b95a-4fd4-bf76-ea7176c215a7",
+  "OpenCardByDefaultInCollection": true,
+  "OperationsClass": "",
+  "Properties": [
+    {
+      "$type": "Sungero.Metadata.CollectionPropertyMetadata, Sungero.Metadata",
+      "NameGuid": "56cbe741-880f-4e6f-9567-343d08494b59",
+      "Name": "Versions",
+      "EntityGuid": "716ae7e2-3953-4e6f-9855-2518e4a943e7",
+      "IsAncestorMetadata": true,
+      "Overridden": [
+        "EntityGuid"
+      ]
+    },
+    {
+      "$type": "Sungero.Metadata.CollectionPropertyMetadata, Sungero.Metadata",
+      "NameGuid": "15280407-331e-42f6-b263-041a495b66cd",
+      "Name": "Tracking",
+      "EntityGuid": "f8dead12-38ab-499a-a680-e664de682358",
+      "IsAncestorMetadata": true,
+      "Overridden": [
+        "EntityGuid"
+      ]
+    }
+  ],
+  "PublicStructures": [],
+  "ResourcesKeys": [],
+  "RibbonCardMetadata": {
+    "NameGuid": "235f4410-e359-4202-be5f-e9015763a0be",
+    "Name": "RibbonCard",
+    "Categories": [],
+    "Elements": [],
+    "Groups": [],
+    "IsAncestorMetadata": true,
+    "Pages": [],
+    "RibbonKind": "Card"
+  },
+  "RibbonCollectionMetadata": {
+    "NameGuid": "58486fee-00d8-4aeb-8f87-a4521b7be747",
+    "Name": "RibbonCollection",
+    "Categories": [],
+    "Elements": [
+      {
+        "$type": "Sungero.Metadata.RibbonActionButtonMetadata, Sungero.Metadata",
+        "NameGuid": "f981ffea-fa37-4732-bf7d-db7cec81399e",
+        "Name": "SignDocumentSet",
+        "ActionGuid": "dfe02439-0006-4040-bff0-563dba6eb953",
+        "ButtonSize": "Large",
+        "Index": 22,
+        "IsVisible": false,
+        "ParentGuid": "495214c9-a353-4cfa-9440-acb5840fa265"
+      },
+      {
+        "$type": "Sungero.Metadata.RibbonActionButtonMetadata, Sungero.Metadata",
+        "NameGuid": "26255bd3-e68f-47cf-ba3d-ea2261131c3d",
+        "Name": "Reject",
+        "ActionGuid": "3071d502-52df-4c6d-a89c-eab2a6d2667f",
+        "ButtonSize": "Large",
+        "Index": 0,
+        "IsVisible": false,
+        "ParentGuid": "b9128665-dad8-4d48-b0ae-a2fa00faf02b"
+      },
+      {
+        "$type": "Sungero.Metadata.RibbonActionButtonMetadata, Sungero.Metadata",
+        "NameGuid": "883543e6-893f-4f8f-82e7-45379cb689e6",
+        "Name": "ShowAssignments",
+        "ActionGuid": "c56b39f0-5e9e-4e13-90ea-7881a093d966",
+        "ButtonSize": "Large",
+        "Index": 1,
+        "IsVisible": false,
+        "ParentGuid": "b9128665-dad8-4d48-b0ae-a2fa00faf02b"
+      },
+      {
+        "$type": "Sungero.Metadata.RibbonActionButtonMetadata, Sungero.Metadata",
+        "NameGuid": "48117a4f-bb38-4b85-8b32-6569a46b0d0c",
+        "Name": "ShowDocumentSet",
+        "ActionGuid": "57688c37-f8a6-416e-81e6-24d0dcd9d0d1",
+        "ButtonSize": "Large",
+        "Index": 2,
+        "IsVisible": false,
+        "ParentGuid": "b9128665-dad8-4d48-b0ae-a2fa00faf02b"
+      },
+      {
+        "$type": "Sungero.Metadata.RibbonActionButtonMetadata, Sungero.Metadata",
+        "NameGuid": "f78bdb49-f297-4479-b4d2-6b73673d8782",
+        "Name": "SignDocumentSet",
+        "ActionGuid": "dfe02439-0006-4040-bff0-563dba6eb953",
+        "ButtonSize": "Large",
+        "Index": -1,
+        "IsVisible": false,
+        "ParentGuid": "b9128665-dad8-4d48-b0ae-a2fa00faf02b"
+      }
+    ],
+    "Groups": [
+      {
+        "NameGuid": "b9128665-dad8-4d48-b0ae-a2fa00faf02b",
+        "Name": "Sign",
+        "IconName": null,
+        "Index": 27,
+        "ParentGuid": "3a9d7dc2-d662-4966-9fdc-c8004b9c83e2",
+        "SmallIconName": null
+      }
+    ],
+    "IsAncestorMetadata": true,
+    "Pages": []
+  },
+  "Versions": [
+    {
+      "Type": "DocumentMetadata",
+      "Number": 2
+    },
+    {
+      "Type": "EntityMetadata",
+      "Number": 9
+    }
+  ]
+}

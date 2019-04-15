@@ -1,0 +1,104 @@
+{
+  "$type": "Sungero.Metadata.SolutionMetadata, Sungero.Metadata",
+  "NameGuid": "50f2374f-3b0a-4a4b-b161-0073e1165a67",
+  "Name": "BulkExchangeSolution",
+  "ClientAssemblyName": "Sungero.BulkExchangeSolution.Client",
+  "ClientBaseAssemblyName": "Sungero.BulkExchangeSolution.ClientBase",
+  "ClientBaseNamespace": "Sungero.BulkExchangeSolution.ClientBase",
+  "ClientNamespace": "Sungero.BulkExchangeSolution.Client",
+  "Code": "BulkEx",
+  "CompanyCode": "Sungero",
+  "Cover": {
+    "NameGuid": "0f879082-dbfa-49b9-9ec5-440bdb63cb00",
+    "Actions": [],
+    "Background": null,
+    "Footer": {
+      "NameGuid": "72c3faee-6cfd-4260-9788-26ed6813d7ec",
+      "BackgroundPosition": "Stretch"
+    },
+    "Groups": [],
+    "Header": {
+      "NameGuid": "80a72065-54cb-4729-b2e7-be29c15152d5",
+      "BackgroundPosition": "Stretch"
+    }
+  },
+  "DesktopViews": [],
+  "ExplorerTreeOrder": [
+    {
+      "ItemId": "3e8b872f-a32f-4756-82f3-34053f483a06"
+    },
+    {
+      "ItemId": "fb59a993-8225-4480-9133-2e37a26753c5",
+      "PreviousItemId": "3e8b872f-a32f-4756-82f3-34053f483a06"
+    },
+    {
+      "ItemId": "143414c9-050a-4466-9eed-ac8db8de280b",
+      "PreviousItemId": "fb59a993-8225-4480-9133-2e37a26753c5"
+    },
+    {
+      "ItemId": "73992f76-289b-40d1-be76-d4019a6ff0b4",
+      "PreviousItemId": "143414c9-050a-4466-9eed-ac8db8de280b"
+    },
+    {
+      "ItemId": "a76ed874-c11d-44c7-b0a6-6718c21d6626",
+      "PreviousItemId": "73992f76-289b-40d1-be76-d4019a6ff0b4"
+    },
+    {
+      "ItemId": "7ac574ac-8a4f-4893-ab81-c25edfa7a90c",
+      "PreviousItemId": "a76ed874-c11d-44c7-b0a6-6718c21d6626"
+    },
+    {
+      "ItemId": "13b590ce-c9b7-48d8-b401-c577f221a435",
+      "PreviousItemId": "7ac574ac-8a4f-4893-ab81-c25edfa7a90c"
+    },
+    {
+      "ItemId": "76a56ed3-5c94-4570-bade-806451a6e130",
+      "PreviousItemId": "13b590ce-c9b7-48d8-b401-c577f221a435"
+    },
+    {
+      "ItemId": "e0e85323-ef1e-4c7c-8eeb-f1cb2d6dfe14",
+      "PreviousItemId": "76a56ed3-5c94-4570-bade-806451a6e130"
+    }
+  ],
+  "IconResourcesKeys": [],
+  "Importance": "Medium",
+  "InterfaceAssemblyName": "Sungero.Domain.Interfaces",
+  "InterfaceNamespace": "Sungero.BulkExchangeSolution",
+  "OrderedSpecialFolders": [],
+  "PublicStructures": [],
+  "ResourceInterfaceAssemblyName": "Sungero.Domain.Interfaces",
+  "ResourceInterfaceNamespace": "Sungero.BulkExchangeSolution",
+  "ResourcesKeys": [
+    "CannotSignDocument",
+    "RejectMessage",
+    "EmptyAbortingReason",
+    "FewAssignmentError",
+    "NoAssignmentError",
+    "RejectReason",
+    "Reject",
+    "MultipleBusinessUnitsError",
+    "CannotSignDocuments",
+    "SignDocumentSetsConfirmationMessage",
+    "DoumentsSignError",
+    "SomeDocumentsNotSigned",
+    "CannotImportDocument",
+    "CannotSendDocument"
+  ],
+  "ServerAssemblyName": "Sungero.BulkExchangeSolution.Server",
+  "ServerNamespace": "Sungero.BulkExchangeSolution.Server",
+  "SharedAssemblyName": "Sungero.BulkExchangeSolution.Shared",
+  "SharedNamespace": "Sungero.BulkExchangeSolution.Shared",
+  "SpecialFolders": [],
+  "Version": "3.1.0.3",
+  "Widgets": [],
+  "Versions": [
+    {
+      "Type": "SolutionMetadata",
+      "Number": 6
+    },
+    {
+      "Type": "ModuleMetadata",
+      "Number": 6
+    }
+  ]
+}
