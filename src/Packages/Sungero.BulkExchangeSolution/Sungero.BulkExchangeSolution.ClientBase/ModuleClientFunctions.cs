@@ -661,5 +661,24 @@ namespace Sungero.BulkExchangeSolution.Client
     
     #endregion
     
+    public virtual void DisableJobs()
+    {
+      Sungero.BulkExchangeSolution.Functions.Module.Remote.DisableJobs();
+    }
+    
+    public virtual void StartGetMessages()
+    {
+      Sungero.BulkExchangeSolution.Functions.Module.Remote.StartGetMessages();
+    }
+    
+    public virtual void StartVerifyDocuments()
+    {
+      Sungero.BulkExchangeSolution.Functions.Module.Remote.StartVerifyDocuments();
+    }
+    
+    public virtual void SendSignedDocuments()
+    {
+      Sungero.BulkExchangeSolution.Functions.Module.Remote.SendSignedDocuments();
+    }
   }
 }

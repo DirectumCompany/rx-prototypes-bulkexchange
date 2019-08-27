@@ -196,5 +196,50 @@ namespace Sungero.BulkExchangeSolution.Server
     {
       return Sungero.Parties.Counterparties.GetAll().FirstOrDefault();
     }
+
+    [Remote]
+    public static void DisableJobs()
+    {
+      var jobs = Sungero.CoreEntities.Jobs.GetAll().Where(j => j.JobId == Constants.Module.GetMessagesJob || 
+                                                          j.JobId == Constants.Module.VerifyJob || 
+                                                          j.JobId == Constants.Module.SendSignedDocumentsJob).ToList();
+      foreach (var job in jobs)
+      {
+        job.Status = Sungero.CoreEntities.DatabookEntry.Status.Closed;
+        job.Save();
+      }
+    }
+    
+    [Remote]
+    public static void StartVerifyDocuments()
+    {
+      ActivateJob(Constants.Module.VerifyJob);
+      Sungero.BulkExchangeSolution.Module.Exchange.Jobs.VerifyDocuments.Enqueue();
+    }
+
+    [Remote]
+    public static void StartGetMessages()
+    {
+      ActivateJob(Constants.Module.GetMessagesJob);
+      Sungero.Exchange.Jobs.GetMessages.Enqueue();
+    }
+    
+    [Remote]
+    public static void SendSignedDocuments()
+    {
+      ActivateJob(Constants.Module.SendSignedDocumentsJob);
+      Sungero.BulkExchangeSolution.Module.Exchange.Jobs.SendSignedDocuments.Enqueue();
+    }
+    
+    public static void ActivateJob(Guid jobGuid)
+    {
+      var jobs = Sungero.CoreEntities.Jobs.GetAll().Where(j => j.JobId == jobGuid && j.Status == Sungero.CoreEntities.DatabookEntry.Status.Closed).ToList();
+      foreach (var job in jobs)
+      {
+        job.Status = Sungero.CoreEntities.DatabookEntry.Status.Active;
+        job.Save();
+      }
+    }
+
   }
 }
