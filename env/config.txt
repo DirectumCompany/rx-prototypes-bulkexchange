@@ -1,0 +1,6 @@
+﻿# Путь до DrxUtil для подписания, отправки документов и запуска фоновых процессов.
+"C:\Projects\DirectumRX\bin\Debug\DrxUtil"
+# Путь до файла run_local.bat для запуска обновления примеров документов.
+"C:\Projects\DirectumRX\src\Generator"
+# Путь для сохранения обновленных документов.
+"D:\BulkExchangeExamples"

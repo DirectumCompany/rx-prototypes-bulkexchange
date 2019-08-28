@@ -200,8 +200,7 @@ namespace Sungero.BulkExchangeSolution.Server
     [Remote]
     public static void DisableJobs()
     {
-      var jobs = Sungero.CoreEntities.Jobs.GetAll().Where(j => j.JobId == Constants.Module.GetMessagesJob || 
-                                                          j.JobId == Constants.Module.VerifyJob || 
+      var jobs = Sungero.CoreEntities.Jobs.GetAll().Where(j => j.JobId == Constants.Module.VerifyJob || 
                                                           j.JobId == Constants.Module.SendSignedDocumentsJob).ToList();
       foreach (var job in jobs)
       {
