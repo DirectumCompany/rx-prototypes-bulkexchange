@@ -60,7 +60,7 @@ namespace Sungero.BulkExchangeSolution.Module.Exchange.Server
     public virtual void VerifyDocuments()
     {
       var infos = ExchangeDocumentInfos.GetAll(d => (d.VerificationStatus == VerificationStatus.Required) && d.PurchaseOrder != null);
-      var documentSets = BulkExchangeSolution.Functions.ExchangeDocumentInfo.GetDocumentSets(infos.ToList()).Where(s => s.IsFullSet).ToList();
+      var documentSets = BulkExchangeSolution.Functions.ExchangeDocumentInfo.GetDocumentSets(infos.ToList()).Where(s => s.IsFullSet).OrderBy(d => d.ExchangeDocumentInfos.Min(s => s.Document.Created)).ToList();
       foreach (var documentSet in documentSets)
       {
         // Переполучаем инфошки, чтобы транзакция работала корректно и не было дублей сессии.
