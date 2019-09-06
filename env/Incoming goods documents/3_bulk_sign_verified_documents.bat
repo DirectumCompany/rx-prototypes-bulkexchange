@@ -10,4 +10,4 @@ for /f "UseBackQ Delims=" %%A IN ("config.txt") do (
 
 rem подписание
 chcp 1251
-call %DST%\DrxUtil.exe -n boss -p 123 -f Sungero.BulkExchangeSolution.Module.SignVerifiedDocuments
+call %DST%\DrxUtil.exe -n chief -p 123 -f Sungero.BulkExchangeSolution.Module.SignVerifiedDocuments
