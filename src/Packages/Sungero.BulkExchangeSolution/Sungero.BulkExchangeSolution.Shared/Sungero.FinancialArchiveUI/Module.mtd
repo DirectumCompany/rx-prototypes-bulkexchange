@@ -3,6 +3,7 @@
   "NameGuid": "95126478-8b70-49cd-8f4e-9635f753fe85",
   "Name": "FinancialArchiveUI",
   "AssociatedGuid": "50f2374f-3b0a-4a4b-b161-0073e1165a67",
+  "AsyncHandlers": [],
   "BaseGuid": "e99ae7e2-edb7-4904-a19a-4577f07609a4",
   "ClientBaseAssemblyName": "Sungero.BulkExchangeSolution.ClientBase",
   "ClientBaseNamespace": "Sungero.BulkExchangeSolution.Module.FinancialArchiveUI.ClientBase",
@@ -234,7 +235,6 @@
             "NameGuid": "f444b739-b0fb-474c-8fcb-289967f97a61",
             "Name": "BusinessUnit",
             "EntityGuid": "eff95720-181f-4f7d-892d-dec034c7b2ab",
-            "MultilineMode": "Single",
             "ParentGuid": "83a3636e-014b-4d45-aaa6-9686855dcfa9"
           },
           {
@@ -280,7 +280,6 @@
             "NameGuid": "099f4bef-beb8-4ca2-866d-aa1f8853062c",
             "Name": "Department",
             "EntityGuid": "61b1c19f-26e2-49a5-b3d3-0d3618151e12",
-            "MultilineMode": "Single",
             "ParentGuid": "83a3636e-014b-4d45-aaa6-9686855dcfa9",
             "PreviousGuid": "f444b739-b0fb-474c-8fcb-289967f97a61"
           },
@@ -290,7 +289,6 @@
             "Name": "Counterparty",
             "EntityGuid": "294767f1-009f-4fbd-80fc-f98c49ddc560",
             "LookupMode": "Standalone",
-            "MultilineMode": "Single",
             "ParentGuid": "83a3636e-014b-4d45-aaa6-9686855dcfa9",
             "PreviousGuid": "7cf790e9-90a9-4bc1-a184-1f6fca88209a"
           },
@@ -299,7 +297,6 @@
             "NameGuid": "7cf790e9-90a9-4bc1-a184-1f6fca88209a",
             "Name": "Responsible",
             "EntityGuid": "b7905516-2be5-4931-961c-cb38d5677565",
-            "MultilineMode": "Single",
             "ParentGuid": "83a3636e-014b-4d45-aaa6-9686855dcfa9",
             "PreviousGuid": "099f4bef-beb8-4ca2-866d-aa1f8853062c"
           },
@@ -406,7 +403,6 @@
             "NameGuid": "4517014b-1486-4eb4-a786-17cb6332f136",
             "Name": "BusinessUnit",
             "EntityGuid": "eff95720-181f-4f7d-892d-dec034c7b2ab",
-            "MultilineMode": "Single",
             "ParentGuid": "9c7e8a48-94aa-45c2-8b52-dc10c7fd9d72"
           },
           {
@@ -414,7 +410,6 @@
             "NameGuid": "f28566a6-79a8-4f24-9e3a-c2f6385a1be7",
             "Name": "Department",
             "EntityGuid": "61b1c19f-26e2-49a5-b3d3-0d3618151e12",
-            "MultilineMode": "Single",
             "ParentGuid": "9c7e8a48-94aa-45c2-8b52-dc10c7fd9d72",
             "PreviousGuid": "4517014b-1486-4eb4-a786-17cb6332f136"
           },
@@ -423,7 +418,6 @@
             "NameGuid": "82acaa03-49b3-409a-8d9d-a77aa3f12693",
             "Name": "Responsible",
             "EntityGuid": "b7905516-2be5-4931-961c-cb38d5677565",
-            "MultilineMode": "Single",
             "ParentGuid": "9c7e8a48-94aa-45c2-8b52-dc10c7fd9d72",
             "PreviousGuid": "f28566a6-79a8-4f24-9e3a-c2f6385a1be7"
           },
@@ -433,7 +427,6 @@
             "Name": "Counterparty",
             "EntityGuid": "294767f1-009f-4fbd-80fc-f98c49ddc560",
             "LookupMode": "Standalone",
-            "MultilineMode": "Single",
             "ParentGuid": "9c7e8a48-94aa-45c2-8b52-dc10c7fd9d72",
             "PreviousGuid": "82acaa03-49b3-409a-8d9d-a77aa3f12693"
           },
@@ -505,7 +498,6 @@
             "NameGuid": "70fe759f-e852-45e7-baba-2c06869cb330",
             "Name": "BusinessUnit",
             "EntityGuid": "eff95720-181f-4f7d-892d-dec034c7b2ab",
-            "MultilineMode": "Single",
             "ParentGuid": "6fa04a6b-feaf-4f5c-baa9-89a332cee65a"
           },
           {
@@ -513,7 +505,6 @@
             "NameGuid": "213eaca3-859d-4a34-a670-f0cacc7c5590",
             "Name": "Department",
             "EntityGuid": "61b1c19f-26e2-49a5-b3d3-0d3618151e12",
-            "MultilineMode": "Single",
             "ParentGuid": "6fa04a6b-feaf-4f5c-baa9-89a332cee65a",
             "PreviousGuid": "70fe759f-e852-45e7-baba-2c06869cb330"
           },
@@ -522,7 +513,6 @@
             "NameGuid": "2877ee2f-fdde-4be6-bcd2-c6c05bc32675",
             "Name": "Responsible",
             "EntityGuid": "b7905516-2be5-4931-961c-cb38d5677565",
-            "MultilineMode": "Single",
             "ParentGuid": "6fa04a6b-feaf-4f5c-baa9-89a332cee65a",
             "PreviousGuid": "213eaca3-859d-4a34-a670-f0cacc7c5590"
           },
@@ -532,7 +522,6 @@
             "Name": "Counterparty",
             "EntityGuid": "294767f1-009f-4fbd-80fc-f98c49ddc560",
             "LookupMode": "Standalone",
-            "MultilineMode": "Single",
             "ParentGuid": "6fa04a6b-feaf-4f5c-baa9-89a332cee65a",
             "PreviousGuid": "2877ee2f-fdde-4be6-bcd2-c6c05bc32675"
           }
@@ -608,7 +597,6 @@
             "NameGuid": "f5a8e64a-dc2b-480e-9424-5cd2531551de",
             "Name": "BusinessUnit",
             "EntityGuid": "eff95720-181f-4f7d-892d-dec034c7b2ab",
-            "MultilineMode": "Single",
             "ParentGuid": "3e6cccee-56df-48e6-a8c6-fcc668f244a6"
           },
           {
@@ -616,7 +604,6 @@
             "NameGuid": "998b9f90-6d03-4a7c-ab5d-b52ee0cefffc",
             "Name": "Department",
             "EntityGuid": "61b1c19f-26e2-49a5-b3d3-0d3618151e12",
-            "MultilineMode": "Single",
             "ParentGuid": "3e6cccee-56df-48e6-a8c6-fcc668f244a6",
             "PreviousGuid": "f5a8e64a-dc2b-480e-9424-5cd2531551de"
           },
@@ -625,7 +612,6 @@
             "NameGuid": "3411ded7-8be9-44ae-9ec1-077a3b4c134d",
             "Name": "Responsible",
             "EntityGuid": "b7905516-2be5-4931-961c-cb38d5677565",
-            "MultilineMode": "Single",
             "ParentGuid": "3e6cccee-56df-48e6-a8c6-fcc668f244a6",
             "PreviousGuid": "998b9f90-6d03-4a7c-ab5d-b52ee0cefffc"
           },
@@ -635,7 +621,6 @@
             "Name": "Counterparty",
             "EntityGuid": "294767f1-009f-4fbd-80fc-f98c49ddc560",
             "LookupMode": "Standalone",
-            "MultilineMode": "Single",
             "ParentGuid": "3e6cccee-56df-48e6-a8c6-fcc668f244a6",
             "PreviousGuid": "3411ded7-8be9-44ae-9ec1-077a3b4c134d"
           },
@@ -696,7 +681,7 @@
       ]
     }
   ],
-  "Version": "3.1.28.1",
+  "Version": "3.3.10.1",
   "Widgets": [],
   "Versions": [
     {

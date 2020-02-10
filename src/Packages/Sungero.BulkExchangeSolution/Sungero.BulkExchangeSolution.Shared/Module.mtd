@@ -2,6 +2,7 @@
   "$type": "Sungero.Metadata.SolutionMetadata, Sungero.Metadata",
   "NameGuid": "50f2374f-3b0a-4a4b-b161-0073e1165a67",
   "Name": "BulkExchangeSolution",
+  "AsyncHandlers": [],
   "ClientAssemblyName": "Sungero.BulkExchangeSolution.Client",
   "ClientBaseAssemblyName": "Sungero.BulkExchangeSolution.ClientBase",
   "ClientBaseNamespace": "Sungero.BulkExchangeSolution.ClientBase",
@@ -99,6 +100,10 @@
     {
       "Type": "ModuleMetadata",
       "Number": 6
+    },
+    {
+      "Type": "DomainApi",
+      "Number": 3
     }
   ]
 }

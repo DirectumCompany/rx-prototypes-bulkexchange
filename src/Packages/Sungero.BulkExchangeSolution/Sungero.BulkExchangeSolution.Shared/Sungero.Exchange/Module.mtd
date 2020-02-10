@@ -3,6 +3,7 @@
   "NameGuid": "9bf9840f-5687-4a17-8b9e-98e930513d01",
   "Name": "Exchange",
   "AssociatedGuid": "50f2374f-3b0a-4a4b-b161-0073e1165a67",
+  "AsyncHandlers": [],
   "BaseGuid": "cec41b99-da21-422f-9332-0fbc423e95c0",
   "ClientBaseAssemblyName": "Sungero.BulkExchangeSolution.ClientBase",
   "ClientBaseNamespace": "Sungero.BulkExchangeSolution.Module.Exchange.ClientBase",
@@ -202,7 +203,7 @@
     "DocumentsTotalAmountError"
   ],
   "SpecialFolders": [],
-  "Version": "3.1.28.1",
+  "Version": "3.3.10.1",
   "Widgets": [],
   "Versions": [
     {
