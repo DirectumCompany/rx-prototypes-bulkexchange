@@ -98,7 +98,7 @@ namespace Sungero.BulkExchangeSolution.Client
                                                                                        x.Certificate.Enabled == true).Select(x => x.Certificate).FirstOrDefault();
           
           Logger.DebugFormat("Start sign document with Id {0}.", document.Id);
-          if (Docflow.PublicFunctions.OfficialDocument.ApproveWithAddenda(document, addenda, certificate, string.Empty, null, false, null))
+          if (Docflow.PublicFunctions.Module.ApproveWithAddenda(document, addenda, certificate, null, false, false, string.Empty))
             Logger.DebugFormat("Document with Id {0} signed.", document.Id);
           else
             Logger.DebugFormat("Document with Id {0} not signed.", document.Id);
@@ -412,7 +412,7 @@ namespace Sungero.BulkExchangeSolution.Client
             var certificate = info.RootBox.ExchangeServiceCertificates.Where(x => Equals(x.Certificate.Owner, Users.Current) && x.Certificate.Enabled == true).Select(x => x.Certificate).FirstOrDefault();
             try
             {
-              if (Docflow.PublicFunctions.OfficialDocument.ApproveWithAddenda(info.Document, null, certificate, string.Empty, null, false, null))
+              if (Docflow.PublicFunctions.Module.ApproveWithAddenda(info.Document, null, certificate, null, false, false, string.Empty))
               {
                 Logger.DebugFormat("Sign document set with document ids {0} successfully.", string.Join(", ", info.Document.Id));
                 info.SignStatus = Sungero.BulkExchangeSolution.ExchangeDocumentInfo.SignStatus.Signed;
@@ -529,7 +529,7 @@ namespace Sungero.BulkExchangeSolution.Client
         
         try
         {
-          if (!Docflow.PublicFunctions.OfficialDocument.ApproveWithAddenda(document, addendas, certificate, activeText, null, false, null))
+          if (!Docflow.PublicFunctions.Module.ApproveWithAddenda(document, addendas, certificate, null, false, false, activeText))
             unsignedDocumentsArePresent = true;
           else
             approvalSigningAssignment.Complete(Docflow.ApprovalSigningAssignment.Result.Sign);
