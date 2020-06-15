@@ -1,0 +1,166 @@
+{
+  "$type": "Sungero.Metadata.DocumentMetadata, Sungero.Content.Shared",
+  "NameGuid": "7ac574ac-8a4f-4893-ab81-c25edfa7a90c",
+  "Name": "ContractStatement",
+  "AccessRightsMode": "Both",
+  "Actions": [
+    {
+      "NameGuid": "e5e7b615-99ef-427c-bb15-18172719b90b",
+      "Name": "Reject",
+      "ActionArea": "Collection",
+      "GenerateHandler": true,
+      "LargeIconName": "Action_Reject_large_e5e7b61599ef427cbb1518172719b90b.png",
+      "NeedRefreshCollectionAfterExecute": true,
+      "SmallIconName": "Action_Reject_small_e5e7b61599ef427cbb1518172719b90b.png"
+    },
+    {
+      "NameGuid": "bd4b6a4b-8d2b-4125-b92a-7f0e065bff36",
+      "Name": "SignDocumentSet",
+      "ActionArea": "Collection",
+      "GenerateHandler": true,
+      "IsMultiSelectAction": true,
+      "LargeIconName": "Action_SignDocumentSet_large_bd4b6a4b8d2b4125b92a7f0e065bff36.png",
+      "NeedRefreshCollectionAfterExecute": true,
+      "SmallIconName": "Action_SignDocumentSet_small_bd4b6a4b8d2b4125b92a7f0e065bff36.png"
+    },
+    {
+      "NameGuid": "8229d25f-d5ad-4221-a5f9-449bb89361aa",
+      "Name": "ShowApprovalSigningAssignment",
+      "ActionArea": "Collection",
+      "GenerateHandler": true,
+      "LargeIconName": "Action_ShowApprovalSigningAssignment_large_8229d25fd5ad4221a5f9449bb89361aa.png",
+      "NeedRefreshCollectionAfterExecute": true,
+      "SmallIconName": "Action_ShowApprovalSigningAssignment_small_8229d25fd5ad4221a5f9449bb89361aa.png"
+    },
+    {
+      "NameGuid": "c138608c-8904-4e60-a647-e6419e4f7c69",
+      "Name": "ShowDocumentSet",
+      "ActionArea": "Collection",
+      "GenerateHandler": true,
+      "LargeIconName": "Action_ShowSet_large_c138608c89044e60a647e6419e4f7c69.png",
+      "SmallIconName": "Action_ShowSet_small_c138608c89044e60a647e6419e4f7c69.png"
+    }
+  ],
+  "BaseGuid": "f2f5774d-5ca3-4725-b31d-ac618f6b8850",
+  "CanBeNavigationPropertyType": true,
+  "CreationAreaMetadata": {
+    "NameGuid": "e5bef61b-65c1-478a-b7c8-7c7bf3e2e891",
+    "Name": "CreationArea",
+    "Buttons": [],
+    "IsAncestorMetadata": true
+  },
+  "ExtraSearchProperties": [],
+  "FilterPanel": {
+    "NameGuid": "80d3ce1a-9a72-443a-8b6c-6c6eef0c8d0f",
+    "Name": "FilterPanel",
+    "Controls": [],
+    "IsAncestorMetadata": true
+  },
+  "IconResourcesKeys": [],
+  "LayeredFromGuid": "f2f5774d-5ca3-4725-b31d-ac618f6b8850",
+  "OpenCardByDefaultInCollection": true,
+  "OperationsClass": "",
+  "Properties": [
+    {
+      "$type": "Sungero.Metadata.CollectionPropertyMetadata, Sungero.Metadata",
+      "NameGuid": "56cbe741-880f-4e6f-9567-343d08494b59",
+      "Name": "Versions",
+      "EntityGuid": "22f81a82-6400-45e3-9b0c-40bf3d60bf34",
+      "IsAncestorMetadata": true,
+      "Overridden": [
+        "EntityGuid"
+      ]
+    },
+    {
+      "$type": "Sungero.Metadata.CollectionPropertyMetadata, Sungero.Metadata",
+      "NameGuid": "15280407-331e-42f6-b263-041a495b66cd",
+      "Name": "Tracking",
+      "EntityGuid": "3b022c35-c660-4d31-bfcb-1b226d6a9495",
+      "IsAncestorMetadata": true,
+      "Overridden": [
+        "EntityGuid"
+      ]
+    }
+  ],
+  "PublicStructures": [],
+  "ResourcesKeys": [],
+  "RibbonCardMetadata": {
+    "NameGuid": "870ab1ae-aa37-4707-9439-d8d6291dff09",
+    "Name": "RibbonCard",
+    "Categories": [],
+    "Elements": [],
+    "Groups": [],
+    "IsAncestorMetadata": true,
+    "Pages": [],
+    "RibbonKind": "Card"
+  },
+  "RibbonCollectionMetadata": {
+    "NameGuid": "c3ece623-b937-4b3e-a9a5-382e812372a0",
+    "Name": "RibbonCollection",
+    "Categories": [],
+    "Elements": [
+      {
+        "$type": "Sungero.Metadata.RibbonActionButtonMetadata, Sungero.Metadata",
+        "NameGuid": "0c04d250-5a07-4790-924e-01f967f85f3b",
+        "Name": "Reject",
+        "ActionGuid": "e5e7b615-99ef-427c-bb15-18172719b90b",
+        "ButtonSize": "Large",
+        "Index": 0,
+        "IsVisible": false,
+        "ParentGuid": "5f5959d5-7c28-45a4-bb39-703318563951"
+      },
+      {
+        "$type": "Sungero.Metadata.RibbonActionButtonMetadata, Sungero.Metadata",
+        "NameGuid": "2576310f-7152-4e1a-9b3d-4eef697b7077",
+        "Name": "ShowAssignments",
+        "ActionGuid": "8229d25f-d5ad-4221-a5f9-449bb89361aa",
+        "ButtonSize": "Large",
+        "Index": 1,
+        "IsVisible": false,
+        "ParentGuid": "5f5959d5-7c28-45a4-bb39-703318563951"
+      },
+      {
+        "$type": "Sungero.Metadata.RibbonActionButtonMetadata, Sungero.Metadata",
+        "NameGuid": "4644ba4b-5141-43ff-91b1-2643f6d60ac2",
+        "Name": "ShowDocumentSet",
+        "ActionGuid": "c138608c-8904-4e60-a647-e6419e4f7c69",
+        "ButtonSize": "Large",
+        "Index": 2,
+        "IsVisible": false,
+        "ParentGuid": "5f5959d5-7c28-45a4-bb39-703318563951"
+      },
+      {
+        "$type": "Sungero.Metadata.RibbonActionButtonMetadata, Sungero.Metadata",
+        "NameGuid": "217ca75c-fd42-4955-8dee-7e0ba9664b3e",
+        "Name": "SignDocumentSet",
+        "ActionGuid": "bd4b6a4b-8d2b-4125-b92a-7f0e065bff36",
+        "ButtonSize": "Large",
+        "Index": -1,
+        "IsVisible": false,
+        "ParentGuid": "5f5959d5-7c28-45a4-bb39-703318563951"
+      }
+    ],
+    "Groups": [
+      {
+        "NameGuid": "5f5959d5-7c28-45a4-bb39-703318563951",
+        "Name": "Sign",
+        "IconName": null,
+        "Index": 27,
+        "ParentGuid": "3a9d7dc2-d662-4966-9fdc-c8004b9c83e2",
+        "SmallIconName": null
+      }
+    ],
+    "IsAncestorMetadata": true,
+    "Pages": []
+  },
+  "Versions": [
+    {
+      "Type": "DocumentMetadata",
+      "Number": 2
+    },
+    {
+      "Type": "EntityMetadata",
+      "Number": 9
+    }
+  ]
+}
