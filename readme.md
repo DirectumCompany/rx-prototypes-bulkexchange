@@ -58,7 +58,7 @@
 ```
 4. [Настроить обмен с контрагентами](https://club.directum.ru/webhelp/directumrx/desktop/index.html?sungero_parties_counterparty_card_exchangeboxes.htm).
 5. [Настроить автоматический режим](https://club.directum.ru/webhelp/directumrx/desktop/index.html?admin_avtomaticheskii_rezhim.htm) для подтверждения получения документов из сервиса обмена.
-6. Настроить запуск сценария массовой работы через сервис обмена. Для этого создать файл *C:\distr\Generator\config.py* по аналогии с *C:\distr\Generator\config.py.example*. В файле указать:
+6. Настроить запуск сценария массовой работы через сервис обмена. Для этого создать файл `.\Generator\config.py` по аналогии с `.\Generator\config.py.example`. В файле указать:
    -	Данные сервиса обмена Synerdocs – адрес сервиса, код сервиса;
     -	Данные контрагента – ИНН, отпечаток сертификата из сервиса обмена;
     -	Данные НОР – ИНН, отпечаток сертификата из сервиса обмена;
