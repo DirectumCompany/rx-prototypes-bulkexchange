@@ -63,4 +63,4 @@
     -	Данные контрагента – ИНН, отпечаток сертификата из сервиса обмена;
     -	Данные НОР – ИНН, отпечаток сертификата из сервиса обмена;
     -	Путь для сохранения сгенерированных документов.
-7. Настроить запуск сценариев по потокам. Указать в файле [.\env\config.txt](https://github.com/DirectumCompany/rx-prototypes-bulkexchange/blob/master/env/config.txt) путь к утилите DrxUtil, путь до файла run_local.bat, путь для сохранения обновленных документов.
+7. Настроить запуск сценариев по потокам. Указать в файле [.\env\config.txt](https://github.com/DirectumCompany/rx-prototypes-bulkexchange/blob/master/env/config.txt) путь к утилите DrxUtil, путь до файла `run_local.bat`, путь для сохранения обновленных документов.
