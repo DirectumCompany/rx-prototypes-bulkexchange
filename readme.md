@@ -26,7 +26,22 @@
 * Акт выполненных работ (неформал.) + Счет-фактура выставленный (Неформализованный акт + УПД СЧФ)
 * Акт выполненных работ (формал.) + Счет-фактура выставленный (ДПРР + УПД СЧФ)
 
-## Структура проекта
-
-* src - папка со всеми исходными кодами решения
-* src\Packages - прикладная разработка
+## Порядок установки
+1. Для работы требуется установленный Directum RX соответствующей версии и генератор.
+2. Склонировать репозиторий с rx-prototypes-bulkexchange в папку.
+3. Указать в _ConfigSettings.xml DDS:
+```xml
+<block name="REPOSITORIES">
+  <repository folderName="Base" solutionType="Base" url="" />
+  <repository folderName="RX" solutionType="Base" url="<адрес локального репозитория>" />
+  <repository folderName="<Папка из п.2>" solutionType="Work" 
+     url="https://github.com/DirectumCompany/rx-prototypes-bulkexchange" />
+</block>
+```
+4. [Настроить обмен с контрагентами](https://club.directum.ru/webhelp/directumrx/desktop/index.html?sungero_parties_counterparty_card_exchangeboxes.htm).
+5. [Настроить автоматический режим](https://club.directum.ru/webhelp/directumrx/desktop/index.html?admin_avtomaticheskii_rezhim.htm) для подтверждения получения документов из сервиса обмена.
+6. Настроить запуск сценария массовой работы через сервис обмена. Для этого создать файл *C:\distr\Generator\config.py* по аналогии с *C:\distr\Generator\config.py.example*. В файле указать:
+   -	Данные сервиса обмена Synerdocs – адрес сервиса, код сервиса;
+    -	Данные контрагента – ИНН, отпечаток сертификата из сервиса обмена;
+    -	Данные НОР – ИНН, отпечаток сертификата из сервиса обмена;
+    -	Путь для сохранения сгенерированных документов.
