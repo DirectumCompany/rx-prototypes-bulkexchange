@@ -45,7 +45,7 @@
 ![Исх товарный документооборот](https://user-images.githubusercontent.com/2620711/84867424-320f6080-b08c-11ea-8e6c-f474cdc688a2.png)
 
 1. Автоматическое подписание.  <br>**Точка входа:** клиентский метод [SignImportedDocuments](https://github.com/DirectumCompany/rx-prototypes-bulkexchange/blob/master/src/Packages/Sungero.BulkExchangeSolution/Sungero.BulkExchangeSolution.ClientBase/ModuleClientFunctions.cs#L89-L111) модуля Exchange.
-2. Отправка ответов по документам. <br>**Точка входа:** фоновый процесс [SendSignedDocuments](https://github.com/DirectumCompany/rx-prototypes-bulkexchange/blob/master/src/Packages/Sungero.BulkExchangeSolution/Sungero.BulkExchangeSolution.Server/Sungero.Exchange/ModuleJobs.cs#L18-L54) модуля Exchange.
+2. Отправка документов в сервис обмена. <br>**Точка входа:** фоновый процесс [SendSignedDocuments](https://github.com/DirectumCompany/rx-prototypes-bulkexchange/blob/master/src/Packages/Sungero.BulkExchangeSolution/Sungero.BulkExchangeSolution.Server/Sungero.Exchange/ModuleJobs.cs#L18-L54) модуля Exchange.
 
 ## Порядок установки
 1. Для работы требуется установленный Directum RX соответствующей версии и генератор.
