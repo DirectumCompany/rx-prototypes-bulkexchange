@@ -16,7 +16,12 @@
 
 Контрагенты направляют через сервис обмена в нашу организацию комплекты из первичных учетных документов, относящиеся к товарному документообороту. Вся работа идет в фоновом режиме, без участия пользователей. 
 ![Вх товарный документооборот](https://user-images.githubusercontent.com/2620711/84864711-1dc96480-b088-11ea-8385-f8ff7941c34c.png)
-Для автоматизации работы с прототипом можно использовать [bat-файлы](https://github.com/DirectumCompany/rx-prototypes-bulkexchange/tree/master/env/Incoming%20goods%20documents).
+1. Проверка комплекта документа.  <br>**Точка входа:** серверная функция [AddRelations](https://github.com/DirectumCompany/rx-prototypes-bulkexchange/blob/master/src/Packages/Sungero.BulkExchangeSolution/Sungero.BulkExchangeSolution.Server/Sungero.Exchange/ModuleServerFunctions.cs#L176-L187) модуля Exchange.
+2. Имитация сверки с учетной системой. <br>**Точка входа:** фоновый процесс [VerifyDocuments](https://github.com/DirectumCompany/rx-prototypes-bulkexchange/blob/master/src/Packages/Sungero.BulkExchangeSolution/Sungero.BulkExchangeSolution.Server/Sungero.Exchange/ModuleJobs.cs#L57-L75) модуля Exchange.
+3. Подписание документов. <br>**Точка входа:** клиентский метод [SignVerifiedDocuments](https://github.com/DirectumCompany/rx-prototypes-bulkexchange/blob/master/src/Packages/Sungero.BulkExchangeSolution/Sungero.BulkExchangeSolution.ClientBase/ModuleClientFunctions.cs#L400-L433) решения BulkExchangeSolution.
+4. Отправка ответов по документам. <br>**Точка входа:** фоновый процесс [SendSignedDocuments](https://github.com/DirectumCompany/rx-prototypes-bulkexchange/blob/master/src/Packages/Sungero.BulkExchangeSolution/Sungero.BulkExchangeSolution.Server/Sungero.Exchange/ModuleJobs.cs#L18-L54) модуля Exchange.
+5. Автоматический отказ для некорректного комплекта документов. <br>**Точка входа:** клиентский метод [SendRejectedDocuments](https://github.com/DirectumCompany/rx-prototypes-bulkexchange/blob/master/src/Packages/Sungero.BulkExchangeSolution/Sungero.BulkExchangeSolution.ClientBase/ModuleClientFunctions.cs#L435-L469) решения BulkExchangeSolution.
+ 
 #### Входящий нетоварный документооборот
 *	Счет-фактура и документ об отгрузке товаров (выполнении работ) (УПД СЧФДОП)
 *	Счет-фактура полученный + Документ об отгрузке товаров (выполнении работ) (УПД СЧФ + УПД ДОП)
@@ -25,7 +30,8 @@
 
 Контрагенты направляют через сервис обмена в нашу организацию комплекты из первичных учетных документов, относящиеся к нетоварному документообороту: акты выполненных работ и счета-фактуры.
 ![Вх нетоварный документооборот](https://user-images.githubusercontent.com/2620711/84865392-2ff7d280-b089-11ea-9ea3-d073138e8802.png)
-Для автоматизации работы с прототипом можно использовать [bat-файлы](https://github.com/DirectumCompany/rx-prototypes-bulkexchange/tree/master/env/Incoming%20works%20documents).
+1. Проверка комплекта документа.  <br>**Точка входа:** серверная функция [AddRelations](https://github.com/DirectumCompany/rx-prototypes-bulkexchange/blob/master/src/Packages/Sungero.BulkExchangeSolution/Sungero.BulkExchangeSolution.Server/Sungero.Exchange/ModuleServerFunctions.cs#L176-L187) модуля Exchange.
+
 #### Исходящий товарный документооборот
 * Счет-фактура и документ об отгрузке товаров (выполнении работ) (УПД СЧФДОП)
 * Документ об отгрузке товаров (выполнении работ) + Счет-фактура выставленный	(УПД ДОП + УПД СЧФ)
