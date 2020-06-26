@@ -257,17 +257,16 @@ namespace Sungero.BulkExchangeSolution.Server
       
       ProcessPackageInArio(blobPackage);
       
-      var arioPackage = SmartProcessing.PublicFunctions.Module.UnpackArioPackage(blobPackage);
-      
+      var arioPackage = SmartProcessing.PublicFunctions.Module.UnpackArioPackage(blobPackage);      
       var documentPackage = this.BuildDocumentPackage(blobPackage, arioPackage);
-      
-      //this.OrderAndLinkDocumentPackage(documentPackage);
-      
-      //this.SendToResponsible(documentPackage);
-
       SmartProcessing.PublicFunctions.Module.FinalizeProcessing(blobPackage);
     }
     
+    /// <summary>
+    /// Подготовить пакет бинарных образов документов.
+    /// </summary>
+    /// <param name="document">Документ.</param>
+    /// <returns>Пакет бинарных образов документов.</returns>
     public virtual IBlobPackage PrepareBlobPackage(IOfficialDocument document)
     {
       var blobPackage = BlobPackages.Create();
@@ -314,23 +313,23 @@ namespace Sungero.BulkExchangeSolution.Server
       foreach (IBlob blob in blobs)
       {
         var document = blob.Document;
-        //if (!this.CanArioProcessFile(filePath))
-        //{
-        //  continue;
-        //}
+        
+        if (!this.CanArioProcessFile(document.LastVersion.AssociatedApplication.Extension))
+          continue;
         
         try
         {
+          var body = document.LastVersion.PublicBody ?? document.LastVersion.Body;
           byte[] content;
           using(var memory = new System.IO.MemoryStream())
           {
-            using (var sourceStream = document.LastVersion.Body.Read())
+            using (var sourceStream = body.Read())
               sourceStream.CopyTo(memory);
             content = memory.ToArray();
           }
           
           var arioResultJson = arioConnector.ClassifyAndExtractFacts(content,
-                                                                     "Акт", //document.Name,
+                                                                     string.Format("{0}.{1}", document.DocumentKind.ShortName, document.LastVersion.AssociatedApplication.Extension),
                                                                      typeClassifierId,
                                                                      firstPageClassifierId,
                                                                      processingRule,
@@ -348,11 +347,11 @@ namespace Sungero.BulkExchangeSolution.Server
     /// <summary>
     /// Определить, может ли Ario обработать файл.
     /// </summary>
-    /// <param name="fileName">Имя или путь до файла.</param>
+    /// <param name="extension">Расширение файла.</param>
     /// <returns>True - может, False - иначе.</returns>
-    public virtual bool CanArioProcessFile(string fileName)
+    public virtual bool CanArioProcessFile(string extension)
     {
-      var ext = Path.GetExtension(fileName).TrimStart('.').ToLower();
+      var ext = extension.ToLower();
       var allowedExtensions = new List<string>()
       {
         "jpg", "jpeg", "png", "bmp", "gif",
@@ -378,19 +377,11 @@ namespace Sungero.BulkExchangeSolution.Server
       {
         var document = SmartProcessing.PublicFunctions.Module.CreateDocument(documentInfo, documentPackage);
         
-        //this.CreateVersion(document, documentInfo);
-        
         if (!documentInfo.FailedCreateVersionByBarcode)
-        {
-          //SmartProcessing.PublicFunctions.Module.FillDeliveryMethod(document, blobPackage.SourceType);
-          
           SmartProcessing.PublicFunctions.Module.FillVerificationState(document);
-        }
         
         SmartProcessing.PublicFunctions.Module.SaveDocument(document, documentInfo);
       }
-      
-      //this.CreateDocumentFromEmailBody(documentPackage);
       
       return documentPackage;
     }
@@ -403,15 +394,11 @@ namespace Sungero.BulkExchangeSolution.Server
     /// <returns>Акт выполненных работ.</returns>
     [Public]
     public virtual IOfficialDocument CreateContractStatementArio(IDocumentInfo documentInfo,
-                                                             IEmployee responsible)
+                                                                 IEmployee responsible)
     {
-      //System.Diagnostics.Debugger.Launch();
       // Акт выполненных работ.
-      //var document = FinancialArchive.ContractStatements.Create();
       var document = BulkExchangeSolution.Blobs.As(documentInfo.ArioDocument.OriginalBlob).Document;
-      //var contractStatement = document.ConvertTo(FinancialArchive.ContractStatements.Info);
       var contractStatement = FinancialArchive.ContractStatements.As(document.ConvertTo(FinancialArchive.ContractStatements.Info));
-      //contractStatement.Save();
       
       SmartProcessing.PublicFunctions.Module.FillContractStatementProperties(contractStatement, documentInfo, responsible);
       
