@@ -59,14 +59,42 @@
     {
       "ItemId": "e0e85323-ef1e-4c7c-8eeb-f1cb2d6dfe14",
       "PreviousItemId": "76a56ed3-5c94-4570-bade-806451a6e130"
+    },
+    {
+      "ItemId": "6105dd7d-7c13-4566-b498-d3becbb7c9b4",
+      "PreviousItemId": "e0e85323-ef1e-4c7c-8eeb-f1cb2d6dfe14"
     }
   ],
   "IconResourcesKeys": [],
   "Importance": "Medium",
   "InterfaceAssemblyName": "Sungero.Domain.Interfaces",
   "InterfaceNamespace": "Sungero.BulkExchangeSolution",
+  "Libraries": [
+    {
+      "NameGuid": "af4974b9-9dbb-4d71-a19a-88c6845b085c",
+      "Name": "ArioExtensions",
+      "Scope": "Both"
+    }
+  ],
   "OrderedSpecialFolders": [],
   "PublicFunctions": [
+    {
+      "Name": "BuildDocumentPackage",
+      "Parameters": [
+        {
+          "Name": "blobPackage",
+          "ParameterType": "global::Sungero.SmartProcessing.IBlobPackage",
+          "ParameterTypeFullName": "Sungero.SmartProcessing.IBlobPackage, Sungero.Domain.Interfaces"
+        },
+        {
+          "Name": "arioPackage",
+          "ParameterType": "global::Sungero.SmartProcessing.Structures.Module.IArioPackage",
+          "ParameterTypeFullName": "Sungero.SmartProcessing.Structures.Module.IArioPackage"
+        }
+      ],
+      "ReturnType": "global::Sungero.SmartProcessing.Structures.Module.IDocumentPackage",
+      "ReturnTypeFullName": "Sungero.SmartProcessing.Structures.Module.IDocumentPackage"
+    },
     {
       "Name": "ProcessExchangeDocument",
       "Parameters": [
@@ -74,6 +102,18 @@
           "Name": "document",
           "ParameterType": "global::Sungero.Docflow.IOfficialDocument",
           "ParameterTypeFullName": "Sungero.Docflow.IOfficialDocument, Sungero.Domain.Interfaces"
+        }
+      ],
+      "ReturnType": "void",
+      "ReturnTypeFullName": "System.Void"
+    },
+    {
+      "Name": "ProcessPackageInArio",
+      "Parameters": [
+        {
+          "Name": "blobPackage",
+          "ParameterType": "global::Sungero.SmartProcessing.IBlobPackage",
+          "ParameterTypeFullName": "Sungero.SmartProcessing.IBlobPackage, Sungero.Domain.Interfaces"
         }
       ],
       "ReturnType": "void",

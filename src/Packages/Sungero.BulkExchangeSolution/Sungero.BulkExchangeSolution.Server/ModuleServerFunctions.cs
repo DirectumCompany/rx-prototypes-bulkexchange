@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.IO;
+using System.Runtime.InteropServices;
 using Sungero.BulkExchangeSolution.ExchangeDocumentInfo;
 using Sungero.Company;
 using Sungero.Core;
@@ -8,6 +10,8 @@ using Sungero.CoreEntities;
 using Sungero.Docflow;
 using Sungero.Domain.Shared;
 using Sungero.Metadata;
+using Sungero.SmartProcessing;
+using Sungero.SmartProcessing.Structures.Module;
 using Status = Sungero.Workflow.AssignmentBase.Status;
 
 namespace Sungero.BulkExchangeSolution.Server
@@ -200,7 +204,7 @@ namespace Sungero.BulkExchangeSolution.Server
     [Remote]
     public static void DisableJobs()
     {
-      var jobs = Sungero.CoreEntities.Jobs.GetAll().Where(j => j.JobId == Constants.Module.VerifyJob || 
+      var jobs = Sungero.CoreEntities.Jobs.GetAll().Where(j => j.JobId == Constants.Module.VerifyJob ||
                                                           j.JobId == Constants.Module.SendSignedDocumentsJob).ToList();
       foreach (var job in jobs)
       {
@@ -249,17 +253,146 @@ namespace Sungero.BulkExchangeSolution.Server
     [Public]
     public virtual void ProcessExchangeDocument(IOfficialDocument document)
     {
-      //var arioPackage = this.UnpackArioPackage(blobPackage);
+      var blobPackage = PrepareBlobPackage(document);
       
-      //var documentPackage = this.BuildDocumentPackage(blobPackage, arioPackage);
+      ProcessPackageInArio(blobPackage);
+      
+      var arioPackage = SmartProcessing.PublicFunctions.Module.UnpackArioPackage(blobPackage);
+      
+      var documentPackage = this.BuildDocumentPackage(blobPackage, arioPackage);
       
       //this.OrderAndLinkDocumentPackage(documentPackage);
       
       //this.SendToResponsible(documentPackage);
 
-      //this.FinalizeProcessing(blobPackage);
+      SmartProcessing.PublicFunctions.Module.FinalizeProcessing(blobPackage);
     }
     
+    public virtual IBlobPackage PrepareBlobPackage(IOfficialDocument document)
+    {
+      var blobPackage = BlobPackages.Create();
+
+      var blob = Blobs.Create();
+      blob.Document = document;
+      blob.Save();
+
+      blobPackage.Blobs.AddNew().Blob = blob;
+      
+      blobPackage.Save();
+      
+      return blobPackage;
+    }
+
+    /// <summary>
+    /// Обработать документ из сервиса обмена в Ario.
+    /// </summary>
+    /// <param name="blobPackage">Пакет документов.</param>
+    [Public]
+    public virtual void ProcessPackageInArio(IBlobPackage blobPackage)
+    {
+      // Проверка настроек.
+      var smartProcessingSettings = Sungero.Docflow.PublicFunctions.SmartProcessingSetting.GetSettings();
+      if (smartProcessingSettings == null)
+        throw new ApplicationException(Sungero.SmartProcessing.Resources.SmartProcessingSettingsNotFound);
+      
+      Sungero.Docflow.PublicFunctions.SmartProcessingSetting.ValidateSettings(smartProcessingSettings);
+      var firstPageClassifierId = smartProcessingSettings.FirstPageClassifierId.ToString();
+      var typeClassifierId = smartProcessingSettings.TypeClassifierId.ToString();
+      
+      // Получение доп. классификаторов.
+      var additionalClassifierIds = Sungero.Docflow.PublicFunctions.SmartProcessingSetting.GetAdditionalClassifierIds(smartProcessingSettings);
+      
+      // Обработка в Ario.
+      var arioConnector = new ArioExtensions.ArioConnector(smartProcessingSettings.ArioUrl);
+      
+      // Получить соответствие класса и наименования правила извлечения фактов.
+      var processingRule = smartProcessingSettings.ProcessingRules
+        .Where(x => !string.IsNullOrWhiteSpace(x.ClassName) && !string.IsNullOrWhiteSpace(x.GrammarName))
+        .ToDictionary(x => x.ClassName, x => x.GrammarName);
+      var blobs = blobPackage.Blobs.Select(x => x.Blob);
+      foreach (IBlob blob in blobs)
+      {
+        var document = blob.Document;
+        //if (!this.CanArioProcessFile(filePath))
+        //{
+        //  continue;
+        //}
+        
+        try
+        {
+          byte[] content;
+          using(var memory = new System.IO.MemoryStream())
+          {
+            using (var sourceStream = document.LastVersion.Body.Read())
+              sourceStream.CopyTo(memory);
+            content = memory.ToArray();
+          }
+          
+          var arioResultJson = arioConnector.ClassifyAndExtractFacts(content,
+                                                                     document.Name,
+                                                                     typeClassifierId,
+                                                                     firstPageClassifierId,
+                                                                     processingRule,
+                                                                     additionalClassifierIds);
+          blob.ArioResultJson = arioResultJson;
+          blob.Save();
+        }
+        catch (ExternalException ex)
+        {
+          throw ex;
+        }
+      }
+    }
+    
+    /// <summary>
+    /// Определить, может ли Ario обработать файл.
+    /// </summary>
+    /// <param name="fileName">Имя или путь до файла.</param>
+    /// <returns>True - может, False - иначе.</returns>
+    public virtual bool CanArioProcessFile(string fileName)
+    {
+      var ext = Path.GetExtension(fileName).TrimStart('.').ToLower();
+      var allowedExtensions = new List<string>()
+      {
+        "jpg", "jpeg", "png", "bmp", "gif",
+        "tif", "tiff", "pdf", "doc", "docx",
+        "dot", "dotx", "rtf", "odt", "ott",
+        "txt", "xls", "xlsx", "ods"
+      };
+      return allowedExtensions.Contains(ext);
+    }
+    
+    /// <summary>
+    /// Сформировать пакет документов.
+    /// </summary>
+    /// <param name="blobPackage">Пакет документов из DCS.</param>
+    /// <param name="arioPackage">Пакет результатов обработки документов в Ario.</param>
+    /// <returns>Пакет созданных документов.</returns>
+    [Public]
+    public virtual IDocumentPackage BuildDocumentPackage(IBlobPackage blobPackage, IArioPackage arioPackage)
+    {
+      var documentPackage = SmartProcessing.PublicFunctions.Module.PrepareDocumentPackage(blobPackage, arioPackage);
+      
+      foreach (var documentInfo in documentPackage.DocumentInfos)
+      {
+        var document = SmartProcessing.PublicFunctions.Module.CreateDocument(documentInfo, documentPackage);
+        
+        //this.CreateVersion(document, documentInfo);
+        
+        if (!documentInfo.FailedCreateVersionByBarcode)
+        {
+          //SmartProcessing.PublicFunctions.Module.FillDeliveryMethod(document, blobPackage.SourceType);
+          
+          SmartProcessing.PublicFunctions.Module.FillVerificationState(document);
+        }
+        
+        SmartProcessing.PublicFunctions.Module.SaveDocument(document, documentInfo);
+      }
+      
+      //this.CreateDocumentFromEmailBody(documentPackage);
+      
+      return documentPackage;
+    }    
     
     #endregion
 
