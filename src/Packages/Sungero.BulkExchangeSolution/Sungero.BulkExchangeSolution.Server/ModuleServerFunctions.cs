@@ -239,6 +239,29 @@ namespace Sungero.BulkExchangeSolution.Server
         job.Save();
       }
     }
+    
+    #region Интеллектуальная обработка
+    
+    /// <summary>
+    /// Обработать документ с сервиса обмена.
+    /// </summary>
+    /// <param name="document">Документ.</param>
+    [Public]
+    public virtual void ProcessExchangeDocument(IOfficialDocument document)
+    {
+      //var arioPackage = this.UnpackArioPackage(blobPackage);
+      
+      //var documentPackage = this.BuildDocumentPackage(blobPackage, arioPackage);
+      
+      //this.OrderAndLinkDocumentPackage(documentPackage);
+      
+      //this.SendToResponsible(documentPackage);
+
+      //this.FinalizeProcessing(blobPackage);
+    }
+    
+    
+    #endregion
 
   }
 }
