@@ -96,7 +96,25 @@
       "ReturnTypeFullName": "Sungero.SmartProcessing.Structures.Module.IDocumentPackage"
     },
     {
+      "Name": "CreateContractStatementArio",
+      "Parameters": [
+        {
+          "Name": "documentInfo",
+          "ParameterType": "global::Sungero.SmartProcessing.Structures.Module.IDocumentInfo",
+          "ParameterTypeFullName": "Sungero.SmartProcessing.Structures.Module.IDocumentInfo"
+        },
+        {
+          "Name": "responsible",
+          "ParameterType": "global::Sungero.Company.IEmployee",
+          "ParameterTypeFullName": "Sungero.Company.IEmployee, Sungero.Domain.Interfaces"
+        }
+      ],
+      "ReturnType": "global::Sungero.Docflow.IOfficialDocument",
+      "ReturnTypeFullName": "Sungero.Docflow.IOfficialDocument, Sungero.Domain.Interfaces"
+    },
+    {
       "Name": "ProcessExchangeDocument",
+      "IsRemote": true,
       "Parameters": [
         {
           "Name": "document",
@@ -104,6 +122,7 @@
           "ParameterTypeFullName": "Sungero.Docflow.IOfficialDocument, Sungero.Domain.Interfaces"
         }
       ],
+      "Placement": "Shared",
       "ReturnType": "void",
       "ReturnTypeFullName": "System.Void"
     },

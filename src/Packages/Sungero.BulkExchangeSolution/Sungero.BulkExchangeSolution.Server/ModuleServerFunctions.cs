@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.IO;
+using System.Linq;
 using System.Runtime.InteropServices;
 using Sungero.BulkExchangeSolution.ExchangeDocumentInfo;
 using Sungero.Company;
@@ -250,7 +250,7 @@ namespace Sungero.BulkExchangeSolution.Server
     /// Обработать документ с сервиса обмена.
     /// </summary>
     /// <param name="document">Документ.</param>
-    [Public]
+    [Remote (IsPure = true), Public]
     public virtual void ProcessExchangeDocument(IOfficialDocument document)
     {
       var blobPackage = PrepareBlobPackage(document);
@@ -271,7 +271,8 @@ namespace Sungero.BulkExchangeSolution.Server
     public virtual IBlobPackage PrepareBlobPackage(IOfficialDocument document)
     {
       var blobPackage = BlobPackages.Create();
-
+      blobPackage.SenderLine = "ExchangeCaptureLine";
+      
       var blob = Blobs.Create();
       blob.Document = document;
       blob.Save();
@@ -392,7 +393,30 @@ namespace Sungero.BulkExchangeSolution.Server
       //this.CreateDocumentFromEmailBody(documentPackage);
       
       return documentPackage;
-    }    
+    }
+    
+    /// <summary>
+    /// Создать акт выполненных работ.
+    /// </summary>
+    /// <param name="documentInfo">Информация о документе.</param>
+    /// <param name="responsible">Ответственный за верификацию.</param>
+    /// <returns>Акт выполненных работ.</returns>
+    [Public]
+    public virtual IOfficialDocument CreateContractStatementArio(IDocumentInfo documentInfo,
+                                                             IEmployee responsible)
+    {
+      //System.Diagnostics.Debugger.Launch();
+      // Акт выполненных работ.
+      //var document = FinancialArchive.ContractStatements.Create();
+      var document = BulkExchangeSolution.Blobs.As(documentInfo.ArioDocument.OriginalBlob).Document;
+      //var contractStatement = document.ConvertTo(FinancialArchive.ContractStatements.Info);
+      var contractStatement = FinancialArchive.ContractStatements.As(document.ConvertTo(FinancialArchive.ContractStatements.Info));
+      //contractStatement.Save();
+      
+      SmartProcessing.PublicFunctions.Module.FillContractStatementProperties(contractStatement, documentInfo, responsible);
+      
+      return contractStatement;
+    }
     
     #endregion
 
