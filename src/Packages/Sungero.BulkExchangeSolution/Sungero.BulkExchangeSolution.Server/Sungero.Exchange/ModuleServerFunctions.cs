@@ -56,7 +56,11 @@ namespace Sungero.BulkExchangeSolution.Module.Exchange.Server
         }
       }
       
-      return base.ProcessDocumentsFromNewIncomingMessage(message, queueItem, infos, processingDocuments, sender, isIncoming, box);
+      base.ProcessDocumentsFromNewIncomingMessage(message, queueItem, infos, processingDocuments, sender, isIncoming, box);
+      foreach (var document in infos.Select(x => x.Document))
+        Sungero.BulkExchangeSolution.PublicFunctions.Module.Remote.ProcessExchangeDocument(document);
+      
+      return true;
     }
     
     protected override IOfficialDocument GetOrCreateNewExchangeDocument(IDocument document, ICounterparty sender, string serviceCounterpartyId, bool isIncoming, DateTime messageDate, IBoxBase box)

@@ -330,7 +330,7 @@ namespace Sungero.BulkExchangeSolution.Server
           }
           
           var arioResultJson = arioConnector.ClassifyAndExtractFacts(content,
-                                                                     document.Name,
+                                                                     "Акт", //document.Name,
                                                                      typeClassifierId,
                                                                      firstPageClassifierId,
                                                                      processingRule,
