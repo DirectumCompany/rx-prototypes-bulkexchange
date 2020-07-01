@@ -257,8 +257,10 @@ namespace Sungero.BulkExchangeSolution.Server
       
       ProcessPackageInArio(blobPackage);
       
-      var arioPackage = SmartProcessing.PublicFunctions.Module.UnpackArioPackage(blobPackage);      
+      var arioPackage = SmartProcessing.PublicFunctions.Module.UnpackArioPackage(blobPackage);
+      
       var documentPackage = this.BuildDocumentPackage(blobPackage, arioPackage);
+      
       SmartProcessing.PublicFunctions.Module.FinalizeProcessing(blobPackage);
     }
     
