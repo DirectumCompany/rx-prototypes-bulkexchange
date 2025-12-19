@@ -52,16 +52,17 @@
 2. Склонировать репозиторий с rx-prototypes-bulkexchange в папку.
 3. Указать в config.yml в разделе DevelopmentStudio:
 ```xml
-   GIT_ROOT_DIRECTORY: '<Папка из п.1>'
+   GIT_ROOT_DIRECTORY: '<Папка из п.2>'
    REPOSITORIES:
       repository:
       -   '@folderName': 'work'
           '@solutionType': 'Work'
-          '@url': 'https://github.com/DirectumCompany/rx-prototypes-bulkexchange'
+          '@url': 'https://github.com/DirectumCompany/rx-prototypes-bulkexchange.git'
       -   '@folderName': 'base'
           '@solutionType': 'Base'
           '@url': ''
 ```
 4. [Настроить обмен с контрагентами](https://club.directum.ru/webhelp/directumrx/desktop/index.html?sungero_parties_counterparty_card_exchangeboxes.htm).
 5. [Настроить автоматический режим](https://club.directum.ru/webhelp/directumrx/desktop/index.html?admin_avtomaticheskii_rezhim.htm) для подтверждения получения документов из сервиса обмена.
+
 
